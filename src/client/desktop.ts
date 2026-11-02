@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { apps } from "../apps/index.ts";
 import { createDesktop } from "../desktop/desktop.ts";
 import { defineEvent } from "../core/events.ts";
+import { createCameraEase } from "../scene/ease.ts";
 import type { Game } from "./game.ts";
 import type { World } from "./scene.ts";
 
@@ -19,7 +20,15 @@ export const mountDesktop = (game: Game, world: World) => {
     if (!desktop.isOpen) player.controls.lock();
   });
 
-  // Sitting down at the PC: park the camera at the seat and show the desktop.
+  // Sitting down at the PC: glide the camera to the seat and show the desktop.
+  const ease = createCameraEase(camera, world.onFrame);
+  const seatQuat = new THREE.Quaternion().setFromRotationMatrix(
+    new THREE.Matrix4().lookAt(
+      office.seat.position,
+      office.seat.lookAt,
+      camera.up,
+    ),
+  );
   const standPose = {
     position: new THREE.Vector3(),
     quaternion: new THREE.Quaternion(),
@@ -28,15 +37,13 @@ export const mountDesktop = (game: Game, world: World) => {
     standPose.position.copy(camera.position);
     standPose.quaternion.copy(camera.quaternion);
     player.controls.unlock();
-    camera.position.copy(office.seat.position);
-    camera.lookAt(office.seat.lookAt);
+    ease(office.seat.position, seatQuat);
     desktop.open();
     game.emit(PcOpened, {});
   };
   const standUp = () => {
     desktop.close();
-    camera.position.copy(standPose.position);
-    camera.quaternion.copy(standPose.quaternion);
+    ease(standPose.position, standPose.quaternion);
   };
   interactions.add({ object: office.pcScreen, label: "Use PC", use: sitDown });
   window.addEventListener("keydown", (e) => {
