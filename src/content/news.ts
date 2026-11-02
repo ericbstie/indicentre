@@ -87,7 +87,7 @@ export const AMBIENT: ReadonlyArray<NewsItem> = (
     ["Student loans pay out Friday. So do the fake 'loan office' mails", ""],
     ["Lottery board: you can't win a draw you never entered", ""],
     [
-      "Moss man, 81, passes his first computer course",
+      "Moss man, 81, passes first computer course",
       `"The teacher said hover before you click. I hover over everything now."`,
     ],
     ["Ålesund ferry 40 minutes late, seagull blamed", ""],

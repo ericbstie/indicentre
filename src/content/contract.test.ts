@@ -14,6 +14,8 @@ import { coworkers } from "./coworkers.ts";
 import { welcomeMail } from "./mail.ts";
 import * as news from "./news.ts";
 import { beats, endings } from "./story.ts";
+import { upgrades } from "../workplace/upgrades.ts";
+import { CALL_BACK } from "./lessons.ts";
 import { voices } from "./voices.ts";
 
 /** Every string reachable from a value. */
@@ -27,6 +29,7 @@ const strings = (v: unknown): string[] =>
 const CONTENT = {
   scams,
   tools,
+  upgrades,
   victimTables,
   FRAGMENTS,
   ANGLES,
@@ -127,6 +130,106 @@ describe("content contract", () => {
     const resultCard = readFileSync("src/apps/leads.ts", "utf8");
     const all = [...Object.values(CONTENT).flatMap(strings), resultCard];
     expect(all.filter((s) => debrief.test(s))).toEqual([]);
+  });
+
+  // Slop rules (research/avoiding-slop.md). Scam mail bodies and the chat
+  // personas imitate how scammers write, so the voice rules skip them.
+  const CHAT = ["Angel ♥", "Sam ♥"];
+  const voiced = {
+    ...CONTENT,
+    scams: scams.map((s) => s.successLines),
+    beats: beats.map((b) => ({
+      ...b,
+      lines: b.lines.filter((l) => !CHAT.includes(l.speaker)),
+    })),
+    welcomeMail: welcomeMail.subject,
+  };
+  // Grouped by the array each string sits in: one pool of lines.
+  const pools = (v: unknown, pool: unknown = v): [unknown, string][] =>
+    typeof v === "string"
+      ? [[pool, v]]
+      : v && typeof v === "object"
+        ? Object.values(v).flatMap((x) => pools(x, Array.isArray(v) ? v : pool))
+        : [];
+  const sentences = (s: string) =>
+    s.replace(/["“”]/g, "").split(/(?<=[.!?])\s+(?=[A-Z{'])/);
+  const closer = (s: string) => sentences(s).at(-1)!;
+
+  // Seen: "Double quota. Fine. I was wrong about you. Once." and 67 more.
+  // A one-sentence line ("Thanks.") is a reply, not a tag.
+  test("few lines end on a tag of three words or fewer", () => {
+    const multi = pools(voiced).filter(([, s]) => sentences(s).length > 1);
+    const tagged = multi.filter(([, s]) => closer(s).split(/\s+/).length <= 3);
+    const perPool = new Map<unknown, string[]>();
+    for (const [p, s] of tagged) perPool.set(p, [...(perPool.get(p) ?? []), s]);
+    expect([...perPool.values()].filter((l) => l.length > 1)).toEqual([]);
+    expect(tagged.length).toBeLessThanOrEqual(multi.length * 0.1);
+  });
+
+  // Seen: "So. Bye." from four different speakers. CALL_BACK repeats on purpose.
+  test("no two lines share a closing sentence", () => {
+    const lines = [...new Set(Object.values(voiced).flatMap(strings))];
+    const seen = new Map<string, string>();
+    const dupes = lines.flatMap((s) => {
+      const c = closer(s);
+      if (sentences(s).length < 2 || c === CALL_BACK) return [];
+      const first = seen.get(c);
+      seen.set(c, s);
+      return first ? [[first, s]] : [];
+    });
+    expect(dupes).toEqual([]);
+  });
+
+  // Seen: "Welcome to the team!!" and the boss's "Ahaha".
+  test("no double bangs or typed laughter outside scam texts and chats", () => {
+    const loud = /!!|\b(a?ha){2,}\b/i;
+    const all = Object.values(voiced).flatMap(strings);
+    expect(all.filter((s) => loud.test(s))).toEqual([]);
+  });
+
+  // Seen: "...a parcel she never ordered" on the TV.
+  test("news never gives a victim a pronoun", () => {
+    const pronoun = /\b(she|he|her|his|him)\b/i;
+    const tv = beats.flatMap((b) =>
+      b.lines.filter((l) => l.speaker === "TV").map((l) => l.line),
+    );
+    const headlines = [
+      ...news.VICTIM_HEADLINES,
+      ...news.SPOTTED_HEADLINES,
+      ...news.AMBIENT.map((a) => a.headline),
+      ...tv,
+    ];
+    expect(headlines.filter((s) => pronoun.test(s))).toEqual([]);
+  });
+
+  // Seen: "Survey: one in three has clicked a link they regretted".
+  test("headlines name a source", () => {
+    expect(
+      news.AMBIENT.map((a) => a.headline).filter((h) =>
+        /^(Study|Survey|Report):/.test(h),
+      ),
+    ).toEqual([]);
+  });
+
+  // Seen: BankCo, ParcelPost, TrendStore, "Reginald P. Fortune, Esq.".
+  test("no placeholder or joke names", () => {
+    const placeholder = /\b[A-Z][a-z]+Co\b|\bEsq\.|ParcelPost|TrendStore/;
+    const all = Object.values(CONTENT).flatMap(strings);
+    expect(all.filter((s) => placeholder.test(s))).toEqual([]);
+  });
+
+  // Seen: the call-back lesson in four wordings across beats and the Shop.
+  test("every call-back lesson uses CALL_BACK", () => {
+    const lessons = [
+      ...beats.map((b) => b.learn),
+      ...tools.map((t) => t.lesson),
+      ...upgrades.map((u) => u.lesson),
+    ].filter((l): l is string => !!l);
+    expect(
+      lessons.filter(
+        (l) => /\b(call|ring)\b.*\bnumber\b/i.test(l) && !l.includes(CALL_BACK),
+      ),
+    ).toEqual([]);
   });
 
   test("no stray whitespace around text", () => {
