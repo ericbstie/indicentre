@@ -25,6 +25,8 @@ const victim = (over: Partial<Victim> = {}): Victim => ({
   wealth: 1,
   weaknesses: ["authority", "urgency"],
   detail: { text: "Same bank for 41 years.", tag: "authority" },
+  hobby: { text: "h", source: "s" },
+  recent: { text: "r", source: "s", hide: "x" },
   defense: { id: "d", behavior: "b", line: "l", counters: ["job"] },
   ...over,
 });

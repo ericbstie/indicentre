@@ -68,6 +68,8 @@ describe("tool effects", () => {
     wealth: 1,
     weaknesses: ["authority"],
     detail: { text: "Same bank for 41 years.", tag: "authority" },
+    hobby: { text: "h", source: "s" },
+    recent: { text: "r", source: "s", hide: "x" },
     defense: { id: "d", behavior: "b", line: "l", counters: ["job"] },
   };
   const tpl = phishing.templates[0]!;

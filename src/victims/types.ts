@@ -46,6 +46,18 @@ export interface Detail {
   readonly tag: Tag;
 }
 
+/** A fact anyone could find, and where it was lying around. Dossier only. */
+export interface Leak {
+  readonly text: string;
+  /** Where it leaked from: "Public photo post". */
+  readonly source: string;
+}
+
+/** A recent life event. `hide` is what the victim could have kept private. */
+export interface RecentEvent extends Leak {
+  readonly hide: string;
+}
+
 export interface Victim {
   readonly id: string;
   readonly name: string;
@@ -59,6 +71,8 @@ export interface Victim {
   readonly wealth: number;
   readonly weaknesses: ReadonlyArray<Tag>;
   readonly detail: Detail;
+  readonly hobby: Leak;
+  readonly recent: RecentEvent;
   /** Their hidden tell: the habit that makes some scams bounce off. */
   readonly defense: Defense;
 }

@@ -6,14 +6,18 @@ import {
   range,
   type Rng,
   sample,
+  seedFrom,
+  seeded,
   weighted,
 } from "../core/rng.ts";
 import {
   DEFENSES,
   DETAILS,
   FIRST_NAMES,
+  HOBBIES,
   LAST_NAMES,
   OCCUPATIONS,
+  RECENT_EVENTS,
 } from "./tables.ts";
 import { type Defense, firstName, type Victim } from "./types.ts";
 
@@ -75,6 +79,13 @@ export const generateVictim = (
     d.counters.includes(detail.tag) ? 0 : d.w,
   );
   const name = drawName(rng, today.names);
+  // Dossier flavour draws from its own stream, so adding it left every
+  // existing seed's victims (and the economy sim) unchanged.
+  const leak = seeded(seedFrom(`${id}/${name}`));
+  const byAge = (x: { minAge?: number; maxAge?: number }) =>
+    fits(age, x) ? 1 : 0;
+  const { text, source } = weighted(leak, HOBBIES, byAge);
+  const recent = weighted(leak, RECENT_EVENTS, byAge);
   return {
     id,
     name,
@@ -85,6 +96,8 @@ export const generateVictim = (
     wealth: range(rng, ...job.wealth),
     weaknesses,
     detail: { text: detail.text, tag: detail.tag },
+    hobby: { text, source },
+    recent: { text: recent.text, source: recent.source, hide: recent.hide },
     defense: voiced(rng, defense, today.pickLine),
   };
 };

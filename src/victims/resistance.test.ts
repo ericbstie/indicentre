@@ -21,6 +21,8 @@ const victim = (over: Partial<Victim> = {}): Victim => ({
   wealth: 1.5,
   weaknesses: ["bank", "authority", "tech-help"],
   detail: { text: "Still prints every email.", tag: "tech-help" },
+  hobby: { text: "h", source: "s" },
+  recent: { text: "r", source: "s", hide: "x" },
   defense: {
     id: "video-call",
     behavior: "Asked for a video call.",
