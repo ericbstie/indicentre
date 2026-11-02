@@ -37,6 +37,7 @@ describe("shift clock", () => {
       heatEnd: 40,
       quota: quotaFor(1),
       met: false,
+      warned: true,
     });
   });
 
@@ -62,10 +63,14 @@ describe("quota", () => {
     const met = run({ type: "earn", amount: quotaFor(1) }, { type: "endDay" });
     expect(met.days.at(-1)?.met).toBe(true);
     expect(missStreak(met)).toBe(0);
-    const missed = reduce(met, { type: "endDay" });
+    const warned = reduce(met, { type: "endDay" });
+    expect(warned.days.at(-1)?.warned).toBe(true);
+    expect(missStreak(warned)).toBe(0);
+    const missed = reduce(warned, { type: "endDay" });
+    expect(missed.days.at(-1)?.warned).toBe(false);
     expect(missStreak(missed)).toBe(1);
     const recovered = [
-      { type: "earn", amount: quotaFor(3) } as const,
+      { type: "earn", amount: quotaFor(4) } as const,
       { type: "endDay" } as const,
     ].reduce(reduce, missed);
     expect(missStreak(recovered)).toBe(0);
@@ -79,8 +84,14 @@ describe("run end", () => {
       { type: "endDay" } as const,
     ].reduce(reduce, s);
 
-  test(`missing quota ${FIRE_AFTER_MISSES} days in a row gets you fired`, () => {
-    const one = run({ type: "endDay" });
+  test("the first missed quota is a written warning, not a strike", () => {
+    const s = run({ type: "endDay" }, { type: "endDay" });
+    expect(s.days.map((d) => d.warned)).toEqual([true, false]);
+    expect(s.status).toBe("playing");
+  });
+
+  test(`after the warning, missing ${FIRE_AFTER_MISSES} days in a row gets you fired`, () => {
+    const one = run({ type: "endDay" }, { type: "endDay" });
     expect(one.status).toBe("playing");
     const s = reduce(one, { type: "endDay" });
     expect(s.status).toBe("fired");
