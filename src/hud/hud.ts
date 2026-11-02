@@ -1,3 +1,4 @@
+import "./hud.css";
 import { clock, type GameState, SHUTDOWN_MAX } from "../core/state.ts";
 
 /** Always-on overlay: scam bucks, shutdown meter, clock, crosshair prompt. */

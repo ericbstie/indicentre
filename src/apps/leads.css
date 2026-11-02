@@ -1,0 +1,75 @@
+.leads {
+  padding: 16px 24px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  font: inherit;
+  text-align: left;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.card:hover {
+  border-color: var(--accent);
+}
+
+.card ul {
+  margin: 4px 0 0;
+  padding-left: 18px;
+  color: var(--ink-soft);
+}
+
+.template {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 12px;
+  margin-bottom: 8px;
+  background: var(--card);
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.template .subject {
+  margin: 4px 0;
+  font-weight: 600;
+}
+
+.template .body {
+  margin: 0;
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  color: #444;
+}
+
+.result {
+  padding: 16px;
+  border-radius: 6px;
+}
+
+.result.win {
+  background: #e3f4e3;
+}
+
+.result.loss {
+  background: #f8e0e0;
+}
+
+.lesson {
+  padding: 8px 12px;
+  background: #fff8d0;
+  border-left: 4px solid var(--warn);
+}

@@ -1,0 +1,39 @@
+.mail {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  height: 100%;
+}
+
+.mail-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-right: 1px solid var(--line);
+  overflow: auto;
+}
+
+.mail-list li {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 12px;
+  border-bottom: 1px solid #e0e0e0;
+  cursor: pointer;
+}
+
+.mail-list li.unread b::before {
+  content: "● ";
+  color: var(--accent);
+}
+
+.mail-list li.selected {
+  background: #dfe8f6;
+}
+
+.mail-read {
+  padding: 16px 24px;
+  overflow: auto;
+}
+
+.mail-read .from {
+  color: var(--muted);
+}

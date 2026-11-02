@@ -1,3 +1,4 @@
+import "./desktop.css";
 import type { AppContext, DesktopApp } from "../apps/app.ts";
 import type { Game } from "../client/game.ts";
 
