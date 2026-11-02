@@ -8,6 +8,14 @@ export const OVERNIGHT_COOLDOWN = 5;
 
 export type ScamId = string;
 
+export interface Mail {
+  readonly id: string;
+  readonly from: string;
+  readonly subject: string;
+  readonly body: string;
+  readonly read: boolean;
+}
+
 export interface GameState {
   readonly scamBucks: number;
   /** 0..SHUTDOWN_MAX. At max the call center is raided and the run ends. */
@@ -16,6 +24,8 @@ export interface GameState {
   /** Minutes since the workday started. */
   readonly minute: number;
   readonly unlockedScams: ReadonlyArray<ScamId>;
+  /** Newest first. */
+  readonly inbox: ReadonlyArray<Mail>;
   readonly status: "playing" | "shutdown";
 }
 
@@ -24,7 +34,9 @@ export type Action =
   | { readonly type: "spend"; readonly amount: number }
   | { readonly type: "heat"; readonly amount: number }
   | { readonly type: "tick"; readonly minutes: number }
-  | { readonly type: "unlock"; readonly scam: ScamId };
+  | { readonly type: "unlock"; readonly scam: ScamId }
+  | { readonly type: "mail"; readonly mail: Omit<Mail, "read"> }
+  | { readonly type: "readMail"; readonly id: string };
 
 export const initialState = (
   unlockedScams: ReadonlyArray<ScamId> = [],
@@ -34,6 +46,7 @@ export const initialState = (
   day: 1,
   minute: 0,
   unlockedScams,
+  inbox: [],
   status: "playing",
 });
 
@@ -42,6 +55,9 @@ const clamp = (n: number, lo: number, hi: number) =>
 
 export const canAfford = (s: GameState, amount: number) =>
   s.scamBucks >= amount;
+
+export const unreadCount = (s: GameState) =>
+  s.inbox.filter((m) => !m.read).length;
 
 export const isUnlocked = (s: GameState, scam: ScamId) =>
   s.unlockedScams.includes(scam);
@@ -90,5 +106,14 @@ export const reduce = (s: GameState, a: Action): GameState => {
       return isUnlocked(s, a.scam)
         ? s
         : { ...s, unlockedScams: [...s.unlockedScams, a.scam] };
+    case "mail":
+      return s.inbox.some((m) => m.id === a.mail.id)
+        ? s
+        : { ...s, inbox: [{ ...a.mail, read: false }, ...s.inbox] };
+    case "readMail":
+      return {
+        ...s,
+        inbox: s.inbox.map((m) => (m.id === a.id ? { ...m, read: true } : m)),
+      };
   }
 };

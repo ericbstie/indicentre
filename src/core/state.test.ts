@@ -5,6 +5,7 @@ import {
   OVERNIGHT_COOLDOWN,
   reduce,
   SHUTDOWN_MAX,
+  unreadCount,
   WORKDAY_MINUTES,
 } from "./state.ts";
 
@@ -44,6 +45,15 @@ describe("reduce", () => {
       reduce(s0, { type: "unlock", scam: "tech-support" }).unlockedScams,
     ).toEqual(["phishing", "tech-support"]);
   });
+});
+
+test("mail arrives newest first, unread, once per id; reading marks it", () => {
+  const mail = { id: "m1", from: "Boss", subject: "Hi", body: "Work." };
+  const s1 = reduce(s0, { type: "mail", mail });
+  expect(reduce(s1, { type: "mail", mail })).toBe(s1);
+  expect(unreadCount(s1)).toBe(1);
+  const s2 = reduce(s1, { type: "readMail", id: "m1" });
+  expect(unreadCount(s2)).toBe(0);
 });
 
 test("clock formats minutes since 09:00", () => {

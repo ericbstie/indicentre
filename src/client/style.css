@@ -21,6 +21,7 @@ canvas {
 .hud {
   position: fixed;
   inset: 0;
+  z-index: 2;
   pointer-events: none;
 }
 
@@ -75,4 +76,135 @@ canvas {
   text-align: center;
   font-size: 28px;
   background: #900d;
+}
+
+.desktop {
+  position: fixed;
+  z-index: 1;
+  inset: 4vh 6vw;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(160deg, #1d4f7a, #0e2a44);
+  border: 10px solid #1a1a1a;
+  border-radius: 8px;
+  box-shadow: 0 0 0 100vmax #0008;
+}
+
+.desktop[hidden],
+.window[hidden] {
+  display: none;
+}
+
+.taskbar {
+  display: flex;
+  gap: 4px;
+  padding: 6px;
+  background: #0008;
+}
+
+.app-icon {
+  position: relative;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  padding: 6px 12px;
+  color: inherit;
+  font: inherit;
+  background: #ffffff14;
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.app-icon:hover {
+  background: #ffffff2a;
+}
+
+.app-icon b {
+  padding: 0 6px;
+  font-size: 11px;
+  background: #d33;
+  border-radius: 8px;
+}
+
+.window {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  margin: 16px;
+  color: #222;
+  background: #f4f4f0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.window header {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 10px;
+  color: #eee;
+  background: #333;
+}
+
+.window header button {
+  color: inherit;
+  font-size: 18px;
+  line-height: 1;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.window-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.hint {
+  padding: 4px 10px;
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.mail {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  height: 100%;
+}
+
+.mail-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-right: 1px solid #ccc;
+  overflow: auto;
+}
+
+.mail-list li {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 12px;
+  border-bottom: 1px solid #e0e0e0;
+  cursor: pointer;
+}
+
+.mail-list li.unread b::before {
+  content: "● ";
+  color: #2a6ad0;
+}
+
+.mail-list li.selected {
+  background: #dfe8f6;
+}
+
+.mail-read {
+  padding: 16px 24px;
+  overflow: auto;
+}
+
+.mail-read .from,
+.empty {
+  color: #777;
 }
