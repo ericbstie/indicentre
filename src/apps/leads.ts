@@ -2,6 +2,7 @@ import "./leads.css";
 import { seedFrom, seeded } from "../core/rng.ts";
 import { availableScams } from "../scams/registry.ts";
 import {
+  bonusFor,
   failHeat,
   pulls,
   type Outcome,
@@ -19,6 +20,7 @@ import { writeHints } from "../victims/hints.ts";
 import { firstName, type Victim } from "../victims/types.ts";
 import { type RevealLevel, reveal, type VictimView } from "../victims/view.ts";
 import { esc, escLines } from "../desktop/html.ts";
+import { callOddsModifier } from "../workplace/slice.ts";
 import type { DesktopApp } from "./app.ts";
 
 const LEADS_PER_BATCH = 3;
@@ -76,7 +78,13 @@ export default {
       const s = game.state();
       return runSeed + s.day * 10_000 + s.minute;
     };
-    const mods = (): Modifiers => modifiersFor(game.state().ownedTools);
+    const mods = (): Modifiers => {
+      const s = game.state();
+      return {
+        ...modifiersFor(s.ownedTools),
+        callBonus: callOddsModifier(s.workplace),
+      };
+    };
     const draw = () => drawLeads(seedNow(), mods().reveal);
     let leads = draw();
     let target: Victim | undefined;
@@ -94,7 +102,7 @@ export default {
       const m = mods();
       const odds =
         m.reveal >= 2
-          ? ` · ${pct(successChance(t, pulls(s, tpl), m.chanceBonus))} odds`
+          ? ` · ${pct(successChance(t, pulls(s, tpl), bonusFor(s, m)))} odds`
           : "";
       return `${CHANNEL[s.channel]} · +${payout(s, t)} bucks · heat +${s.heat.success}, +${failHeat(s, m)} if reported · ${s.minutes} min${odds}`;
     };

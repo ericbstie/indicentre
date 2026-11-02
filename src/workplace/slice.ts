@@ -27,3 +27,14 @@ export const install = (w: WorkplaceState, u: Install): WorkplaceState => ({
   owned: [...w.owned, u.id],
   deskTier: u.tier !== undefined && u.tier > w.deskTier ? u.tier : w.deskTier,
 });
+
+/** Percentage points added to call odds per desk tier. */
+export const DESK_CALL_BONUS: Readonly<Record<DeskTier, number>> = {
+  0: 0,
+  1: 0.05,
+  2: 0.1,
+};
+
+/** Odds bonus for channel "call" scams from the desk you sit at. */
+export const callOddsModifier = (w: WorkplaceState) =>
+  DESK_CALL_BONUS[w.deskTier];
