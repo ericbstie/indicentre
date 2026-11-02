@@ -24,9 +24,10 @@ are about to touch. Nothing else is required.
   never at an ethnicity, accent or nationality. Scam mechanics stay abstract
   and game-like: no real operational instructions, no real brands (use
   BankCo-style fakes).
-- **Every scam teaches.** A scam template must list `redFlags`; a scam must
-  have a 3-line `whatToSpot` card. The player sees them after every attempt,
-  under the victim's defense when they lose.
+- **The game teaches by showing, not by debrief.** No generic feedback after
+  a pitch (no red-flag lists, no odds reveal): the result card shows the
+  outcome and the victim's own line, and the TV news tells what a victim
+  who caught you did right.
 
 ## Before you open (and before you merge) a PR
 

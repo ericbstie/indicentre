@@ -16,7 +16,7 @@
 - [ ] Rebased on the latest `main` right before merging
 - [ ] New apps/scams/systems are new files only (`bun run new:<kind> <id>`); no edits to another feature's files
 - [ ] Shared files touched (list them, or "none"): `core/state.ts`, `core/events.ts`, `client/*`
-- [ ] Each new scam has `redFlags`, `fitTags` (victim weakness tags) and a 3-line `whatToSpot` card
+- [ ] Each new scam has `fitTags` (victim weakness tags) and a `successLine`
 - [ ] No new dependencies (or: reason, exact version, lockfile committed)
 - [ ] Dead code removed
 - [ ] Consistency: no second way to do something [docs/consistency.md](../docs/consistency.md) already covers

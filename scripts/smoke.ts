@@ -55,10 +55,10 @@ try {
   await view.click(".leads [data-target]", { timeout: 5000 });
   await view.click(`.leads [data-send^="phishing/"]`, { timeout: 5000 });
 
-  const spot = await view.evaluate<number>(
-    `document.querySelectorAll(".leads .result .lesson li").length`,
+  const shown = await view.evaluate<boolean>(
+    `!!document.querySelector(".leads .result h3")`,
   );
-  if (spot !== 3) fail(`result card shows ${spot} What-to-spot lines, want 3`);
+  if (!shown) fail("no result card after sending a scam");
   const after = await hud();
   if (after === before) fail(`HUD unchanged after a scam: ${after}`);
   if (errors.length) fail(`console errors:\n  ${errors.join("\n  ")}`);

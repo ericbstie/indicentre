@@ -1,8 +1,7 @@
 # IndiCentre
 
 A satirical game about online safety. You are the new junior at a scam call
-center. Every scam you run shows you the red flags your victim missed, so you
-learn to spot them yourself.
+center. Seeing scams from the inside, you learn to spot them yourself.
 
 First-person 3D office, a simplified PC desktop, scam bucks to earn, and a
 shutdown meter that ends the run if it fills.
