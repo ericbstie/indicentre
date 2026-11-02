@@ -82,11 +82,16 @@ src/
                        babble (gibberish voices), speak, music, sfx
   desktop/             PC overlay shell (desktop.ts/.css), html.ts esc()
   scene/               three.js: office, player, npc, interact registry, tv,
-                       screenText (text on a canvas-textured plane)
+                       screenText (text on a canvas-textured plane),
+                       models.ts loadModel(id)
   news/                pure news model, story generator, feed queue
   hud/                 HUD overlay (hud.ts/.css), modal.ts one-button blocking card
+assets/
+  manifest.json        every model: pinned URL, sha256, CC0 license
+  models/<id>.glb      verified by `bun run check`
 scripts/
   gen.ts               writes the three generated index.ts files
+  assets.ts            fetches + verifies assets (`bun run assets`)
   new.ts               scaffolds an app / scam / system
 ```
 
@@ -125,6 +130,7 @@ synchronous `Game` facade and stays Effect-free. New long-lived services
 | shared colors                          | `client/tokens.css` (rarely; prefer your own `.css`)         |
 | a voice for a new speaker              | nothing (derived from the name); tune in `content/voices.ts` |
 | a sound effect                         | `audio/sfx.ts`, played from a system on a `game.on(...)`     |
+| a 3D model                             | `assets/manifest.json` + `bun run assets` (`docs/assets.md`) |
 
 A system gets `{ game, world }`: add meshes with
 `world.office.scene.add(...)`, make them usable with
