@@ -2,7 +2,7 @@
 // generate.test.ts checks the shape. Voice: one concrete detail, no pronouns
 // in details (names don't tell us anyone's pronouns), people not punchlines.
 
-import type { Defense, Detail, Tag } from "./types.ts";
+import type { Defense, Detail, Leak, RecentEvent, Tag } from "./types.ts";
 
 export interface Occupation {
   readonly label: string;
@@ -521,4 +521,138 @@ export const LAST_NAMES: ReadonlyArray<string> = [
   "Nguyen",
   "Ali",
   "Brekke",
+];
+
+type AgeFit = { readonly minAge?: number; readonly maxAge?: number };
+
+/** Dossier flavour: no effect on odds. One per victim, fitted to age. */
+export const HOBBIES: ReadonlyArray<Leak & AgeFit> = [
+  {
+    minAge: 40,
+    text: "Sings in a church choir. Rehearsals on Thursdays.",
+    source: "Choir newsletter, public PDF",
+  },
+  {
+    maxAge: 50,
+    text: "Five-a-side football, Tuesday nights.",
+    source: "Club fixture list",
+  },
+  {
+    minAge: 45,
+    text: "Grows marrows. Came second at the county show.",
+    source: "Show results page",
+  },
+  {
+    text: "Posts a cake every Sunday. Every single Sunday.",
+    source: "Public photo feed",
+  },
+  {
+    text: "Plays online chess, mostly after midnight.",
+    source: "Public player profile",
+  },
+  {
+    text: "Birdwatcher. Logs every sighting with the time and place.",
+    source: "Public sightings map",
+  },
+  {
+    text: "Runs the neighbourhood group chat.",
+    source: "Invite link posted on a public noticeboard",
+  },
+  {
+    minAge: 55,
+    text: "Knits for the grandchildren. Takes orders from friends too.",
+    source: "Craft market listing",
+  },
+  {
+    text: "Restores old radios. Sells the spare parts online.",
+    source: "Marketplace seller page",
+  },
+  {
+    minAge: 60,
+    text: "Bingo at the community hall on Fridays.",
+    source: "Photo of the hall noticeboard",
+  },
+  {
+    maxAge: 55,
+    text: "Checks in at the same gym at 6 a.m. every weekday.",
+    source: "Fitness app, public by default",
+  },
+  {
+    text: "Writes long reviews of local restaurants. Signs them with a full name.",
+    source: "Review site profile",
+  },
+];
+
+/** What just happened in their life, where it was posted, and what to keep back. */
+export const RECENT_EVENTS: ReadonlyArray<RecentEvent & AgeFit> = [
+  {
+    text: "Just bought a car. The photo shows the plate and the dealer's sign.",
+    source: "Public photo post",
+    hide: "The plate and the dealer. A new-car post tells strangers money just moved.",
+  },
+  {
+    text: "Moved house last month. The housewarming invite has the new street.",
+    source: "Public event page",
+    hide: "The street name. An invite can go to friends only.",
+  },
+  {
+    text: "Back from two weeks abroad. Posted the flight times before leaving.",
+    source: "Public travel posts",
+    hide: "The trip dates, at least until getting home.",
+  },
+  {
+    minAge: 50,
+    text: "New grandchild. The birth post names the hospital and both parents.",
+    source: "Family photo post, set to public",
+    hide: "Family names. They answer half the security questions out there.",
+  },
+  {
+    maxAge: 64,
+    text: "Started a new job. Announced the employer and the start date.",
+    source: "Career profile",
+    hide: "The start date. A fake 'new starter paperwork' mail only works if the sender knows it.",
+  },
+  {
+    minAge: 55,
+    text: "Lost a partner in the spring. The memorial page is open for messages.",
+    source: "Memorial page",
+    hide: "Who can post on the memorial page. Strangers read open guestbooks too.",
+  },
+  {
+    text: "Signed up for a charity run. The fundraising page shows the full name and town.",
+    source: "Fundraising page",
+    hide: "The town. A fundraiser needs a first name, not a home address.",
+  },
+  {
+    text: "Complained to the bank in public about a blocked card.",
+    source: "Public reply thread",
+    hide: "Which bank it is. A public complaint tells anyone who to pretend to be.",
+  },
+  {
+    text: "Selling a sofa. The listing shows a personal phone number.",
+    source: "Marketplace listing",
+    hide: "The phone number. The site's own messages would have done.",
+  },
+  {
+    text: "Birthday last week. Forty-odd friends posted the date and the age.",
+    source: "Public birthday wall",
+    hide: "The birth date. It's on most identity checks.",
+  },
+  {
+    minAge: 60,
+    text: "Retired in June. The leaving-do photos mention the pension fund.",
+    source: "Former employer's news page",
+    hide: "The pension fund. A new pension is a new reason to expect official mail.",
+  },
+  {
+    minAge: 40,
+    text: "The eldest just started university in another city.",
+    source: "Proud-parent post",
+    hide: "Which city. A 'new phone, need money' text sounds right when the details fit.",
+  },
+  {
+    text: "Posted about a delivery that is three days late.",
+    source: "Public complaint to a courier",
+    hide: "That a parcel is late. That is the opening line of every fake delivery text.",
+  },
 ];

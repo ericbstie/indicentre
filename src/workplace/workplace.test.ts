@@ -56,6 +56,8 @@ describe("call odds", () => {
     wealth: 1,
     weaknesses: ["tech-help"],
     detail: { text: "Printer has been broken since May.", tag: "tech-help" },
+    hobby: { text: "h", source: "s" },
+    recent: { text: "r", source: "s", hide: "x" },
     defense: { id: "d", behavior: "b", line: "l", counters: ["job"] },
   };
   const mods = (tier: DeskTier) => ({

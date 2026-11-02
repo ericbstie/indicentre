@@ -3,7 +3,7 @@ import { seeded } from "../core/rng.ts";
 import { FRAGMENTS } from "./fragments.ts";
 import { generateVictims } from "./generate.ts";
 import { writeHints } from "./hints.ts";
-import { DEFENSES, DETAILS } from "./tables.ts";
+import { DEFENSES, DETAILS, HOBBIES, RECENT_EVENTS } from "./tables.ts";
 import { TAGS } from "./types.ts";
 
 // From the voice guide: stock phrases that read as machine-written.
@@ -16,6 +16,11 @@ const all = [
   ...Object.values(FRAGMENTS).flat(),
   ...DETAILS.map((d) => d.text),
   ...DEFENSES.flatMap((d) => [d.behavior, ...d.lines]),
+  ...[...HOBBIES, ...RECENT_EVENTS].flatMap((l) => [
+    l.text,
+    l.source,
+    ...("hide" in l ? [l.hide] : []),
+  ]),
 ];
 
 describe("hint content", () => {

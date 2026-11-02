@@ -5,8 +5,10 @@ import {
   DEFENSES,
   DETAILS,
   FIRST_NAMES,
+  HOBBIES,
   LAST_NAMES,
   OCCUPATIONS,
+  RECENT_EVENTS,
 } from "./tables.ts";
 import { firstName, TAGS } from "./types.ts";
 
@@ -31,14 +33,15 @@ describe("victim tables", () => {
     expect(new Set(LAST_NAMES).size).toBe(LAST_NAMES.length);
   });
 
-  test("every occupation's age range has at least one detail", () => {
+  test("every occupation's age range has a detail, hobby and recent event", () => {
     for (const o of OCCUPATIONS)
       for (const age of o.age)
-        expect(
-          DETAILS.some(
-            (d) => age >= (d.minAge ?? 0) && age <= (d.maxAge ?? Infinity),
-          ),
-        ).toBe(true);
+        for (const pool of [DETAILS, HOBBIES, RECENT_EVENTS])
+          expect(
+            pool.some(
+              (d) => age >= (d.minAge ?? 0) && age <= (d.maxAge ?? Infinity),
+            ),
+          ).toBe(true);
   });
 });
 
@@ -106,6 +109,19 @@ describe("generateVictims", () => {
     for (const t of TAGS) expect(count.get(t) ?? 0).toBeGreaterThan(0);
     const total = [...count.values()].reduce((a, b) => a + b, 0);
     for (const n of count.values()) expect(n / total).toBeLessThan(0.25);
+  });
+
+  test("dossier leaks fit the victim's age and vary", () => {
+    const fit = (age: number, x: { minAge?: number; maxAge?: number }) =>
+      age >= (x.minAge ?? 0) && age <= (x.maxAge ?? Infinity);
+    for (const v of batch) {
+      const hobby = HOBBIES.find((h) => h.text === v.hobby.text);
+      const recent = RECENT_EVENTS.find((r) => r.text === v.recent.text);
+      expect(hobby && fit(v.age, hobby)).toBe(true);
+      expect(recent && fit(v.age, recent)).toBe(true);
+    }
+    expect(new Set(batch.map((v) => v.hobby.text)).size).toBeGreaterThan(8);
+    expect(new Set(batch.map((v) => v.recent.text)).size).toBeGreaterThan(8);
   });
 
   test("a spread of ages and occupations", () => {
