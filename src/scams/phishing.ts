@@ -10,48 +10,61 @@ export default {
   heat: { success: 2, fail: 8 },
   fitTags: ["parcel", "bank"],
   successLines: [
-    "Filled it all in. The bank rang this afternoon about a payment I didn't make.",
-    "I typed my code in twice because the first time the page went white. All sorted now, I think.",
-    "Verified! My husband says I should have asked him first, but he wasn't home and it said 24 hours.",
+    "Done, I put in everything it asked for. It said my code was wrong the first time so I typed it again. Is that all now?",
+    "hello i did the form but the page went white at the end. do i need to do it again or did it go through, i dont want to miss the deadline",
+    "I filled it in. Then my bank rang about a payment I didn't make and asked if I had answered any emails. Please tell me that wasn't you.",
   ],
   templates: [
     {
       id: "account-locked",
       label: "Your account is locked",
-      subject: "URGENT: Account suspended - action required",
-      body: `Dear valued customer {name},
+      subject: "Security Alert : Your account has been temporarily Suspended",
+      body: `Dear Customer,
 
-We detected unusual activity and your Fjellstad Bank account has been LOCKED.
-Verify your identity within 24 hours or your account will be closed permanently.
+We have detected unusual sign-in activity on your Fjellstad Bank online account. For your protection your account has been temporarily Suspended.
 
-[ Verify Now ]  (fjellstadd-secure-login.net)
+To restore full access kindly verify your identity within 24 hours. Failure to do so will result in permanent closure of your account.
 
-Fjellstad Bank Security Team`,
+[ Restore Access ]
+
+Ref: FJB-SEC-20931
+Fjellstad Bank Online Security | fjellstad-bank.secure-verify.net
+This is an automated message, please do not reply.`,
       lures: { authority: 0.8, urgency: 0.9 },
     },
     {
       id: "parcel-fee",
       label: "Parcel waiting, small fee",
-      subject: "Your parcel is on hold",
-      body: `Hi {name},
+      subject: "QuickCrate: Delivery attempt failed (Ref NO22810476)",
+      body: `Dear {name},
 
-Your parcel could not be delivered due to an unpaid customs fee of 1.99.
-Pay now to schedule redelivery: [ Pay fee ]
+Your shipment NO22810476 could not be delivered because import charges have not been paid.
 
-QuickCrate Delivery Services`,
+Status: On hold at terminal
+Amount due: 1.99
+Pay within: 48 hours
+
+[ Pay and reschedule ]
+
+If payment is not received the package will be returned to sender.
+QuickCrate Customer Service | Do not reply to this email`,
       lures: { curiosity: 0.8, urgency: 0.5 },
     },
     {
       id: "inheritance",
       label: "Long-lost great-uncle",
-      subject: "Confidential: unclaimed inheritance of 4,500,000",
-      body: `Dear {name},
+      subject: "ATTN: {name} - NEXT OF KIN CLAIM (REF: LM/2291/NO)",
+      body: `Attention {name},
 
-I am the solicitor of your late great-uncle Per Aas, who left 4,500,000 to his closest living relative. That is you.
-To release the funds, a small processing fee is required. Kindly reply with your bank details.
+I am Henrik Lie, private solicitor to the late Mr. Per Aas who died in a car accident abroad in 2023. He left the sum of 4,500,000 in a deposit account without a will, and our search has shown you as his closest living relative.
 
-Henrik Lie
-Lie & Moen Advokatfirma`,
+The bank has given notice that the fund will go to the State if not claimed within 14 working days. Kindly reply with your home address and private phone number so I can file the claim in your favour. A small administration fee for stamp duty will apply.
+
+Please treat this as strictly confidential.
+
+Barr. Henrik Lie
+Lie & Moen Advokatfirma
+(reply only to: henrik.lie.chambers@mailbox.co)`,
       lures: { greed: 1, authority: 0.4 },
     },
   ],

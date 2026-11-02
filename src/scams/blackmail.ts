@@ -11,36 +11,44 @@ export default {
   heat: { success: 6, fail: 14 },
   fitTags: ["fear"],
   successLines: [
-    "Paid. Please delete it. I've changed the password, the old one too, the one from 2019.",
-    "I didn't know how to buy crypto. The boy at the kiosk showed me. Please don't write again.",
-    "Sent it. I still don't know what you have. I've put a plaster over the camera anyway.",
+    "I paid it. Please delete it now. I have changed the password, and the old one from 2019 as well. Please don't write to me again.",
+    "i didnt know how to buy crypto so a young man at the kiosk helped me. it is sent. i havent told anyone",
+    "Sent it. I still don't know what you think you have. I've put tape over the camera and I don't sleep much.",
   ],
   templates: [
     {
       id: "old-password",
       label: "I know your password",
-      subject: "{name}, your password is sommer2019",
-      body: `Hi {name},
+      subject: "{name} - sommer2019",
+      body: `Hello {name},
 
-Yes, sommer2019. That's your password. I've had it for a while.
-I used it to get into your laptop and I've been watching through the camera.
-I know what you do in the evenings. So will your contacts, unless you pay.
+I know that sommer2019 is your password. You dont know me and you are probably thinking why you are getting this mail.
 
-Ignore this mail and I send everything to everyone in your address book.`,
+I placed a software on a website you visited and it gave me access to your device and camera. I have recorded you. I also copied all your contacts.
+
+What you should do: pay 1,500 in crypto to the wallet below. You have 48 hours. I have a special pixel in this mail and I know right now you have read it.
+
+If I dont get the payment, the video goes to all your contacts. If I get it, I delete everything and you never hear from me again.
+
+Wallet: qx77f41nord2290akd8r03mzl
+
+Do not reply, this mail is auto-generated.`,
       lures: { authority: 0.4, urgency: 0.6 },
     },
     {
       id: "deadline",
       label: "48 hours to pay",
-      subject: "Final notice. 48 hours.",
+      subject: "SECOND NOTICE {name}",
       body: `{name},
 
-You opened this mail, so the timer has started. I can see that.
-48 hours. Payment in crypto only, to the wallet below. Not a bank, not cash.
-After that the files go out. Your family first.
+this is second time I write you. You did not pay.
 
-Wallet: QX-7741-NORD-2290
-Don't tell anyone. I'll know.`,
+24 hours left. After that the video goes to your family and your work first.
+
+Same wallet: qx77f41nord2290akd8r03mzl
+Amount is now 2,000 because you made me wait.
+
+Dont go to police. They can not help you and I will know.`,
       lures: { urgency: 0.9 },
     },
     {
@@ -49,11 +57,11 @@ Don't tell anyone. I'll know.`,
       subject: "Re: our little secret",
       body: `Dear {name},
 
-I'm a reasonable person. I don't want to ruin anyone's life.
-Pay 1,500 in crypto and I delete everything and you never hear from me again.
-Nobody needs to know. Not your work, not your friends.
+I am not a bad person and I do not want to ruin your life. Think of this as a business deal.
 
-You already know which password I mean.`,
+I have what I have. You know which password I mean. For 1,500 in crypto I delete it and we both forget this.
+
+Nobody needs to know. Not your work, not your friends.`,
       lures: { authority: 0.3, urgency: 0.5, curiosity: 0.3 },
     },
   ],

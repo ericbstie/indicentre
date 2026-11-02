@@ -11,33 +11,38 @@ export default {
   heat: { success: 6, fail: 14 },
   fitTags: ["bank"],
   successLines: [
-    "Paid it before lunch. Trine from Haldorsen even rang to say thanks, so that's sorted. Strange that Trine doesn't remember ringing.",
-    "The boss said don't wait for him, so I didn't. He's back Monday. I'll tell him it's done.",
-    "Renewed the register entry. Now the auditor wants to know why we paid a register that doesn't exist.",
+    "Hi Trine, paid today to the new account as asked. I tried ringing first but nobody picked up, so I went by your email. Have a nice weekend.",
+    "done, paid it. didnt want to hold up the Nordby job. can you send me the paperwork for my files when you're back",
+    "Payment sent. Our auditor has now asked me who you are, and I don't know what to tell them.",
   ],
   templates: [
     {
       id: "new-bank-details",
       label: "Supplier changed banks",
-      subject: "Haldorsen Pipe & Valve: NEW bank details from 1 December",
+      subject: "Haldorsen Pipe & Valve - change of bank details",
       body: `Hi {name},
 
-Please note we have moved banks. From today, pay all Haldorsen invoices to the new account below. The old one will be Closed.
-Invoice 20419 (34,600) is due Friday, so please use the new details for that one already.
+Hope all is well.
 
-Any questions, ring me on the number in my signature.
+Please be advised that we have changed our bank. Our old account will be closed at the end of the month, so all payments from now on should go to the new account in the attached letter.
 
-Trine, Accounts
+Invoice 20419 (34,600) is due Friday. Could you please use the new details for this one already. Our phones are being moved this week, so please confirm by email only.
+
+Best regards
+Trine Haugen
+Accounts Receivable
+Haldorsen Pipe & Valve AS
 accounts@haldorsen-pipe.co`,
       lures: { authority: 0.6, urgency: 0.7 },
     },
     {
       id: "boss-in-a-meeting",
       label: "The boss needs it paid now",
-      subject: "quick one before 3",
-      body: `{name}, I'm in with the bank all afternoon, can't talk.
-Need you to pay the attached invoice to the new contractor today, it's holding up the Nordby job.
-Don't wait for me to sign, I'll sort the paperwork Monday.
+      subject: "Urgent",
+      body: `{name} are you at your desk
+
+Stuck in a meeting with the bank, can't take calls. Need a payment made to the new contractor today before 3 or we lose the Nordby job. Invoice attached.
+Go ahead without my signature, I'll sort the paperwork Monday. Let me know when done.
 
 Sent from my phone`,
       lures: { authority: 0.9, urgency: 0.9 },
@@ -45,13 +50,19 @@ Sent from my phone`,
     {
       id: "directory-renewal",
       label: "Renew the trade listing",
-      subject: "2nd REMINDER: Nordvest Trade Register, annual entry",
+      subject:
+        "2nd REMINDER - Nordvest Trade Register - Entry No. 77120 - Payment Overdue",
       body: `Dear {name},
 
-Your company entry in the Nordvest Trade Register expires this month.
-Annual fee 4,890 is now overdue. Pay within 5 days to avoid removal and a collection charge.
+According to our records, the annual entry for your company in the Nordvest Trade Register (entry no. 77120) has not been renewed.
 
-Nordvest Trade Register, Registry Office`,
+Amount due: 4,890
+Due date: OVERDUE
+
+To avoid removal from the register and a collection charge of 750, payment must be received within 5 working days.
+
+Nordvest Trade Register, Registry Office
+This is not a public register. Payment of this notice confirms acceptance of our terms.`,
       lures: { authority: 0.8, urgency: 0.6 },
     },
   ],

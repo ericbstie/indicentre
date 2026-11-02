@@ -11,19 +11,20 @@ export default {
   heat: { success: 6, fail: 15 },
   fitTags: ["fear", "tech-help"],
   successLines: [
-    "Bought the gift cards on my lunch break and sent the codes. That was 4,000 kr of my own money, and Halvard never asked for them.",
-    "Typed my password in twice because the page froze. IT says they never sent a reset, but they'll look into the freezing.",
-    "Opened the bonus list. It asked me to log in again and then it was empty. Maybe they haven't finished it yet.",
+    "Hi Halvard, all 8 are bought and the photos are sent. It came to 4,000 on my own card, so please don't forget the salary bit.",
+    "done, I had to log in twice because the page froze the first time. is my mailbox ok now? I have a lot of client mail in there",
+    "Opened the bonus file but it asked me to log in again and then it was empty. Could you share it again, it's not working for me.",
   ],
   templates: [
     {
       id: "ceo-gift-cards",
       label: "The CEO needs a favour",
-      subject: "are you at your desk?",
-      body: `{name}, are you around? In back-to-back board meetings, can't take calls.
+      subject: "Are you available?",
+      body: `{name}, are you available? Need a quick favour.
 
-I need eight gift cards for client thank-yous before 4. Buy them on your card, I'll have it paid back with your salary.
-Send me photos of the codes here. Keep it between us for now, it's a surprise.
+In back-to-back meetings, can't take calls. I need eight gift cards for client thank-yous before 4. Buy them on your card, I'll have it paid back with your salary.
+
+Scratch the backs and send me photos of the codes here. Keep it between us for now, it's a surprise.
 
 Halvard
 Sent from my phone`,
@@ -32,14 +33,15 @@ Sent from my phone`,
     {
       id: "it-password-reset",
       label: "IT: mailbox locks at 17:00",
-      subject: "ACTION REQUIRED: mailbox migration today",
-      body: `Hi {name},
+      subject: "[IT Notice] Mailbox upgrade - action required before 17:00",
+      body: `Dear Staff,
 
-We are moving all staff mailboxes to the new server tonight.
-Mailboxes not confirmed by 17:00 will be locked and their mail may be lost.
+As part of our scheduled mailbox upgrade, all accounts must be re-validated today.
+Mailboxes not validated by 17:00 will be suspended and incoming mail may be lost.
 
-Confirm your login here: staff-portal-login.co/confirm
+Validate your account: staff-portal-login.co/validate
 
+Thank you for your cooperation.
 IT Service Desk
 Please do not reply to this message`,
       lures: { authority: 0.6, urgency: 0.8 },
