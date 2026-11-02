@@ -1,5 +1,9 @@
 import "./modal.css";
 
+let openCount = 0;
+/** True while a modal card is up, so other scenes can wait their turn. */
+export const modalOpen = () => openCount > 0;
+
 /**
  * A blocking card above everything with one button (day report, run end).
  * Esc presses the button too, and never reaches the stand-up handler.
@@ -18,6 +22,7 @@ export const showModal = (
   const close = () => {
     window.removeEventListener("keydown", onKey, { capture: true });
     root.remove();
+    openCount--;
     onClose();
   };
   const onKey = (e: KeyboardEvent) => {
@@ -29,5 +34,6 @@ export const showModal = (
   window.addEventListener("keydown", onKey, { capture: true });
   document.exitPointerLock();
   document.body.append(root);
+  openCount++;
   b.focus();
 };
