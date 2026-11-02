@@ -434,12 +434,7 @@ export const endings: Readonly<Record<"won" | "shutdown" | "fired", Ending>> = {
     lines: [
       {
         speaker: "Phone",
-        line: "Day 10, 15:10. A new profile messages Tommy. A nice photo. A dog. A camera that's always broken.",
-      },
-      { speaker: "Tommy", line: "lol who is this. ok. you seem sweet tho" },
-      {
-        speaker: "Phone",
-        line: "16:40. A crisis, a small ask, then a bigger one. Tommy pays both before dinner.",
+        line: "15:10. A new profile messages Tommy. A beach photo, a chipped green mug. He doesn't recognise the mug. By dinner he has paid twice.",
       },
       {
         speaker: "Boss",
@@ -447,11 +442,13 @@ export const endings: Readonly<Record<"won" | "shutdown" | "fired", Ending>> = {
       },
       {
         speaker: "Boss",
-        line: 'Here. The "hot singles" account. You run the funnel now, {nick}.',
+        line: 'Here. The "hot singles" account, and its lead list: everyone who paid this floor once. People who paid once pay again.',
       },
+      { speaker: "Phone", line: "Top of the list: {victims}" },
       {
-        speaker: "Phone",
-        line: 'A new chat opens. Somewhere a junior is typing: "hi?"',
+        speaker: "You",
+        line: 'To {last}: "hiii sorry I think a friend gave me the wrong number?? you seem sweet tho. what do I call you"',
+        choose: { key: "funnel", options: ["Send", "Send"] },
       },
     ],
   },
