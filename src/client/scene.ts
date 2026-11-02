@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { tickCharacters } from "../scene/characters.ts";
+import { createCameraEase } from "../scene/ease.ts";
 import { createInteractions } from "../scene/interact.ts";
 import { buildOffice } from "../scene/office.ts";
 import { createPlayer } from "../scene/player.ts";
@@ -31,6 +32,22 @@ export const createWorld = () => {
     return () => frameHandlers.delete(fn);
   };
 
+  const ease = createCameraEase(camera, onFrame);
+  const seatQuat = new THREE.Quaternion().setFromRotationMatrix(
+    new THREE.Matrix4().lookAt(
+      office.seat.position,
+      office.seat.lookAt,
+      camera.up,
+    ),
+  );
+  /** Glides the camera to the player's seat; returns a stand-up that glides back. */
+  const sitAtDesk = () => {
+    const position = camera.position.clone();
+    const quaternion = camera.quaternion.clone();
+    ease(office.seat.position, seatQuat);
+    return () => ease(position, quaternion);
+  };
+
   const start = () => {
     const timer = new THREE.Timer();
     renderer.setAnimationLoop((t) => {
@@ -43,7 +60,16 @@ export const createWorld = () => {
     });
   };
 
-  return { renderer, camera, office, player, interactions, onFrame, start };
+  return {
+    renderer,
+    camera,
+    office,
+    player,
+    interactions,
+    onFrame,
+    sitAtDesk,
+    start,
+  };
 };
 
 export type World = ReturnType<typeof createWorld>;
