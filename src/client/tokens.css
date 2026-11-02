@@ -54,3 +54,10 @@ canvas {
   border: 0;
   cursor: pointer;
 }
+
+/* The takeaway box after a scam or purchase. */
+.lesson {
+  padding: 8px 12px;
+  background: #fff8d0;
+  border-left: 4px solid var(--warn);
+}

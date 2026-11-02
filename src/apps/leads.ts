@@ -109,8 +109,8 @@ export default {
       <div class="result ${o.success ? "win" : "loss"}">
         <h3>${
           o.success
-            ? `${esc(first)} fell for it. +${esc(o.bucks)} scam bucks`
-            : `${esc(first)} didn't bite. Shutdown meter +${esc(o.heat)}`
+            ? `${esc(first)} fell for it. +${esc(o.bucks)} bucks`
+            : `${esc(first)} didn't bite. Heat +${esc(o.heat)}`
         }</h3>
         ${
           o.success
