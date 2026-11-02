@@ -1,8 +1,8 @@
-import { clueCount, type GameState } from "../core/state.ts";
-
 // EXTRA: the catfisher file. One clue a day about "Sam", the match who
 // catfished the player before day 1. Each clue names one catfishing red
 // flag, from the victim's side. Ignoring them costs nothing but the story.
+
+import { clueCount, type GameState } from "../core/state.ts";
 
 /** How a clue reaches the player: a mail, or a coworker leaning over. */
 export type ClueVia =
