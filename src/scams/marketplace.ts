@@ -16,8 +16,6 @@ export default {
   ],
   successLine:
     "Sent the difference to his mover. Nice man. Shame nobody ever came for the bike.",
-  lesson:
-    "Keep the whole sale inside the marketplace. Nobody overpays a stranger by accident.",
   templates: [
     {
       id: "overpay",

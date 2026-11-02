@@ -22,7 +22,8 @@ are about to touch. Nothing else is required.
   and game-like: no real operational instructions, no real brands (use
   BankCo-style fakes).
 - **Every scam teaches.** A scam template must list `redFlags`; a scam must
-  have a `lesson`. The player sees them after every attempt.
+  have a 3-line `whatToSpot` card. The player sees them after every attempt,
+  under the victim's defense when they lose.
 
 ## Commit plans
 
@@ -118,6 +119,7 @@ synchronous `Game` facade and stays Effect-free. New long-lived services
 | new persistent state                   | append field + `Action` + `reduce` case + test in `state.ts` |
 | a shop tool                            | `src/shop/tools.ts` (+ `Modifiers` field if a new effect)    |
 | a new lure                             | `LURES` in `scams/types.ts` + `TAGS` in `victims/types.ts`   |
+| a multi-contact scam                   | `warmups` on the `ScamDef` (see `scams/catfish.ts`)          |
 | shared colors                          | `client/tokens.css` (rarely; prefer your own `.css`)         |
 | a voice for a new speaker              | nothing (derived from the name); tune in `content/voices.ts` |
 | a sound effect                         | `audio/sfx.ts`, played from a system on a `game.on(...)`     |

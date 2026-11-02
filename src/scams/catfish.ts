@@ -16,8 +16,6 @@ export default {
   ],
   successLine:
     "Sent it this morning. He says the satellite on the platform is down this week, so no calls. I'm counting days.",
-  lesson:
-    "Someone you've never met who suddenly needs your money is a scam, however long you've talked.",
   warmups: [
     {
       id: "hello",

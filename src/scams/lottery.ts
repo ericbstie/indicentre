@@ -16,8 +16,6 @@ export default {
   ],
   successLine:
     "Paid the fee! The money clears in 6 to 8 weeks. I've already told my sister about the boat.",
-  lesson:
-    "Winning never costs money. If you have to pay to collect, there is no prize.",
   templates: [
     {
       id: "grand-draw",

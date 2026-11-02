@@ -16,8 +16,6 @@ export default {
   ],
   successLine:
     "Done! I filled everything in. Thank you so much for warning me, you are very kind.",
-  lesson:
-    "Real companies don't ask you to 'verify' through a link in an unexpected email. Go to the site yourself.",
   templates: [
     {
       id: "account-locked",
@@ -53,23 +51,6 @@ ParcelPost-Delivery Services`,
         "You weren't expecting a parcel",
         "A tiny fee is bait to get your card details",
         "Sender name doesn't match the real postal service",
-      ],
-    },
-    {
-      id: "prize",
-      label: "You won a phone",
-      subject: "Congratulations {name}!! You are our lucky winner",
-      body: `Congratulations {name}!
-
-You have been randomly selected to receive a brand new GadgetPhone 17.
-Just pay shipping and confirm your details: [ Claim prize ]
-
-Offer expires TODAY.`,
-      lures: { greed: 0.9, urgency: 0.4 },
-      redFlags: [
-        "You never entered a contest",
-        "Too good to be true",
-        "A 'free' prize that needs your payment details",
       ],
     },
     {

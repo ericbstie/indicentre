@@ -40,11 +40,18 @@ export default {
 export default {
   id: "${id}",
   name: "${title}",
+  channel: "mail",
   price: 100,
   minutes: 30,
   payout: 60,
   heat: { success: 3, fail: 10 },
-  lesson: "TODO: the one-line real-world defense.",
+  fitTags: ["urgency"],
+  whatToSpot: [
+    "TODO: what to spot, from the victim's side.",
+    "TODO: second line.",
+    "TODO: the right thing to do instead.",
+  ],
+  successLine: "TODO: what a victim says after falling for it.",
   templates: [
     {
       id: "first",
