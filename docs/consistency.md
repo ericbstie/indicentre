@@ -18,7 +18,9 @@ rule only when you find a real duplicate, and cite where.
 
 - **Stakes live on the Send button's `<small>` line** (`src/apps/leads.ts`).
   Extend that line; don't add a second stakes paragraph. Seen: PR #4 and
-  PR #5 each add their own `.stakes` line beside it.
+  PR #5 each add their own `.stakes` line beside it. What is the same for
+  every pitch of a scam (channel, minutes) goes on the scam's heading.
+  Seen: `Mail · … · 20 min` repeated on every Send button.
 - **What the player may know before sending goes through `RevealLevel`**
   (`src/victims/view.ts`, `REVEAL` in `leads.ts`). Seen: PR #4 shows odds
   always, PR #5 gates them on a separate `revealOdds` tool flag.
@@ -43,6 +45,9 @@ rule only when you find a real duplicate, and cite where.
   `var(--line)` while `.template` used `#ddd`; `#444`/`#555` instead of
   `var(--ink-soft)` in `leads.css` and PR #4; `#e0e0e0` instead of
   `var(--line)` for the mail list rows (`src/apps/mail.css`).
+- **A white box in an app is `.panel`, an app's padding is `.page`**
+  (`client/tokens.css`). Seen: `.card`, `.template`, `.item`, `.clue` and
+  `.dossier` each declared the same box.
 
 ## Pass 3 (after the story arc and scams 6-8)
 
