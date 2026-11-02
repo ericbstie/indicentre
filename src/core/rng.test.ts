@@ -1,5 +1,14 @@
 import { describe, expect, test } from "bun:test";
-import { int, pick, range, sample, seedFrom, seeded, weighted } from "./rng.ts";
+import {
+  int,
+  noRepeat,
+  pick,
+  range,
+  sample,
+  seedFrom,
+  seeded,
+  weighted,
+} from "./rng.ts";
 
 const draws = (seed: number, n = 5) => {
   const r = seeded(seed);
@@ -43,5 +52,24 @@ describe("rng", () => {
   test("seedFrom is stable and spreads", () => {
     expect(seedFrom("playtest")).toBe(seedFrom("playtest"));
     expect(seedFrom("a")).not.toBe(seedFrom("b"));
+  });
+
+  test("noRepeat never returns a pool's last pick twice in a row", () => {
+    const r = seeded(4);
+    const fresh = noRepeat();
+    const a = ["x", "y", "z"];
+    const b = ["x", "y"];
+    let prevA = "";
+    let prevB = "";
+    for (let i = 0; i < 200; i++) {
+      const x = fresh(r, a);
+      const y = fresh(r, b);
+      expect(x).not.toBe(prevA);
+      expect(y).not.toBe(prevB);
+      prevA = x;
+      prevB = y;
+    }
+    expect(fresh(r, ["only"])).toBe("only");
+    expect(fresh(r, ["only"])).toBe("only");
   });
 });

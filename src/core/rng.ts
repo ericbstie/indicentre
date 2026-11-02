@@ -24,6 +24,21 @@ export const pick = <T>(rng: Rng, xs: ReadonlyArray<T>): T => {
   return x;
 };
 
+/**
+ * A `pick` that remembers what it last returned from each pool and never
+ * returns it twice in a row (pools of 2+). Keep one per feature, so lines
+ * don't repeat back to back across batches.
+ */
+export const noRepeat = () => {
+  const last = new WeakMap<ReadonlyArray<unknown>, unknown>();
+  return <T>(rng: Rng, xs: ReadonlyArray<T>): T => {
+    const prev = last.get(xs);
+    const x = pick(rng, xs.length > 1 ? xs.filter((y) => y !== prev) : xs);
+    last.set(xs, x);
+    return x;
+  };
+};
+
 /** k distinct items, order randomized. */
 export const sample = <T>(rng: Rng, xs: ReadonlyArray<T>, k: number): T[] => {
   const pool = [...xs];
