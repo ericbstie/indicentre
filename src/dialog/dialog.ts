@@ -19,6 +19,9 @@ export interface DialogNode {
   readonly choices?: readonly [DialogChoice, DialogChoice?];
   /** A countdown bar; when it runs out, `then` is picked for the player. */
   readonly timeout?: { readonly ms: number; readonly then: DialogChoice };
+  /** What Esc does: leave (left out), pick this choice, or nothing (null).
+   * Story scenes step one line on Esc, so one key can't skip a whole scene. */
+  readonly esc?: DialogChoice | null;
 }
 
 let root: HTMLElement | undefined;
@@ -42,7 +45,9 @@ const mount = () => {
       if (!current) return;
       if (e.code === "Escape") {
         e.stopImmediatePropagation();
-        closeDialog();
+        if (current.esc === undefined) closeDialog();
+        else if (current.esc) choose(current.esc);
+        return;
       }
       const i = ["Digit1", "Digit2"].indexOf(e.code);
       const choice = i >= 0 ? current?.choices?.[i] : undefined;
@@ -72,10 +77,12 @@ const render = (node: DialogNode) => {
     btn.addEventListener("click", () => choose(c));
     replies.append(btn);
   });
-  const leave = document.createElement("span");
-  leave.className = "dialog-leave";
-  leave.textContent = "[Esc] Leave";
-  replies.append(leave);
+  if (node.esc === undefined) {
+    const leave = document.createElement("span");
+    leave.className = "dialog-leave";
+    leave.textContent = "[Esc] Leave";
+    replies.append(leave);
+  }
   box.append(who, line, replies);
   clearTimeout(timer);
   const t = node.timeout;

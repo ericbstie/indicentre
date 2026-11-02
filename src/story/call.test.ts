@@ -47,3 +47,13 @@ test("enough right moves lands the call, once", () => {
 test("a timeout counts as a miss", () => {
   expect(play([0, "timeout", 1])).toEqual({ results: [false], last: "lost" });
 });
+
+// Playtest 2: one Esc on the boss's first line skipped the whole call.
+test("Esc can't hang up mid-call; on the result it goes on", () => {
+  let node = callDialog(call, () => {});
+  for (let i = 0; i < 3; i++) {
+    expect(node.esc).toBeNull();
+    node = pick(node.choices![0]!);
+  }
+  expect(node.esc).toBe(node.choices![0]);
+});

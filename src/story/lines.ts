@@ -26,14 +26,21 @@ export const linesDialog = (
   });
   const remember = (key: string, value: string) =>
     reply(value, () => ctx.remember(key, value));
+  if (l.choose)
+    return {
+      speaker: l.speaker,
+      line: fill(l.line, ctx.vars()),
+      choices: [
+        remember(l.choose.key, l.choose.options[0]),
+        remember(l.choose.key, l.choose.options[1]),
+      ],
+      esc: null,
+    };
+  const next = reply("Go on");
   return {
     speaker: l.speaker,
     line: fill(l.line, ctx.vars()),
-    choices: l.choose
-      ? [
-          remember(l.choose.key, l.choose.options[0]),
-          remember(l.choose.key, l.choose.options[1]),
-        ]
-      : [reply("Go on")],
+    choices: [next],
+    esc: next,
   };
 };

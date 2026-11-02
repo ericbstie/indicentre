@@ -59,7 +59,8 @@ try {
   const before = await hud();
 
   // Story beats (day 0 intro, day 1 briefing, Priya at the PC) and cards
-  // (day report) cover the screen; Esc through them like an impatient player.
+  // (day report) cover the screen; click through them like an impatient
+  // player. Story lines take 1 (Esc only steps them), cards take Esc.
   const skipStory = async () => {
     let quiet = 0;
     for (let i = 0; i < 40 && quiet < 3; i++) {
@@ -69,7 +70,7 @@ try {
       );
       if (open)
         await view.evaluate(
-          `document.body.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape", bubbles: true }))`,
+          `document.body.dispatchEvent(new KeyboardEvent("keydown", { code: document.querySelector(".modal") ? "Escape" : "Digit1", bubbles: true }))`,
         );
       quiet = open ? 0 : quiet + 1;
     }

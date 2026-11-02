@@ -33,11 +33,8 @@ export const callDialog = (
     const won = hits >= call.pass;
     done(won);
     const { speaker, line } = won ? call.won : call.lost;
-    return {
-      speaker,
-      line,
-      choices: [{ label: "Go on" }],
-    };
+    const next = { label: "Go on" };
+    return { speaker, line, choices: [next], esc: next };
   };
   const step = (i: number): DialogNode => {
     const s = call.steps[i];
@@ -54,6 +51,7 @@ export const callDialog = (
       line: s.line,
       choices: [answer("Push"), answer("Stall")],
       timeout: { ms: call.ms, then: answer() },
+      esc: null,
     };
   };
   return step(0);
