@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { owns } from "../core/economy.ts";
 import { initialState, reduce } from "../core/state.ts";
 import phishing from "../scams/phishing.ts";
+import { scams } from "../scams/registry.ts";
 import { failHeat, pulls, resolveScam } from "../scams/resolve.ts";
 import { successChance } from "../victims/resistance.ts";
 import type { Victim } from "../victims/types.ts";
@@ -42,9 +43,19 @@ describe("buy", () => {
     );
   });
 
+  // Seen: the Shop said "heat +13 if reported" while Leads, with the
+  // Spoofed caller ID owned, said "+7 if reported" for the same scam.
+  test("a scam's Shop heat is the same number Leads shows", () => {
+    const item = catalog.find((c) => c.requires === "spoofed-id")!;
+    const scam = scams.find((s) => s.id === item.id)!;
+    const mods = modifiersFor(["spoofed-id"]);
+    expect(item.blurb(mods)).toContain(`+${failHeat(scam, mods)} if reported`);
+    expect(item.blurb(NO_MODS)).toContain(`+${scam.heat.fail} if reported`);
+  });
+
   test("a scam that needs a tool is not for sale without it", () => {
     const item = catalog.find((c) => c.requires === "spoofed-id")!;
-    expect(item.blurb).toContain("Needs Spoofed caller ID");
+    expect(item.blurb(NO_MODS)).toContain("Needs Spoofed caller ID");
     const flush = reduce(rich, { type: "earn", amount: 500 });
     expect(reduce(flush, { type: "buy", item })).toBe(flush);
     const tooled = reduce(flush, { type: "buy", item: tool("spoofed-id") });

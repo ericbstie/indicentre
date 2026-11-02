@@ -4,6 +4,7 @@ import type { GameState } from "../core/state.ts";
 import { beats } from "../content/story.ts";
 import { esc, tagList } from "../desktop/html.ts";
 import { type CatalogItem, catalog, lessonFor } from "../shop/catalog.ts";
+import { modifiersFor } from "../shop/tools.ts";
 import { shopSells } from "../story/story.ts";
 import type { DesktopApp } from "./app.ts";
 
@@ -12,7 +13,7 @@ const row = (s: GameState, item: CatalogItem) => {
   const lesson = have ? lessonFor(item.id) : undefined;
   return `
   <div class="item">
-    <div><b>${esc(item.name)}</b>${item.tags ? ` ${tagList(item.tags)}` : ""}<p>${esc(item.blurb)}</p>${
+    <div><b>${esc(item.name)}</b>${item.tags ? ` ${tagList(item.tags)}` : ""}<p>${esc(item.blurb(modifiersFor(s.ownedTools)))}</p>${
       lesson ? `<p class="lesson">${esc(lesson)}</p>` : ""
     }</div>
     ${
