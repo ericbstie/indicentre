@@ -125,6 +125,15 @@ export const OCCUPATIONS: ReadonlyArray<Occupation> = [
     leans: ["authority", "fear", "bank"],
   },
   {
+    label: "Bookkeeper at a family plumbing firm",
+    w: 2,
+    age: [34, 64],
+    techComfort: [0.3, 0.6],
+    trust: [0.45, 0.75],
+    wealth: [1.3, 1.9],
+    leans: ["authority", "urgency", "bank"],
+  },
+  {
     label: "IT consultant",
     w: 1,
     age: [27, 55],
