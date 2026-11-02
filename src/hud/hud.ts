@@ -19,6 +19,7 @@ export const createHud = (root: HTMLElement) => {
   const quota = $("[data-quota]");
   const meter = $("[data-meter]");
   const prompt = $("[data-prompt]");
+  const crosshair = $(".crosshair");
 
   return {
     render(s: GameState) {
@@ -29,7 +30,10 @@ export const createHud = (root: HTMLElement) => {
       quota.classList.toggle("met", s.earnedToday >= q);
       meter.style.width = `${(s.shutdownMeter / SHUTDOWN_MAX) * 100}%`;
     },
-    prompt(label: string | undefined) {
+    /** Each frame: the crosshair only while the mouse looks around, not at
+     * the PC or in a dialog; the [E] prompt for what's under it. */
+    aim(looking: boolean, label: string | undefined) {
+      if (crosshair.hidden === looking) crosshair.hidden = !looking;
       prompt.textContent = label ? `[E] ${label}` : "";
     },
   };
