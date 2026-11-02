@@ -81,3 +81,40 @@ test("storage that throws never breaks the game", () => {
   expect(loadRun(broken)).toBeUndefined();
   expect(() => clearRun(broken)).not.toThrow();
 });
+
+// Everything in GameState is saved. If this fails you changed its shape:
+// bump SAVE_VERSION (old saves then start fresh) and update the list.
+const SAVED_SHAPE_V1 = [
+  "bossMood",
+  "clues",
+  "day",
+  "days",
+  "earnedToday",
+  "heatAtDayStart",
+  "inbox",
+  "minute",
+  "ownedTools",
+  "scamBucks",
+  "scamFails",
+  "shutdownMeter",
+  "status",
+  "talkedTo",
+  "unlockedScams",
+  "workplace.deskTier",
+  "workplace.owned",
+];
+
+const shapeOf = (o: object, prefix = ""): string[] =>
+  Object.entries(o).flatMap(([k, v]) =>
+    typeof v === "object" &&
+    v !== null &&
+    !Array.isArray(v) &&
+    Object.keys(v).length
+      ? shapeOf(v, `${prefix}${k}.`)
+      : [`${prefix}${k}`],
+  );
+
+test("GameState shape matches the save version", () => {
+  expect(SAVE_VERSION).toBe(1);
+  expect(shapeOf(initialState()).sort()).toEqual(SAVED_SHAPE_V1);
+});
