@@ -23,6 +23,20 @@ are about to touch. Nothing else is required.
 - **Every scam teaches.** A scam template must list `redFlags`; a scam must
   have a `lesson`. The player sees them after every attempt.
 
+## Commands
+
+Tools are pinned in `mise.toml` (`mise install` once). `mise tasks` lists
+these; each runs `bun install --frozen-lockfile` first.
+
+| Task             | Does                                               |
+| ---------------- | -------------------------------------------------- |
+| `mise run dev`   | Dev server with HMR on http://localhost:3000       |
+| `mise run check` | Typecheck (strict, doubles as lint) + format check |
+| `mise run test`  | Unit tests                                         |
+| `mise run build` | Static production bundle in `dist/`                |
+
+Also `bun run start` (no hot reload) and `bun run fmt` (format everything).
+
 ## Commit plans
 
 Every feature branch lands an explicit, pre-agreed list of commits, systems
