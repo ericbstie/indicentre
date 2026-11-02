@@ -15,93 +15,25 @@ import {
 } from "../scams/resolve.ts";
 import { freshness, markLanded } from "../scams/wear.ts";
 import { type Modifiers, modifiersFor } from "../shop/tools.ts";
-import type { Channel, ScamDef, ScamTemplate } from "../scams/types.ts";
-import { daily, generateVictims } from "../victims/generate.ts";
-import { ANGLES } from "../victims/angles.ts";
+import type { ScamDef, ScamTemplate } from "../scams/types.ts";
 import { fitLabel, successChance } from "../victims/resistance.ts";
-import { writeHints } from "../victims/hints.ts";
-import { firstName, type Victim } from "../victims/types.ts";
-import { type RevealLevel, reveal, type VictimView } from "../victims/view.ts";
-import { esc, escLines, tagList } from "../desktop/html.ts";
+import type { Victim } from "../victims/types.ts";
+import { esc } from "../desktop/html.ts";
 import { callOddsModifier } from "../workplace/slice.ts";
 import type { DesktopApp } from "./app.ts";
+import { viewDossier } from "./leads/dossier.ts";
+import { drawLeads } from "./leads/draw.ts";
+import {
+  CHANNEL,
+  pct,
+  type Result,
+  viewCard,
+  viewResult,
+  viewTemplate,
+} from "./leads/views.ts";
 
-const LEADS_PER_BATCH = 3;
-
-interface Lead {
-  readonly victim: Victim;
-  readonly view: VictimView;
-}
-
-const today = daily();
 /** Win replies don't repeat back to back. */
 const pickReply = noRepeat();
-
-const drawLeads = (
-  seed: number,
-  day: number,
-  level: RevealLevel,
-): ReadonlyArray<Lead> => {
-  const rng = seeded(seed);
-  const t = today(day);
-  return generateVictims(rng, LEADS_PER_BATCH, t).map((victim) => ({
-    victim,
-    view: reveal(victim, writeHints(rng, victim, t.pickLine), level),
-  }));
-};
-
-const CHANNEL: Record<Channel, string> = {
-  mail: "Mail",
-  sms: "Text message",
-  call: "Phone call",
-  marketplace: "Marketplace",
-  social: "Social",
-};
-
-const pct = (x: number) => `${Math.round(x * 100)}%`;
-
-const viewCard = (v: VictimView) => `
-  <b>${esc(v.name)}</b>
-  <small>${esc(v.ageBand)} · ${esc(v.occupation)}</small>
-  <ul>${v.hints.map((h) => `<li>${esc(h)}</li>`).join("")}</ul>${
-    v.weaknesses
-      ? `<small>Falls for: ${tagList(v.weaknesses)} · tech ${esc(pct(v.techComfort ?? 0))}</small>`
-      : ""
-  }${v.defense ? `<small>Watch out: ${esc(v.defense)}</small>` : ""}`;
-
-/**
- * Persondata's full profile of one lead: what public posts give away.
- * `best` is the open pitch with the highest odds, if any.
- */
-const viewDossier = (v: VictimView, best?: { label: string; p: number }) => {
-  const top = v.weaknesses?.[0];
-  return v.hobby && v.recent && top
-    ? `<section class="dossier panel">
-        <h4>Dossier</h4>
-        <dl>
-          <dt>Hobby</dt><dd>${esc(v.hobby.text)} <small>${esc(v.hobby.source)}</small></dd>
-          <dt>Recently</dt><dd>${esc(v.recent.text)} <small>${esc(v.recent.source)}</small></dd>
-          <dt>Falls for</dt><dd>${tagList(v.weaknesses ?? [])} tech ${esc(pct(v.techComfort ?? 0))}</dd>
-          <dt>Watch out</dt><dd>${esc(v.defense ?? "")}</dd>
-          <dt>Angle</dt><dd>${tagList([top])} ${esc(ANGLES[top])}${
-            best
-              ? ` <small>Best open pitch: ${esc(best.label)}, ${esc(fitLabel(best.p))}</small>`
-              : ""
-          }</dd>
-        </dl>
-        <p class="lesson"><b>What ${esc(firstName(v))} could have hidden:</b> ${esc(v.recent.hide)}</p>
-      </section>`
-    : "";
-};
-
-interface Result {
-  readonly target: Victim;
-  readonly scam: ScamDef;
-  readonly template: ScamTemplate;
-  readonly outcome: Outcome;
-  /** A win's reply from `successLines`, personalized. */
-  readonly reply: string;
-}
 
 /** Pick a target, pick a scam template, send, see what happened. */
 export default {
@@ -153,20 +85,6 @@ export default {
         <button class="card panel" data-target="${esc(view.id)}">${viewCard(view)}</button>`,
         )
         .join("")}</div>`;
-
-    const viewTemplate = (
-      t: Victim,
-      s: ScamDef,
-      tpl: ScamTemplate,
-      action: string,
-      stakes: string,
-    ) => `
-      <div class="template panel">
-        <div><b>${esc(tpl.label)}</b> ${tagList(pulls(s, tpl))}
-        <p class="subject">${esc(personalize(tpl.subject, t))}</p>
-        <p class="body">${escLines(personalize(tpl.body, t))}</p></div>
-        <button class="btn" ${action}>Send<small>${esc(stakes)}</small></button>
-      </div>`;
 
     const viewWarmups = (t: Victim, s: ScamDef) => {
       const warmups = s.warmups ?? [];
@@ -232,21 +150,6 @@ export default {
           .join("")}`,
         )
         .join("")}`;
-    };
-
-    const viewResult = (r: Result) => {
-      const first = firstName(r.target);
-      const o = r.outcome;
-      return `
-      <div class="result ${o.success ? "win" : "loss"}">
-        <h3>${
-          o.success
-            ? `${esc(first)} fell for it. +${esc(o.bucks)} bucks`
-            : `${esc(first)} ${r.scam.warmups?.includes(r.template) ? "blocked you" : "didn't bite"}. Heat +${esc(o.heat)}`
-        }</h3>
-        ${o.success ? `<blockquote>"${esc(r.reply)}"</blockquote>` : ""}
-        <button class="btn" data-next>Next leads</button>
-      </div>`;
     };
 
     const render = () => {
