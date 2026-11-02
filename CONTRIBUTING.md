@@ -12,7 +12,7 @@ are about to touch. Nothing else is required.
   `bun.lock`. Lifecycle scripts never run.
 - **Green every commit:** `bun run check && bun run test` before each commit.
   `check` = rebuild generated indexes (`bun run gen`), asset manifest, typecheck, format,
-  `scripts/lint.ts` (no unused exported values), and the content contract
+  `scripts/lint.ts` (no unused or test-only exports), and the content contract
   (`src/content/contract.test.ts`: no real brands, no triads, known slots).
   `test` also rebuilds the indexes first.
   CI runs the same with `--frozen-lockfile` plus `bun audit`, a build and
