@@ -197,7 +197,7 @@ console.log(
   `${N} runs per player. quota ${Array.from({ length: WIN_DAY }, (_, i) => quotaFor(i + 1)).join(" ")}`,
 );
 console.log(
-  "player            won  shut fired  days  per day d1..d10, survivors only",
+  "player            won  shut fired warned  days  per day d1..d10, survivors only",
 );
 for (const pl of PLAYERS) {
   const end: Record<string, number> = {};
@@ -206,10 +206,12 @@ for (const pl of PLAYERS) {
   const alive: number[] = [];
   const buyDay: Record<string, number[]> = {};
   let days = 0;
+  let warned = 0;
   for (let seed = 1; seed <= N; seed++) {
     const { s, bought } = run(seed, pl);
     end[s.status] = (end[s.status] ?? 0) + 1;
     days += s.days.length;
+    if (s.days.some((d) => d.warned)) warned++;
     s.days.forEach((d, i) => {
       perDay[i] = (perDay[i] ?? 0) + d.earned;
       heatDay[i] = (heatDay[i] ?? 0) + d.heatEnd;
@@ -218,10 +220,10 @@ for (const pl of PLAYERS) {
     for (const [id, d] of bought) (buyDay[id] ??= []).push(d);
   }
   console.log(
-    `${pl.name.padEnd(17)} ${pctOf(end["won"] ?? 0)} ${pctOf(end["shutdown"] ?? 0)} ${pctOf(end["fired"] ?? 0)} ${(days / N).toFixed(1).padStart(5)}  earned ${perDay.map((x, i) => Math.round(x / alive[i]!)).join(" ")}`,
+    `${pl.name.padEnd(17)} ${pctOf(end["won"] ?? 0)} ${pctOf(end["shutdown"] ?? 0)} ${pctOf(end["fired"] ?? 0)} ${pctOf(warned).padStart(6)} ${(days / N).toFixed(1).padStart(5)}  earned ${perDay.map((x, i) => Math.round(x / alive[i]!)).join(" ")}`,
   );
   console.log(
-    `${"".padEnd(41)}heat   ${heatDay.map((x, i) => Math.round(x / alive[i]!)).join(" ")}`,
+    `${"".padEnd(48)}heat   ${heatDay.map((x, i) => Math.round(x / alive[i]!)).join(" ")}`,
   );
   const buys = Object.entries(buyDay).map(
     ([id, ds]) =>
