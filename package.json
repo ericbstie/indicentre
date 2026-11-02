@@ -7,7 +7,7 @@
     "dev": "bun --hot src/server.ts",
     "start": "bun src/server.ts",
     "build": "bun build ./src/client/index.html --outdir=dist --minify",
-    "check": "bun scripts/gen.ts --check && bun scripts/assets.ts --check && bun check --no-script && bun fmt --no-script --check",
+    "check": "bun scripts/gen.ts --check && bun scripts/assets.ts --check && bun check --no-script && bun fmt --no-script --check && bun scripts/lint.ts && bun test src/content/contract.test.ts",
     "gen": "bun scripts/gen.ts",
     "assets": "bun scripts/assets.ts",
     "new:app": "bun scripts/new.ts app",

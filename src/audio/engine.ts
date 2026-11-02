@@ -37,7 +37,7 @@ const save = (muted: boolean) => {
  * Web Audio graph: buses -> master -> speakers. Browsers only allow audio
  * after a user gesture, so the context is created on the first click/key.
  */
-export const makeAudioEngine = Effect.sync((): AudioEngineShape => {
+const makeAudioEngine = Effect.sync((): AudioEngineShape => {
   let ctx: AudioContext | undefined;
   let master: GainNode | undefined;
   const buses = new Map<Bus, GainNode>();

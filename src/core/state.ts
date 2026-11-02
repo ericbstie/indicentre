@@ -12,7 +12,7 @@ import {
 export const SHUTDOWN_MAX = 100;
 
 export const BOSS_MOOD_MAX = 100;
-export const BOSS_MOOD_START = 50;
+const BOSS_MOOD_START = 50;
 
 export type ScamId = string;
 
