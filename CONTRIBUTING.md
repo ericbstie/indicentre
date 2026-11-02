@@ -11,8 +11,11 @@ are about to touch. Nothing else is required.
   an exact version (`bunfig.toml` enforces `exact`), and a committed
   `bun.lock`. Lifecycle scripts never run.
 - **Green every commit:** `bun run check && bun run test` before each commit.
-  `check` also verifies the generated registry indexes (`bun run gen`).
-  CI runs the same with `--frozen-lockfile` plus `bun audit` and a build.
+  `check` = stale generated indexes (`bun run gen`), asset manifest, typecheck, format,
+  `scripts/lint.ts` (no unused exported values), and the content contract
+  (`src/content/contract.test.ts`: no real brands, no triads, known slots).
+  CI runs the same with `--frozen-lockfile` plus `bun audit`, a build and
+  the smoke test.
 - **Lint = the compiler.** `tsconfig.json` is maximally strict (unused
   locals/params, exact optional props, unchecked index access). Don't loosen it.
 - **Lean:** no menus, settings screens or abstractions until a feature needs
@@ -24,6 +27,18 @@ are about to touch. Nothing else is required.
 - **Every scam teaches.** A scam template must list `redFlags`; a scam must
   have a 3-line `whatToSpot` card. The player sees them after every attempt,
   under the victim's defense when they lose.
+
+## Before you open (and before you merge) a PR
+
+```sh
+bun run check && bun run test && bun run smoke
+```
+
+`smoke` boots the server and plays one phishing scam in headless Chrome
+(`Bun.WebView`); set `BUN_CHROME_PATH` if Chrome isn't found. Right before
+merging, rebase on `origin/main` and wait for green: CI's `fresh` job fails
+a PR that doesn't contain the latest main, because two PRs that were each
+green alone have broken main together.
 
 ## Commit plans
 
