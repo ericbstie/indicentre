@@ -21,12 +21,12 @@ export default {
       subject: "URGENT: Account suspended - action required",
       body: `Dear valued customer {name},
 
-We detected unusual activity and your BankCo account has been LOCKED.
+We detected unusual activity and your Fjellstad Bank account has been LOCKED.
 Verify your identity within 24 hours or your account will be closed permanently.
 
-[ Verify Now ]  (bankco-secure-login.net)
+[ Verify Now ]  (fjellstadd-secure-login.net)
 
-BankCo Security Team`,
+Fjellstad Bank Security Team`,
       lures: { authority: 0.8, urgency: 0.9 },
     },
     {
@@ -38,7 +38,7 @@ BankCo Security Team`,
 Your parcel could not be delivered due to an unpaid customs fee of 1.99.
 Pay now to schedule redelivery: [ Pay fee ]
 
-ParcelPost-Delivery Services`,
+QuickCrate Delivery Services`,
       lures: { curiosity: 0.8, urgency: 0.5 },
     },
     {
@@ -47,10 +47,11 @@ ParcelPost-Delivery Services`,
       subject: "Confidential: unclaimed inheritance of 4,500,000",
       body: `Dear {name},
 
-I am the solicitor of your late great-uncle Bartholomew, who left 4,500,000 to his closest living relative. That is you.
+I am the solicitor of your late great-uncle Per Aas, who left 4,500,000 to his closest living relative. That is you.
 To release the funds, a small processing fee is required. Kindly reply with your bank details.
 
-Barrister Reginald P. Fortune, Esq.`,
+Henrik Lie
+Lie & Moen Advokatfirma`,
       lures: { greed: 1, authority: 0.4 },
     },
   ],

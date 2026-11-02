@@ -24,7 +24,7 @@ are about to touch. Nothing else is required.
 - **Content tone:** satirical and educational. Punch at the scam industry,
   never at an ethnicity, accent or nationality. Scam mechanics stay abstract
   and game-like: no real operational instructions, no real brands (use
-  BankCo-style fakes).
+  made-up names like Fjellstad Bank).
 - **The game teaches by showing, not by debrief.** No generic feedback after
   a pitch (no red-flag lists, no odds reveal, no "what they did right"):
   the result card shows the outcome, bucks and heat, plus the reply of a

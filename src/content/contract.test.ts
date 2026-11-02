@@ -39,7 +39,7 @@ const CONTENT = {
 };
 
 // Real companies, products and payment rails that tend to sneak into scam
-// text. Use made-up names (BankCo, ParcelPost) instead.
+// text. Use the made-up ones in docs/consistency.md instead.
 const BRANDS =
   /\b(PayPal|Amazon|Apple|iPhone|Microsoft|Windows|Google|Gmail|Facebook|Instagram|WhatsApp|TikTok|Tinder|Netflix|Spotify|DHL|FedEx|UPS|Posten|Vipps|DNB|Nordea|Visa|Mastercard|eBay|Bitcoin|TeamViewer|AnyDesk|Western Union|Norton|McAfee)\b/;
 

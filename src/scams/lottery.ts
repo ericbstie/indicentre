@@ -25,18 +25,18 @@ Your email address was selected in the Grand Continental Online Draw. Prize: 850
 To release it we require a one-time clearance fee of 349 within 72 hours.
 For security, keep this win confidential until it is paid out.
 
-Mrs. Helen Goldbury
+Helen Moore
 Claims Department`,
       lures: { greed: 0.9, urgency: 0.5, authority: 0.3 },
     },
     {
       id: "giveaway",
       label: "Giveaway prize, pay shipping",
-      subject: "You won the TrendStore summer giveaway!",
+      subject: "You won the Lykke Sport summer giveaway!",
       body: `Hey {name}! You're one of 5 winners (the headphones!!)
 Just cover 4.95 shipping in the next 24h or we draw someone else: [ Claim ]
 
-xx the TrendStore team`,
+xx the Lykke Sport team`,
       lures: { greed: 0.6, curiosity: 0.6, urgency: 0.6 },
     },
   ],

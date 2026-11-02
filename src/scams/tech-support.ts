@@ -19,7 +19,7 @@ export default {
       id: "error-reports",
       label: "Your computer is sending errors",
       subject:
-        '"Hello, Windoze Help Desk. We are calling about your computer."',
+        '"Hello, Datavakt Help Desk. We are calling about your computer."',
       body: `We have received 312 error reports from your computer this week, {name}.
 I just need you to open one program so I can look at it with you. Free of charge.
 The repair licence afterwards is 1,499. Most customers take the lifetime one.`,
