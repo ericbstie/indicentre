@@ -1,6 +1,15 @@
 import { describe, expect, test } from "bun:test";
 import { initialState, reduce } from "../core/state.ts";
-import { type Beat, chose, dueBeats, fill, sawBeat, story } from "./story.ts";
+import { beats as arc } from "../content/story.ts";
+import {
+  type Beat,
+  chose,
+  dueBeats,
+  fill,
+  sawBeat,
+  shopSells,
+  story,
+} from "./story.ts";
 
 const beat = (id: string, day: number, on: Beat["on"]): Beat => ({
   id,
@@ -34,4 +43,21 @@ test("seen beats are recorded once; choices are remembered", () => {
   expect(story.get(s1).seen).toEqual(["d0"]);
   const s2 = reduce(s1, chose("nick", "Tiger"));
   expect(story.get(s2).choices["nick"]).toBe("Tiger");
+});
+
+describe("scam schedule", () => {
+  const sched: ReadonlyArray<Beat> = [
+    { ...beat("d1", 1, "dayStart"), introduces: "phishing", free: true },
+    { ...beat("d3", 3, "dayStart"), introduces: "marketplace" },
+  ];
+  test("the Shop sells a scam from its day on, never a free one", () => {
+    expect(shopSells(sched, "marketplace", 2)).toBe(false);
+    expect(shopSells(sched, "marketplace", 3)).toBe(true);
+    expect(shopSells(sched, "phishing", 5)).toBe(false);
+    expect(shopSells(sched, "lottery", 9)).toBe(false);
+  });
+
+  test("beat ids are unique", () => {
+    expect(new Set(arc.map((b) => b.id)).size).toBe(arc.length);
+  });
 });
