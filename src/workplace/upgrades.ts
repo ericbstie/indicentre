@@ -1,7 +1,7 @@
 import type { DeskTier } from "./slice.ts";
 
 /** Something for your own desk, sold in the Shop's "Your desk" section. */
-export interface UpgradeDef {
+interface UpgradeDef {
   readonly id: string;
   readonly name: string;
   readonly price: number;
