@@ -1,0 +1,35 @@
+.dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  background: #000a;
+}
+
+.dialog-card {
+  max-width: 420px;
+  padding: 20px 24px;
+  color: var(--ink);
+  background: var(--paper);
+  border-radius: 8px;
+}
+
+.dialog-card h2 {
+  margin-top: 0;
+}
+
+.dialog-card td:first-child {
+  padding-right: 16px;
+  color: var(--muted);
+}
+
+.dialog-card .met {
+  color: #1a7a1a;
+  font-weight: 600;
+}
+
+.dialog-card .missed {
+  color: var(--danger);
+  font-weight: 600;
+}
