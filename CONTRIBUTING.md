@@ -45,10 +45,9 @@ merging, rebase on `origin/main` and wait for green: CI's `fresh` job fails
 a PR that doesn't contain the latest main, because two PRs that were each
 green alone have broken main together.
 
-Long branches go stale fast (wave 5: two PRs needed 4+ rebases each), so
-rebase whenever `bun run doctor` says you're behind. Rebasing your own
-`claude/project-thread-*` branch and pushing with `git push
---force-with-lease` is expected; never force-push a branch you didn't open.
+Long branches go stale fast, so rebase whenever `bun run doctor` says
+you're behind. Rebasing your own `claude/project-thread-*` branch and
+pushing with `git push --force-with-lease` is expected; never force-push a branch you didn't open.
 If you remove a field or export, doctor lists the open branches that still
 use it: tell them before you merge. A new scam brings its own `introduces`
 beat; don't reserve schedule slots for scams that don't exist yet.
@@ -64,7 +63,9 @@ first, feature last. Example for "phone scams":
 4. `feat(desktop): add <app/UI>` (the feature itself)
 
 Conventional commit prefixes: `feat(scope)`, `fix`, `chore`, `ci`, `docs`,
-`test`, `refactor`. Scope = top-level folder under `src/`.
+`test`, `refactor`. Scope = the folder you changed (`scams`, `scripts`, ...).
+A new scam and its `introduces` beat land in the same commit: the story
+test fails on a scam without a day.
 
 ## Architecture
 
@@ -120,6 +121,7 @@ src/
                        screenText (text on a canvas-textured plane),
                        models.ts loadModel(id)
   news/                pure news model, story generator, feed queue
+  boss/                boss walker and slap gag (mood lives in core/boss.ts)
   hud/                 HUD overlay (hud.ts/.css), modal.ts one-button blocking card
 assets/
   manifest.json        every model: pinned URL, sha256, CC0 license
@@ -128,7 +130,8 @@ scripts/
   gen.ts               writes the three generated index.ts files
   assets.ts            fetches + verifies assets (`bun run assets`)
   new.ts               scaffolds an app / scam / system
-  doctor.ts            files your branch shares with other open branches
+  doctor.ts            behind-main count, files shared with open branches,
+                       new exports main already has
 ```
 
 **Registries.** A registry entry is any `.ts` file in `src/apps/`,
@@ -211,7 +214,8 @@ These are the only files two open branches may both touch:
 | `src/*/index.ts`                                                | generated and gitignored; never commit                       |
 
 Run `bun run doctor` before you push: it lists files your branch shares
-with other open branches. A name clash (two branches creating
+with other open branches, and new exports whose name main already uses
+(reuse that helper instead). A name clash (two branches creating
 `content/boss.ts`) means pick a more specific name now.
 
 **Never write a fallback for work in an open PR.** If you need a dialog,

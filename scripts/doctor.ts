@@ -1,6 +1,7 @@
 // Before you push: how far behind main you are, files this branch changes
 // that other unmerged branches change too, and names you removed that open
-// branches still use (PR #30 dropped ScamDef fields under three scam PRs).
+// branches still use (PR #30 dropped ScamDef fields under three scam PRs),
+// and new exports whose name main already has.
 //   bun run doctor
 import { $ } from "bun";
 
@@ -32,6 +33,28 @@ const named = (diff: string[], sign: string) =>
 const myDiff = await git("diff", base ?? "origin/main", "--", "src");
 const added = named(myDiff, "+");
 const removed = [...named(myDiff, "-")].filter((n) => !added.has(n));
+
+// A second helper for the same job (two firstName, pct, fill so far).
+const exp = "export (const|function|class) ";
+const was = named(myDiff, "-");
+const newExports = myDiff.flatMap((l) => {
+  const m = new RegExp(`^\\+${exp}(\\w+)`).exec(l);
+  return m && !was.has(m[2]!) ? [m[2]!] : [];
+});
+for (const n of newExports) {
+  const homes = await git(
+    "grep",
+    "-lE",
+    `^${exp}${n}\\b`,
+    "origin/main",
+    "--",
+    "src",
+  );
+  if (homes.length)
+    console.log(
+      `New export ${n}: main already has one in ${homes.join(", ").replaceAll("origin/main:", "")}. Reuse it.\n`,
+    );
+}
 
 let clashes = 0;
 const refs = "--format=%(refname:short)";

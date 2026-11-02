@@ -89,3 +89,9 @@ The content contract checks the grep-able rules. These are judgment calls:
   in what they say. Seen: replies written like news quotes ("The bank
   says...") before the real-patterns pass (docs/scam-patterns.md).
 - **Places are Norwegian.** Seen: "a dentist in Ohio".
+
+## Pass 4 (git meta-analysis)
+
+- **One helper per job; `bun run doctor` names the one main has.** Seen:
+  `fill()` in both `src/story/story.ts` and `src/news/news.ts`, after
+  `firstName` and `pct` had been doubled the same way.
