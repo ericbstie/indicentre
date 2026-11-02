@@ -154,11 +154,15 @@ export default {
         if (techniqueUnlocked && unhappy) await watchNextScam();
       });
     });
+    const offDesk = game.on("DeskUpgraded", () => {
+      if (!busy) void react("newDesk");
+    });
     const offFrame = world.onFrame((dt) => walker.update(dt));
     return () => {
       offFrame();
       offScam();
       offDay();
+      offDesk();
     };
   },
 } satisfies GameSystem;

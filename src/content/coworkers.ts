@@ -16,6 +16,8 @@ export interface Coworker {
   readonly hints: ReadonlyArray<string>;
   /** When they have nothing new for you. */
   readonly idle: string;
+  /** Replaces `idle` once you've moved to a better desk. */
+  readonly newDesk?: string;
 }
 
 export const coworkers: ReadonlyArray<Coworker> = [
@@ -49,6 +51,8 @@ export const coworkers: ReadonlyArray<Coworker> = [
       "Keep them on the line. The second they ask someone else in the house, you've lost them.",
     ],
     idle: "My chair lost a wheel on Tuesday. Facilities said Q3. It's November.",
+    newDesk:
+      "You got a partition? I've asked for one since March. Enjoy hearing yourself think, I guess.",
   },
   {
     id: "mags",
@@ -70,3 +74,7 @@ export const coworkers: ReadonlyArray<Coworker> = [
 /** Hints this coworker will share, given how often the player has failed their specialty. */
 export const unlockedHints = (c: Coworker, s: GameState) =>
   c.hints.slice(0, 1 + failsAt(s, c.specialty));
+
+/** What they say when they have no new hint for you. */
+export const idleLine = (c: Coworker, s: GameState) =>
+  (s.workplace.deskTier > 0 && c.newDesk) || c.idle;

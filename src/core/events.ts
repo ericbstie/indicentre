@@ -3,6 +3,7 @@
 // after every dispatch; others (ScamResolved) are emitted by the code that
 // knows about them. Append new variants; don't reorder.
 
+import type { DeskTier } from "../workplace/slice.ts";
 import type { DaySummary } from "./economy.ts";
 import type { GameState, ScamId } from "./state.ts";
 
@@ -49,7 +50,8 @@ export type GameEvent =
   | {
       readonly type: "RunEnded";
       readonly status: Exclude<GameState["status"], "playing">;
-    };
+    }
+  | { readonly type: "DeskUpgraded"; readonly tier: DeskTier };
 
 export type EventType = GameEvent["type"];
 export type EventOf<T extends EventType> = Extract<GameEvent, { type: T }>;
@@ -79,6 +81,8 @@ export const diffEvents = (prev: GameState, next: GameState): GameEvent[] => {
   const ended =
     next.days.length > prev.days.length ? next.days.at(-1) : undefined;
   if (ended) out.push({ type: "DayEnded", summary: ended });
+  if (next.workplace.deskTier > prev.workplace.deskTier)
+    out.push({ type: "DeskUpgraded", tier: next.workplace.deskTier });
   if (prev.status === "playing" && next.status !== "playing")
     out.push({ type: "RunEnded", status: next.status });
   return out;

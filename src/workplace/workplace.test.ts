@@ -1,5 +1,7 @@
 import { describe, expect, test } from "bun:test";
+import { coworkers, idleLine } from "../content/coworkers.ts";
 import { owns } from "../core/economy.ts";
+import { diffEvents } from "../core/events.ts";
 import { initialState, reduce } from "../core/state.ts";
 import phishing from "../scams/phishing.ts";
 import { bonusFor, pulls, resolveScam } from "../scams/resolve.ts";
@@ -109,5 +111,25 @@ describe("upgrades catalog", () => {
     expect(reduce(rich, { type: "buy", item: corner }).workplace.deskTier).toBe(
       2,
     );
+  });
+});
+
+describe("desk reactions", () => {
+  const wall = buy(rich, "partition", 150, 1);
+
+  test("a better desk emits DeskUpgraded; a cosmetic does not", () => {
+    expect(diffEvents(rich, wall)).toContainEqual({
+      type: "DeskUpgraded",
+      tier: 1,
+    });
+    expect(
+      diffEvents(rich, buy(rich, "plant", 40)).map((e) => e.type),
+    ).not.toContain("DeskUpgraded");
+  });
+
+  test("Rohan's idle line changes once you have a better desk", () => {
+    const rohan = coworkers.find((c) => c.newDesk)!;
+    expect(idleLine(rohan, rich)).toBe(rohan.idle);
+    expect(idleLine(rohan, wall)).toBe(rohan.newDesk!);
   });
 });

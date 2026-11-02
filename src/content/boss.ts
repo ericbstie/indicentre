@@ -10,7 +10,8 @@ export type BossReaction =
   | "quotaSmashed"
   | "watchStart"
   | "watchSuccess"
-  | "watchFail";
+  | "watchFail"
+  | "newDesk";
 
 export interface MoodLines {
   readonly low: ReadonlyArray<string>;
@@ -75,5 +76,9 @@ export const bossLines: Readonly<Record<BossReaction, MoodLines>> = {
       "They spotted it before you finished the subject line.",
     ],
     high: ["They noticed. Read your own message once before you send it."],
+  },
+  newDesk: {
+    low: ["New desk. Same numbers. I'll be checking which one is the problem."],
+    high: ["Nice desk. I had that desk in 2019. Look where I am now."],
   },
 };
