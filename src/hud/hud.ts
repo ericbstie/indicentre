@@ -12,15 +12,13 @@ export const createHud = (root: HTMLElement) => {
       <span class="heat">Heat <span class="meter"><i data-meter></i></span></span>
     </div>
     <div class="crosshair">+</div>
-    <div class="prompt" data-prompt></div>
-    <div class="banner" data-banner hidden></div>`;
+    <div class="prompt" data-prompt></div>`;
   const $ = (sel: string) => root.querySelector<HTMLElement>(sel)!;
   const bucks = $("[data-bucks]");
   const time = $("[data-clock]");
   const quota = $("[data-quota]");
   const meter = $("[data-meter]");
   const prompt = $("[data-prompt]");
-  const banner = $("[data-banner]");
 
   return {
     render(s: GameState) {
@@ -30,10 +28,6 @@ export const createHud = (root: HTMLElement) => {
       quota.textContent = `Quota ${Math.min(s.earnedToday, q)}/${q}`;
       quota.classList.toggle("met", s.earnedToday >= q);
       meter.style.width = `${(s.shutdownMeter / SHUTDOWN_MAX) * 100}%`;
-      if (s.status === "shutdown") {
-        banner.hidden = false;
-        banner.textContent = "RAIDED. The call center has been shut down.";
-      }
     },
     prompt(label: string | undefined) {
       prompt.textContent = label ? `[E] ${label}` : "";

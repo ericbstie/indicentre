@@ -12,8 +12,6 @@ export const starterScams: ReadonlyArray<ScamId> = scams
   .filter((s) => s.price === 0)
   .map((s) => s.id);
 
-export const scamById = (id: ScamId) => scams.find((s) => s.id === id);
-
 /** Scams the player can run right now. Locked ones stay hidden. */
 export const availableScams = (s: GameState) =>
   scams.filter((scam) => isUnlocked(s, scam.id));

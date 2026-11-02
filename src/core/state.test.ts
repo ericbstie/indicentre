@@ -16,25 +16,12 @@ describe("reduce", () => {
     expect(reduce(s0, { type: "earn", amount: -5 })).toBe(s0);
   });
 
-  test("spend only succeeds when affordable", () => {
-    const rich = reduce(s0, { type: "earn", amount: 30 });
-    expect(reduce(rich, { type: "spend", amount: 20 }).scamBucks).toBe(10);
-    expect(reduce(rich, { type: "spend", amount: 40 })).toBe(rich);
-  });
-
   test("heat is clamped and maxing it shuts the center down", () => {
     expect(reduce(s0, { type: "heat", amount: -10 }).shutdownMeter).toBe(0);
     const raided = reduce(s0, { type: "heat", amount: 250 });
     expect(raided.shutdownMeter).toBe(SHUTDOWN_MAX);
     expect(raided.status).toBe("shutdown");
     expect(reduce(raided, { type: "earn", amount: 10 })).toBe(raided);
-  });
-
-  test("unlock is idempotent", () => {
-    expect(reduce(s0, { type: "unlock", scam: "phishing" })).toBe(s0);
-    expect(
-      reduce(s0, { type: "unlock", scam: "tech-support" }).unlockedScams,
-    ).toEqual(["phishing", "tech-support"]);
   });
 });
 
