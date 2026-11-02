@@ -63,6 +63,21 @@ const viewCard = (v: VictimView) => `
       : ""
   }${v.defense ? `<small>Watch out: ${esc(v.defense)}</small>` : ""}`;
 
+/** Persondata's full profile of one lead: what public posts give away. */
+const viewDossier = (v: VictimView) =>
+  v.hobby && v.recent
+    ? `<section class="dossier">
+        <h4>Dossier <small>scraped from public posts</small></h4>
+        <dl>
+          <dt>Who</dt><dd>${esc(v.ageBand)} · ${esc(v.occupation)}</dd>
+          <dt>Hobby</dt><dd>${esc(v.hobby.text)} <small>${esc(v.hobby.source)}</small></dd>
+          <dt>Recently</dt><dd>${esc(v.recent.text)} <small>${esc(v.recent.source)}</small></dd>
+          <dt>Falls for</dt><dd>${tagList(v.weaknesses ?? [])} tech ${esc(pct(v.techComfort ?? 0))}</dd>
+          <dt>Watch out</dt><dd>${esc(v.defense ?? "")}</dd>
+        </dl>
+      </section>`
+    : `<p class="empty">No dossier. Persondata in the Shop builds one from public posts.</p>`;
+
 interface Result {
   readonly target: Victim;
   readonly scam: ScamDef;
@@ -146,9 +161,14 @@ export default {
         ${next ? viewTemplate(t, s, next, `data-warm="${esc(s.id)}"`, `${CHANNEL[s.channel]} · no bucks yet · heat +${s.heat.success} if blocked · ${s.minutes} min`) : ""}`;
     };
 
-    const viewTemplates = (t: Victim) => `
+    const viewOf = (t: Victim) => leads.find((l) => l.victim === t)?.view;
+
+    const viewTemplates = (t: Victim) => {
+      const view = viewOf(t);
+      return `
       <button class="link" data-back>← Leads</button>
       <h3>Scam ${esc(t.name)}</h3>
+      ${view ? viewDossier(view) : ""}
       ${available()
         .map(
           (s) => `
@@ -167,6 +187,7 @@ export default {
           .join("")}`,
         )
         .join("")}`;
+    };
 
     const viewResult = (r: Result) => {
       const first = firstName(r.target);

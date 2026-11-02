@@ -94,3 +94,34 @@
 .trust meter {
   width: 120px;
 }
+
+.dossier {
+  padding: 12px;
+  margin-bottom: 12px;
+  background: var(--card);
+  border: 1px dashed var(--line);
+  border-radius: 6px;
+}
+
+.dossier h4 {
+  margin: 0 0 8px;
+}
+
+.dossier dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 12px;
+  margin: 0;
+}
+
+.dossier dt {
+  color: var(--muted);
+}
+
+.dossier dd {
+  margin: 0;
+}
+
+.dossier small {
+  color: var(--muted);
+}
