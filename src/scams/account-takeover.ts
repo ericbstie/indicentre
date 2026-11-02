@@ -11,9 +11,9 @@ export default {
   heat: { success: 5, fail: 12 },
   fitTags: ["curiosity", "fear", "urgency", "family"],
   whatToSpot: [
-    "TODO: what to spot, from the victim's side.",
-    "TODO: second line.",
-    "TODO: the right thing to do instead.",
+    "Real services don't send login links in messages. Open the app yourself.",
+    "Look at the address before you type a password. Then look again.",
+    "Turn on two-factor, and never hand the code to anyone, friends included.",
   ],
   successLine:
     "I logged in on the link and everything looked normal, so no harm done. Odd, though. My cousin says I've been asking everyone for money all week.",

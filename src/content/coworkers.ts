@@ -38,7 +38,7 @@ export const coworkers: ReadonlyArray<Coworker> = [
       "People check the sender name. Almost nobody checks what comes after the @.",
       "Ask for 2.99, not 200. A small fee doesn't feel like money until it's their card number.",
       "The ones who hover over the link before clicking? Let them go. They're already gone.",
-      "If one writes back angry, don't answer. Answering is how the bank finds us.",
+      "Get one Flokk login and you've got four hundred friends who trust the name. Just pray they haven't turned on two-factor.",
     ],
     idle: [
       "That's my fourteenth mail today and it's not even lunch. Don't stand there, it shows up on my numbers.",
