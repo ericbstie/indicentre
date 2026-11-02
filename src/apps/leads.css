@@ -1,7 +1,3 @@
-.leads {
-  padding: 16px 24px;
-}
-
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -12,12 +8,9 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: 12px;
+  margin: 0;
   font: inherit;
   text-align: left;
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 6px;
   cursor: pointer;
 }
 
@@ -36,11 +29,6 @@
   gap: 16px;
   align-items: flex-start;
   justify-content: space-between;
-  padding: 12px;
-  margin-bottom: 8px;
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 6px;
 }
 
 .template .subject {
@@ -96,11 +84,8 @@
 }
 
 .dossier {
-  padding: 12px;
   margin-bottom: 12px;
-  background: var(--card);
-  border: 1px dashed var(--line);
-  border-radius: 6px;
+  border-style: dashed;
 }
 
 .dossier .lesson {
