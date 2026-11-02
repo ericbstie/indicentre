@@ -5,10 +5,12 @@ import phishing from "../scams/phishing.ts";
 import { bonusFor, pulls, resolveScam } from "../scams/resolve.ts";
 import techSupport from "../scams/tech-support.ts";
 import type { ScamDef } from "../scams/types.ts";
+import { catalog } from "../shop/catalog.ts";
 import { NO_MODS } from "../shop/tools.ts";
 import { successChance } from "../victims/resistance.ts";
 import type { Victim } from "../victims/types.ts";
 import { callOddsModifier, DESK_CALL_BONUS, type DeskTier } from "./slice.ts";
+import { upgrades } from "./upgrades.ts";
 
 const rich = reduce(initialState(), { type: "earn", amount: 1000 });
 const buy = (s: typeof rich, id: string, price: number, tier?: 1 | 2) =>
@@ -28,16 +30,16 @@ describe("workplace purchases", () => {
   });
 
   test("a desk raises the tier; a lower desk then counts as owned", () => {
-    const s = buy(rich, "desk-2", 350, 2);
+    const s = buy(rich, "booth", 350, 2);
     expect(s.workplace.deskTier).toBe(2);
-    expect(owns(s, { kind: "upgrade", id: "desk-1", tier: 1 })).toBe(true);
-    expect(buy(s, "desk-1", 150, 1)).toBe(s);
+    expect(owns(s, { kind: "upgrade", id: "partition", tier: 1 })).toBe(true);
+    expect(buy(s, "partition", 150, 1)).toBe(s);
   });
 
   test("unaffordable upgrades do nothing; spending keeps the quota", () => {
     const broke = initialState();
-    expect(buy(broke, "desk-1", 150, 1)).toBe(broke);
-    expect(buy(rich, "desk-1", 150, 1).earnedToday).toBe(1000);
+    expect(buy(broke, "partition", 150, 1)).toBe(broke);
+    expect(buy(rich, "partition", 150, 1).earnedToday).toBe(1000);
   });
 });
 
@@ -88,6 +90,24 @@ describe("call odds", () => {
     );
     expect(resolveScam(() => roll, techSupport, v, tpl, mods(2)).success).toBe(
       true,
+    );
+  });
+});
+
+describe("upgrades catalog", () => {
+  test("desk tiers 1 and 2 are sold, and each blurb states its call bonus", () => {
+    const desks = upgrades.filter((u) => u.tier !== undefined);
+    expect(desks.map((u) => u.tier).sort()).toEqual([1, 2]);
+    for (const d of desks)
+      expect(d.blurb).toContain(
+        `+${DESK_CALL_BONUS[d.tier!] * 100}% odds on calls`,
+      );
+  });
+
+  test("a catalog desk bought through the Shop sets the tier", () => {
+    const corner = catalog.find((c) => c.id === "booth")!;
+    expect(reduce(rich, { type: "buy", item: corner }).workplace.deskTier).toBe(
+      2,
     );
   });
 });
