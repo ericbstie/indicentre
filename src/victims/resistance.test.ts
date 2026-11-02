@@ -4,6 +4,7 @@ import { generateVictims } from "./generate.ts";
 import {
   attempt,
   COUNTERED,
+  fitLabel,
   MAX_CHANCE,
   MIN_CHANCE,
   successChance,
@@ -92,5 +93,16 @@ describe("attempt", () => {
     );
     expect(wins.length).toBeGreaterThan(40);
     expect(wins.length).toBeLessThan(180);
+  });
+});
+
+describe("fitLabel", () => {
+  test("buckets odds without exposing them", () => {
+    expect(fitLabel(MAX_CHANCE)).toBe("good fit");
+    expect(fitLabel(0.5)).toBe("good fit");
+    expect(fitLabel(0.49)).toBe("maybe");
+    expect(fitLabel(0.25)).toBe("maybe");
+    expect(fitLabel(0.24)).toBe("long shot");
+    expect(fitLabel(MIN_CHANCE)).toBe("long shot");
   });
 });
