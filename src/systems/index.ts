@@ -9,6 +9,7 @@ import news from "./news.ts";
 import runEnd from "./run-end.ts";
 import sound from "./sound.ts";
 import welcome from "./welcome.ts";
+import workplace from "./workplace.ts";
 
 export const systems: ReadonlyArray<GameSystem> = [
   boss,
@@ -20,4 +21,5 @@ export const systems: ReadonlyArray<GameSystem> = [
   runEnd,
   sound,
   welcome,
+  workplace,
 ];

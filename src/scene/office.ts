@@ -35,10 +35,10 @@ const box = (
 
 /** Kenney Furniture Kit models are about half real size. */
 const FURNITURE_SCALE = 2;
-const DESK_TOP = 0.768;
+export const DESK_TOP = 0.768;
 
 /** Adds a scaled model to `parent` once it has loaded. */
-const place = (
+export const place = (
   parent: THREE.Object3D,
   id: ModelId,
   x: number,
