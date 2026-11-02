@@ -13,6 +13,7 @@ import {
   resolveWarmup,
   warmed,
 } from "../scams/resolve.ts";
+import { freshness, markLanded } from "../scams/wear.ts";
 import { type Modifiers, modifiersFor } from "../shop/tools.ts";
 import type { Channel, ScamDef, ScamTemplate } from "../scams/types.ts";
 import { daily, generateVictims } from "../victims/generate.ts";
@@ -142,7 +143,8 @@ export default {
       const m = mods();
       const p = successChance(t, pulls(s, tpl), bonusFor(s, m));
       const odds = m.reveal >= 2 ? `, ${pct(p)} odds` : "";
-      return `${CHANNEL[s.channel]} · +${payout(s, t)} bucks · heat +${s.heat.success}, +${failHeat(s, m)} if reported · ${s.minutes} min · ${fitLabel(p)}${odds}`;
+      const fresh = freshness(game.state(), s.id);
+      return `${CHANNEL[s.channel]} · +${payout(s, t, fresh)} bucks · heat +${s.heat.success}, +${failHeat(s, m)} if reported · ${s.minutes} min · ${fitLabel(p)}${odds}`;
     };
 
     const viewTargets = () => `
@@ -197,6 +199,14 @@ export default {
         );
     };
 
+    /** Marks a scam that pays less today because it has been run a lot. */
+    const worn = (s: ScamDef) => {
+      const fresh = freshness(game.state(), s.id);
+      return fresh < 1
+        ? ` <small class="worn">worn out today, pays ${esc(pct(fresh))}</small>`
+        : "";
+    };
+
     const viewTemplates = (t: Victim) => {
       const view = viewOf(t);
       return `
@@ -206,7 +216,7 @@ export default {
       ${available()
         .map(
           (s) => `
-        <h4>${esc(s.name)}</h4>
+        <h4>${esc(s.name)}${worn(s)}</h4>
         ${viewWarmups(t, s)}
         ${s.templates
           .map((tpl) =>
@@ -279,6 +289,7 @@ export default {
         current(target, scam),
         template,
         mods(),
+        freshness(game.state(), scam.id),
       );
       const reply = personalize(
         pickReply(seeded(seedNow() + 11), scam.successLines),
@@ -286,6 +297,7 @@ export default {
       );
       result = { target, scam, template, outcome, reply };
       outcome.actions.forEach(game.dispatch);
+      if (outcome.success) game.dispatch(markLanded(game.state(), scam.id));
       resolved(target, scam, outcome);
       if (outcome.success) {
         game.dispatch(

@@ -23,9 +23,10 @@ export type Outcome = Attempt & {
   readonly actions: ReadonlyArray<Action>;
 };
 
-/** Expected payout on success, for the pre-commit preview. */
-export const payout = (scam: ScamDef, victim: Victim) =>
-  Math.round(scam.payout * victim.wealth);
+/** Expected payout on success, for the pre-commit preview. `fresh` is the
+ * scam's freshness today (wear.ts). */
+export const payout = (scam: ScamDef, victim: Victim, fresh = 1) =>
+  Math.round(scam.payout * victim.wealth * fresh);
 
 /** Heat when the victim reports you, after tools. */
 export const failHeat = (scam: ScamDef, mods: Modifiers = NO_MODS) =>
@@ -41,9 +42,10 @@ export const resolveScam = (
   victim: Victim,
   template: ScamTemplate,
   mods: Modifiers = NO_MODS,
+  fresh = 1,
 ): Outcome => {
   const a = attempt(rng, victim, pulls(scam, template), bonusFor(scam, mods));
-  const bucks = a.success ? payout(scam, victim) : 0;
+  const bucks = a.success ? payout(scam, victim, fresh) : 0;
   const heat = a.success ? scam.heat.success : failHeat(scam, mods);
   return {
     ...a,
