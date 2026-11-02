@@ -1,5 +1,6 @@
 // Economy slice: shift clock, day rollover and the DayEnded log.
 // Pure functions over GameState; state.ts delegates its cases here.
+import { type DeskTier, hasUpgrade, install } from "../workplace/slice.ts";
 import type { GameState, ScamId } from "./state.ts";
 
 /** Shift length (09:00 -> 17:00). Time only moves when a scam runs. */
@@ -73,20 +74,29 @@ export type ToolId = string;
 
 /** Something the Shop sells. Catalog data lives in src/shop/. */
 export interface Purchase {
-  readonly kind: "scam" | "tool";
+  readonly kind: "scam" | "tool" | "upgrade";
   readonly id: ScamId | ToolId;
   readonly price: number;
+  /** Upgrades only: the desk tier this buys (workplace/slice.ts). */
+  readonly tier?: DeskTier;
 }
 
 export const owns = (s: GameState, p: Omit<Purchase, "price">) =>
-  (p.kind === "scam" ? s.unlockedScams : s.ownedTools).includes(p.id);
+  p.kind === "upgrade"
+    ? hasUpgrade(s.workplace, p)
+    : (p.kind === "scam" ? s.unlockedScams : s.ownedTools).includes(p.id);
 
 /** Pay and unlock. No-op if already owned or unaffordable. Spending never
  * counts against the quota, which only looks at what was earned. */
 export const buy = (s: GameState, p: Purchase): GameState => {
   if (owns(s, p) || p.price < 0 || s.scamBucks < p.price) return s;
   const paid = { ...s, scamBucks: s.scamBucks - p.price };
-  return p.kind === "scam"
-    ? { ...paid, unlockedScams: [...s.unlockedScams, p.id] }
-    : { ...paid, ownedTools: [...s.ownedTools, p.id] };
+  switch (p.kind) {
+    case "scam":
+      return { ...paid, unlockedScams: [...s.unlockedScams, p.id] };
+    case "tool":
+      return { ...paid, ownedTools: [...s.ownedTools, p.id] };
+    case "upgrade":
+      return { ...paid, workplace: install(s.workplace, p) };
+  }
 };
