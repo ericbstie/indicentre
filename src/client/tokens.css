@@ -62,3 +62,19 @@ canvas {
   background: #fff8d0;
   border-left: 4px solid var(--warn);
 }
+
+/* Weakness and lure tags (desktop/html.ts tagList). */
+.tags {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.tag {
+  padding: 0 6px;
+  font-size: 11px;
+  color: var(--ink-soft);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
