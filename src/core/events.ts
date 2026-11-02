@@ -3,6 +3,7 @@
 // after every dispatch; others (ScamResolved) are emitted by the code that
 // knows about them. Append new variants; don't reorder.
 
+import type { DaySummary } from "./economy.ts";
 import type { GameState, ScamId } from "./state.ts";
 
 export type GameEvent =
@@ -31,7 +32,8 @@ export type GameEvent =
       readonly type: "BossMoodChanged";
       readonly from: number;
       readonly to: number;
-    };
+    }
+  | { readonly type: "DayEnded"; readonly summary: DaySummary };
 
 export type EventType = GameEvent["type"];
 export type EventOf<T extends EventType> = Extract<GameEvent, { type: T }>;
@@ -58,6 +60,9 @@ export const diffEvents = (prev: GameState, next: GameState): GameEvent[] => {
       from: prev.bossMood,
       to: next.bossMood,
     });
+  const ended =
+    next.days.length > prev.days.length ? next.days.at(-1) : undefined;
+  if (ended) out.push({ type: "DayEnded", summary: ended });
   return out;
 };
 

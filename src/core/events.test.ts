@@ -1,7 +1,8 @@
 import { expect, test } from "bun:test";
 import { Effect } from "effect";
 import { createBus, diffEvents, type GameEvent } from "./events.ts";
-import { initialState, reduce, WORKDAY_MINUTES } from "./state.ts";
+import { SHIFT_MINUTES } from "./economy.ts";
+import { initialState, reduce } from "./state.ts";
 import { makeGameStore } from "./store.ts";
 
 test("diffEvents reports bucks, heat and day changes only", () => {
@@ -15,8 +16,12 @@ test("diffEvents reports bucks, heat and day changes only", () => {
     { type: "BucksChanged", from: 0, to: 5 },
     { type: "HeatChanged", from: 0, to: 10 },
   ]);
-  const s2 = reduce(s0, { type: "tick", minutes: WORKDAY_MINUTES });
+  const s2 = reduce(s0, { type: "tick", minutes: SHIFT_MINUTES });
   expect(diffEvents(s0, s2)).toContainEqual({ type: "DayAdvanced", day: 2 });
+  expect(diffEvents(s0, s2)).toContainEqual({
+    type: "DayEnded",
+    summary: s2.days[0]!,
+  });
 });
 
 test("bus delivers only the subscribed type and unsubscribes", () => {
