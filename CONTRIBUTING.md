@@ -11,9 +11,10 @@ are about to touch. Nothing else is required.
   an exact version (`bunfig.toml` enforces `exact`), and a committed
   `bun.lock`. Lifecycle scripts never run.
 - **Green every commit:** `bun run check && bun run test` before each commit.
-  `check` = stale generated indexes (`bun run gen`), asset manifest, typecheck, format,
+  `check` = rebuild generated indexes (`bun run gen`), asset manifest, typecheck, format,
   `scripts/lint.ts` (no unused exported values), and the content contract
   (`src/content/contract.test.ts`: no real brands, no triads, known slots).
+  `test` also rebuilds the indexes first.
   CI runs the same with `--frozen-lockfile` plus `bun audit`, a build and
   the smoke test.
 - **Lint = the compiler.** `tsconfig.json` is maximally strict (unused
@@ -72,20 +73,21 @@ src/
     hud.ts             mounts the HUD
     game.ts            Game: sync facade over the Effect store (+ event bus)
   core/                pure logic, no DOM, no three
-    state.ts           GameState, Action union, reduce(), selectors
+    state.ts           economy GameState, CoreAction, reduce(), selectors
+    slice.ts           defineSlice(): feature state declared in its own file
     economy.ts         shift clock, DayEnded log, quota, buy, win/lose
-    events.ts          GameEvent union, diffEvents(), createBus()
+    events.ts          cross-cutting GameEvent, defineEvent(), createBus()
     store.ts           GameStore Effect service (Ref + listeners + bus)
     save.ts            one saved run in localStorage; SAVE_VERSION guards
-                       GameState's shape (save.test.ts lists its keys)
+                       core GameState's shape (save.test.ts lists its keys)
     rng.ts             seeded Rng; never Math.random in logic
   apps/                REGISTRY: one desktop app per file
     app.ts             DesktopApp, AppContext
-    index.ts           generated
+    index.ts           generated, gitignored
     <id>.ts, <id>.css  an app and its styles
   scams/               REGISTRY: one scam per file, plus the scam system
     types.ts           Lure, ScamTemplate, ScamDef
-    index.ts           generated
+    index.ts           generated, gitignored
     registry.ts        scams (shop order), starterScams, availableScams
     resolve.ts         fitTags(), resolveScam(victim) -> Outcome{actions}
     <id>.ts            a scam
@@ -96,7 +98,7 @@ src/
   workplace/           desk upgrades: slice.ts (owned, desk tier, call odds), upgrades.ts
   systems/             REGISTRY: one gameplay system per file
     system.ts          GameSystem, SystemContext {game, world}
-    index.ts           generated
+    index.ts           generated, gitignored
     <id>.ts            clock.ts, welcome.ts, NPCs, news TV, boss...
   content/             static text and data (mails, coworkers, news)
   dialog/              openDialog({ speaker, line, choices }) overlay
@@ -115,14 +117,15 @@ scripts/
   gen.ts               writes the three generated index.ts files
   assets.ts            fetches + verifies assets (`bun run assets`)
   new.ts               scaffolds an app / scam / system
+  doctor.ts            files your branch shares with other open branches
 ```
 
 **Registries.** A registry entry is any `.ts` file in `src/apps/`,
 `src/scams/` or `src/systems/` with a `default` export
 (`export default { ... } satisfies DesktopApp | ScamDef | GameSystem`).
-`bun run gen` rewrites that folder's `index.ts`; `bun run check` fails if an
-index is stale. Never edit an `index.ts` by hand. On a rebase conflict in
-one, take either side and run `bun run gen`.
+`bun run gen` writes that folder's `index.ts`. The indexes are gitignored
+and every script (`dev`, `start`, `build`, `check`, `test`) rebuilds them,
+so never commit or edit one.
 
 **Data flow:** code calls `game.dispatch(action)` → `reduce()` →
 listeners re-render → the store emits events for what changed
@@ -130,6 +133,25 @@ listeners re-render → the store emits events for what changed
 domain event emits it itself (`game.emit({ type: "ScamResolved", ... })`).
 Features react with `game.on(type, handler)` instead of editing the reducer
 or another feature. Outcome logic stays pure and returns `Action`s.
+
+**Feature state and events live in the feature's file** (see
+`content/mail.ts`, `core/boss.ts`, `content/coworkers.ts`):
+
+```ts
+export const inbox = defineSlice("inbox", [] as ReadonlyArray<Mail>, (mails, a: InboxAction) => ...);
+export const readMail = (id: string) => ({ type: "inbox/read", id }) as const;
+inbox.get(game.state());          // typed read, `initial` until changed
+game.dispatch(readMail(id));      // "<key>/<verb>" goes only to that slice
+
+export const HintGiven = defineEvent<{ coworker: string; hint: string }>("HintGiven");
+game.emit(HintGiven, { coworker, hint });
+game.on(HintGiven, ({ hint }) => ...);
+```
+
+A slice reacts only to its own actions; to respond to money, heat or a
+finished day, a system listens with `game.on(...)` and dispatches. Slices
+are saved with the run; if a slice's value changes shape, give it a new key
+(`"inbox"` → `"inbox2"`) so old saves don't load stale data into it.
 
 **Effect boundary:** Effect services live in `core/`. UI code gets the
 synchronous `Game` facade and stays Effect-free. New long-lived services
@@ -144,8 +166,8 @@ synchronous `Game` facade and stays Effect-free. New long-lived services
 | an NPC, prop, TV, timer, boss reaction | `bun run new:system <id>` → `src/systems/<id>.ts`               |
 | text (mails, dialogue, news)           | `src/content/<topic>.ts`                                        |
 | a reaction to money/heat/day/scams     | a system that calls `game.on(...)`                              |
-| a new kind of event                    | append a variant to `core/events.ts`                            |
-| new persistent state                   | append field + `Action` + `reduce` case + test in `state.ts`    |
+| a new kind of event                    | `defineEvent` in the file that emits it                         |
+| new persistent state                   | `defineSlice` + action creators + test, in the owning file      |
 | a shop tool                            | `src/shop/tools.ts` (+ `Modifiers` field if a new effect)       |
 | a new lure                             | `LURES` in `scams/types.ts` + `TAGS` in `victims/types.ts`      |
 | a Persondata dossier fact or angle     | `HOBBIES`/`RECENT_EVENTS` in `victims/tables.ts`, `ANGLES`      |
@@ -163,18 +185,27 @@ A system gets `{ game, world }`: add meshes with
 `world.onFrame(dt => ...)`, react to events with `game.on(...)`. Return a
 cleanup if you subscribed to anything.
 
-## The no-shared-file rule
+## Shared seams
 
 A feature branch adds files; it does not edit another feature's files.
-The only shared files are append-only and should get one small hunk each:
+These are the only files two open branches may both touch:
 
-- `core/state.ts`: append fields/actions; don't reorder existing ones.
-- `core/events.ts`: append event variants.
+| File                                                            | Rule                                                         |
+| --------------------------------------------------------------- | ------------------------------------------------------------ |
+| `core/state.ts`, `core/events.ts`                               | economy and cross-cutting events only; features never edit   |
+| `client/*`, `desktop/desktop.ts`, `scene/*`, `scams/resolve.ts` | core change: own commit, first in the plan, say so in the PR |
+| `client/tokens.css`                                             | append only, one hunk                                        |
+| `CONTRIBUTING.md`, `docs/*.md`                                  | append only, one hunk                                        |
+| `src/*/index.ts`                                                | generated and gitignored; never commit                       |
 
-If you need to change `client/*`, `desktop/desktop.ts`, `scene/*` or
-`scams/resolve.ts`, that is a core change: say so in the PR, keep it
-separate from the feature commits, and expect it to land first.
-Generated `index.ts` files never count as shared (regenerate them).
+Run `bun run doctor` before you push: it lists files your branch shares
+with other open branches. A name clash (two branches creating
+`content/boss.ts`) means pick a more specific name now.
+
+**Never write a fallback for work in an open PR.** If you need a dialog,
+counter or system that another branch is adding, build on that branch's
+interface (rebase onto it once merged, or base your branch on it) or wait.
+A temporary copy always ends up deleted in someone else's PR.
 
 ## Playtesting
 
