@@ -1,0 +1,40 @@
+.dialog-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 8vh;
+}
+
+.dialog-layer[hidden] {
+  display: none;
+}
+
+.dialog {
+  width: min(640px, 92vw);
+  padding: 14px 18px;
+  color: var(--ink);
+  background: var(--paper);
+  border-radius: 6px;
+  box-shadow: 0 4px 16px #0008;
+}
+
+.dialog p {
+  margin: 6px 0 12px;
+  font-size: 16px;
+}
+
+.dialog-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: baseline;
+}
+
+.dialog-leave {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--muted);
+}
