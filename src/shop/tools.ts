@@ -9,12 +9,15 @@ export interface Modifiers {
   readonly chanceBonus: number;
   /** Multiplies heat when a target reports you. */
   readonly failHeatMult: number;
+  /** Added to success chance on channel "call" scams (your desk). */
+  readonly callBonus: number;
 }
 
 export const NO_MODS: Modifiers = {
   reveal: 0,
   chanceBonus: 0,
   failHeatMult: 1,
+  callBonus: 0,
 };
 
 export interface ToolDef {
@@ -67,6 +70,7 @@ export const modifiersFor = (owned: ReadonlyArray<ToolId>): Modifiers =>
         reveal: Math.max(m.reveal, t.effect.reveal ?? 0) as RevealLevel,
         chanceBonus: m.chanceBonus + (t.effect.chanceBonus ?? 0),
         failHeatMult: m.failHeatMult * (t.effect.failHeatMult ?? 1),
+        callBonus: m.callBonus + (t.effect.callBonus ?? 0),
       }),
       NO_MODS,
     );

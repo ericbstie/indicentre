@@ -31,6 +31,10 @@ export const payout = (scam: ScamDef, victim: Victim) =>
 export const failHeat = (scam: ScamDef, mods: Modifiers = NO_MODS) =>
   Math.round(scam.heat.fail * mods.failHeatMult);
 
+/** Odds bonus for this scam: tools always, the desk only on calls. */
+export const bonusFor = (scam: ScamDef, mods: Modifiers = NO_MODS) =>
+  mods.chanceBonus + (scam.channel === "call" ? mods.callBonus : 0);
+
 export const resolveScam = (
   rng: Rng,
   scam: ScamDef,
@@ -38,7 +42,7 @@ export const resolveScam = (
   template: ScamTemplate,
   mods: Modifiers = NO_MODS,
 ): Outcome => {
-  const a = attempt(rng, victim, pulls(scam, template), mods.chanceBonus);
+  const a = attempt(rng, victim, pulls(scam, template), bonusFor(scam, mods));
   const bucks = a.success ? payout(scam, victim) : 0;
   const heat = a.success ? scam.heat.success : failHeat(scam, mods);
   return {
@@ -74,7 +78,7 @@ export const resolveWarmup = (
   template: ScamTemplate,
   mods: Modifiers = NO_MODS,
 ): Outcome => {
-  const a = attempt(rng, victim, pulls(scam, template), mods.chanceBonus);
+  const a = attempt(rng, victim, pulls(scam, template), bonusFor(scam, mods));
   const heat = a.success ? 0 : scam.heat.success;
   return {
     ...a,
