@@ -236,4 +236,19 @@ describe("content contract", () => {
     const all = Object.values(CONTENT).flatMap(strings);
     expect(all.filter((s) => s !== s.trim())).toEqual([]);
   });
+
+  // Eric: no generic feedback after a pitch (PR #30 removed these fields
+  // while three scam PRs still added them). The result card shows the
+  // outcome and the victim's reply; the news tells what a victim did right.
+  test("scams carry no post-pitch debrief", () => {
+    const debrief = /^(whatToSpot|redFlags?|debrief|tips|chance|odds)$/i;
+    const keys = (v: unknown, at: string): string[] =>
+      v && typeof v === "object"
+        ? Object.entries(v).flatMap(([k, x]) => [
+            ...(debrief.test(k) ? [`${at}.${k}`] : []),
+            ...keys(x, `${at}.${k}`),
+          ])
+        : [];
+    expect(scams.flatMap((s) => keys(s, s.id))).toEqual([]);
+  });
 });
