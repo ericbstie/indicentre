@@ -19,12 +19,6 @@
   color: var(--ink-soft);
 }
 
-.shop .lesson {
-  padding: 6px 10px;
-  background: #fff8d0;
-  border-left: 4px solid var(--warn);
-}
-
 .shop .btn {
   white-space: nowrap;
 }
