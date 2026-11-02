@@ -1,6 +1,7 @@
 import manifest from "../assets/manifest.json";
 import index from "./client/index.html";
 import { allowedHosts, hostAllowed, visitor } from "./server/proxy";
+import { serveFile } from "./server/static";
 
 // Dev: Bun bundles the HTML import itself, with HMR.
 // Production (`mise run app`): serves the prebuilt `bun run build` output in
@@ -11,21 +12,28 @@ const hostname = process.env["HOST"] ?? "127.0.0.1";
 const dist = `${import.meta.dir}/../dist`;
 const allowed = allowedHosts(process.env["ALLOWED_HOSTS"]);
 
-// Only manifest-listed (hash-verified) models are served.
-const model = (file: string) => {
+// Only manifest-listed (hash-verified) models are served. The manifest hash
+// is the ETag, so a returning player revalidates 2.7 MB of models with 304s.
+const model = async (req: Request, file: string) => {
   const id = file.replace(/\.glb$/, "");
-  return Object.hasOwn(manifest.models, id)
-    ? new Response(Bun.file(`${import.meta.dir}/../assets/models/${id}.glb`), {
-        headers: { "content-type": "model/gltf-binary" },
-      })
-    : notFound();
+  if (!Object.hasOwn(manifest.models, id)) return notFound();
+  const etag = `"${manifest.models[id as keyof typeof manifest.models].sha256}"`;
+  const headers = { etag, "cache-control": "no-cache" };
+  if (req.headers.get("if-none-match") === etag)
+    return new Response(null, { status: 304, headers });
+  const path = `${import.meta.dir}/../assets/models/${id}.glb`;
+  return (await serveFile(req, path, headers)) ?? notFound();
 };
 const notFound = () => new Response("Not found", { status: 404 });
 
 // URL parsing has already resolved any `..`, so the path stays under dist/.
-const built = async (pathname: string) => {
-  const file = Bun.file(dist + (pathname === "/" ? "/index.html" : pathname));
-  return (await file.exists()) ? new Response(file) : notFound();
+// Bundle files have a content hash in their name and never change; the page
+// itself is revalidated so a deploy shows up on the next load.
+const built = async (req: Request, pathname: string) => {
+  const page = pathname === "/" || pathname.endsWith(".html");
+  const path = dist + (pathname === "/" ? "/index.html" : pathname);
+  const cache = page ? "no-cache" : "public, max-age=31536000, immutable";
+  return (await serveFile(req, path, { "cache-control": cache })) ?? notFound();
 };
 
 const handle = (req: Request) => {
@@ -35,8 +43,8 @@ const handle = (req: Request) => {
     return new Response("Unknown host", { status: 421 });
   const { pathname } = new URL(req.url);
   if (pathname.startsWith("/assets/models/"))
-    return model(pathname.slice("/assets/models/".length));
-  return development ? notFound() : built(pathname);
+    return model(req, pathname.slice("/assets/models/".length));
+  return development ? notFound() : built(req, pathname);
 };
 
 if (!development && !(await Bun.file(`${dist}/index.html`).exists()))
