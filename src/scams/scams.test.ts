@@ -1,6 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import { type Action, initialState, reduce } from "../core/state.ts";
+import { fit } from "../victims/resistance.ts";
 import catfish from "./catfish.ts";
+import techSupport from "./tech-support.ts";
 import { TAGS, type Victim } from "../victims/types.ts";
 import phishing from "./phishing.ts";
 import { availableScams, scams, starterScams } from "./registry.ts";
@@ -137,5 +139,35 @@ describe("warm-ups", () => {
     const blocked = resolveWarmup(() => 0.99, catfish, lonely, hello);
     expect(blocked.success).toBe(false);
     expect(apply(blocked).shutdownMeter).toBe(catfish.heat.success);
+  });
+});
+
+describe("fit tags", () => {
+  const call = techSupport.templates[0]!;
+
+  test("victims weak to a scam's fitTags fit it better", () => {
+    const anxious = victim({ weaknesses: ["tech-help", "fear"] });
+    const romantic = victim({ weaknesses: ["romance", "lonely"] });
+    expect(fit(anxious, pulls(techSupport, call))).toBeGreaterThan(
+      fit(romantic, pulls(techSupport, call)),
+    );
+    const odds = (v: Victim) =>
+      resolveScam(() => 0.99, techSupport, v, call).chance;
+    expect(odds(anxious)).toBeGreaterThan(odds(romantic));
+  });
+
+  test("a victim whose tell guards a fit tag counters the scam", () => {
+    const guarded = victim({
+      weaknesses: ["tech-help", "fear"],
+      defense: { id: "d", behavior: "b", line: "l", counters: ["tech-help"] },
+    });
+    const lose = resolveScam(() => 0.99, techSupport, guarded, call);
+    expect(lose.success).toBe(false);
+    if (!lose.success) expect(lose.defense).toBe(guarded.defense);
+  });
+
+  test("pulls has no duplicates when lures repeat a fit tag", () => {
+    const p = pulls(catfish, catfish.templates[0]!);
+    expect(new Set(p).size).toBe(p.length);
   });
 });
