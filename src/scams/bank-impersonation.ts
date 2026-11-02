@@ -10,9 +10,9 @@ export default {
   heat: { success: 5, fail: 13 },
   fitTags: ["bank", "authority", "urgency", "fear"],
   whatToSpot: [
-    "TODO: what to spot, from the victim's side.",
-    "TODO: second line.",
-    "TODO: the right thing to do instead.",
+    "Your bank will never ask you to move money to keep it safe.",
+    "No one from the bank needs the code they just texted you.",
+    "Hang up and call the number on the back of your card.",
   ],
   successLine:
     "She had my account number already, so I knew she was real. The money's safe now. She said not to ring the branch, they're part of the problem.",
