@@ -92,12 +92,15 @@ export const AMBIENT: ReadonlyArray<NewsItem> = (
     ],
     ["Ålesund ferry 40 minutes late, seagull blamed", ""],
     [
-      "Police report: scam call centres 'more organised than ever'",
-      `"Some of them have quarterly targets," one investigator said.`,
+      "Police: raided scam office kept a list of fines by the printer",
+      `"Fifty for no call before nine. It doubled if you didn't sign," an investigator said.`,
     ],
     ["Phone networks to label suspected spam calls from March", ""],
     ["Drammen bakery wins the regional cinnamon bun prize again", ""],
-    ["Bank fraud in the region: 412 cases so far this year", ""],
+    [
+      "UN report: many scam callers are held against their will",
+      `"They have quotas too. Miss one and they don't eat," a researcher said.`,
+    ],
     [
       "Kristiansand school teaches 12-year-olds to spot fake prize mails",
       `"They're better at it than the staff," the head teacher admitted.`,
