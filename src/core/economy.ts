@@ -13,7 +13,8 @@ const QUOTA_BASE = 45;
 const QUOTA_STEP = 17;
 export const quotaFor = (day: number) => QUOTA_BASE + QUOTA_STEP * (day - 1);
 
-/** Missing the quota this many days in a row gets you fired. */
+/** Missing the quota this many days in a row gets you fired. The first miss of
+ * the run is a written warning instead and starts no streak. */
 export const FIRE_AFTER_MISSES = 2;
 /** Finish this day still employed and un-raided: top seller. */
 export const WIN_DAY = 10;
@@ -26,17 +27,21 @@ export interface DaySummary {
   readonly heatEnd: number;
   readonly quota: number;
   readonly met: boolean;
+  /** The run's first missed quota: a written warning that doesn't count. */
+  readonly warned: boolean;
 }
 
 /** Close the shift: log it, cool heat overnight, start the next day at 09:00. */
 export const endDay = (s: GameState): GameState => {
+  const met = s.earnedToday >= quotaFor(s.day);
   const summary: DaySummary = {
     day: s.day,
     earned: s.earnedToday,
     heatStart: s.heatAtDayStart,
     heatEnd: s.shutdownMeter,
     quota: quotaFor(s.day),
-    met: s.earnedToday >= quotaFor(s.day),
+    met,
+    warned: !met && s.days.every((d) => d.met),
   };
   const heat = Math.max(0, s.shutdownMeter - OVERNIGHT_COOLDOWN);
   const next: GameState = {
@@ -63,10 +68,15 @@ export const advance = (s: GameState, minutes: number): GameState => {
   return minute >= SHIFT_MINUTES ? endDay(s) : { ...s, minute };
 };
 
-/** Consecutive missed quotas, counting back from the last finished day. */
+/** Consecutive missed quotas that count, back from the last finished day.
+ * The warned day ends the count like a met one. */
 export const missStreak = (s: GameState) => {
   let n = 0;
-  for (let i = s.days.length - 1; i >= 0 && !s.days[i]!.met; i--) n++;
+  for (let i = s.days.length - 1; i >= 0; i--) {
+    const d = s.days[i]!;
+    if (d.met || d.warned) break;
+    n++;
+  }
   return n;
 };
 
