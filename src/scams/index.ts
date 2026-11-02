@@ -4,6 +4,7 @@ import bankImpersonation from "./bank-impersonation.ts";
 import catfish from "./catfish.ts";
 import lottery from "./lottery.ts";
 import marketplace from "./marketplace.ts";
+import parcelSms from "./parcel-sms.ts";
 import phishing from "./phishing.ts";
 import techSupport from "./tech-support.ts";
 
@@ -12,6 +13,7 @@ export const allScams: ReadonlyArray<ScamDef> = [
   catfish,
   lottery,
   marketplace,
+  parcelSms,
   phishing,
   techSupport,
 ];

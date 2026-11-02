@@ -8,7 +8,13 @@ export type Lure = (typeof LURES)[number];
 export type LureWeights = Readonly<Record<Lure, number>>;
 
 /** Where a scam happens. Shown before the player commits. */
-export const CHANNELS = ["mail", "call", "marketplace", "social"] as const;
+export const CHANNELS = [
+  "mail",
+  "sms",
+  "call",
+  "marketplace",
+  "social",
+] as const;
 export type Channel = (typeof CHANNELS)[number];
 
 /** One concrete message/script the player can send. */
