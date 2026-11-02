@@ -15,6 +15,7 @@ import {
 import { type Modifiers, modifiersFor } from "../shop/tools.ts";
 import type { Channel, ScamDef, ScamTemplate } from "../scams/types.ts";
 import { daily, generateVictims } from "../victims/generate.ts";
+import { ANGLES } from "../victims/angles.ts";
 import { fitLabel, successChance } from "../victims/resistance.ts";
 import { writeHints } from "../victims/hints.ts";
 import { firstName, type Victim } from "../victims/types.ts";
@@ -63,9 +64,13 @@ const viewCard = (v: VictimView) => `
       : ""
   }${v.defense ? `<small>Watch out: ${esc(v.defense)}</small>` : ""}`;
 
-/** Persondata's full profile of one lead: what public posts give away. */
-const viewDossier = (v: VictimView) =>
-  v.hobby && v.recent
+/**
+ * Persondata's full profile of one lead: what public posts give away.
+ * `best` is the open pitch with the highest odds, if any.
+ */
+const viewDossier = (v: VictimView, best?: { label: string; p: number }) => {
+  const top = v.weaknesses?.[0];
+  return v.hobby && v.recent && top
     ? `<section class="dossier">
         <h4>Dossier <small>scraped from public posts</small></h4>
         <dl>
@@ -74,9 +79,15 @@ const viewDossier = (v: VictimView) =>
           <dt>Recently</dt><dd>${esc(v.recent.text)} <small>${esc(v.recent.source)}</small></dd>
           <dt>Falls for</dt><dd>${tagList(v.weaknesses ?? [])} tech ${esc(pct(v.techComfort ?? 0))}</dd>
           <dt>Watch out</dt><dd>${esc(v.defense ?? "")}</dd>
+          <dt>Angle</dt><dd>${tagList([top])} ${esc(ANGLES[top])}${
+            best
+              ? ` <small>Best open pitch: ${esc(best.label)}, ${esc(fitLabel(best.p))}</small>`
+              : ""
+          }</dd>
         </dl>
       </section>`
     : `<p class="empty">No dossier. Persondata in the Shop builds one from public posts.</p>`;
+};
 
 interface Result {
   readonly target: Victim;
@@ -163,12 +174,28 @@ export default {
 
     const viewOf = (t: Victim) => leads.find((l) => l.victim === t)?.view;
 
+    /** The available pitch with the best odds on `t`, for the dossier. */
+    const bestPitch = (t: Victim) => {
+      const m = mods();
+      return available()
+        .flatMap((s) =>
+          s.templates.map((tpl) => ({
+            label: tpl.label,
+            p: successChance(current(t, s), pulls(s, tpl), bonusFor(s, m)),
+          })),
+        )
+        .reduce<{ label: string; p: number } | undefined>(
+          (a, b) => (a && a.p >= b.p ? a : b),
+          undefined,
+        );
+    };
+
     const viewTemplates = (t: Victim) => {
       const view = viewOf(t);
       return `
       <button class="link" data-back>← Leads</button>
       <h3>Scam ${esc(t.name)}</h3>
-      ${view ? viewDossier(view) : ""}
+      ${view ? viewDossier(view, bestPitch(t)) : ""}
       ${available()
         .map(
           (s) => `

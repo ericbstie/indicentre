@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { seeded } from "../core/rng.ts";
+import { ANGLES } from "./angles.ts";
 import { FRAGMENTS } from "./fragments.ts";
 import { generateVictims } from "./generate.ts";
 import { writeHints } from "./hints.ts";
@@ -13,6 +14,7 @@ const BANNED =
 const PRONOUNS = /\b(he|she|him|her|his|hers)\b/i;
 
 const all = [
+  ...Object.values(ANGLES),
   ...Object.values(FRAGMENTS).flat(),
   ...DETAILS.map((d) => d.text),
   ...DEFENSES.flatMap((d) => [d.behavior, ...d.lines]),

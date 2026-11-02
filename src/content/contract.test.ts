@@ -4,6 +4,7 @@
 import { describe, expect, test } from "bun:test";
 import { scams } from "../scams/registry.ts";
 import { tools } from "../shop/tools.ts";
+import { ANGLES } from "../victims/angles.ts";
 import * as victimTables from "../victims/tables.ts";
 import { FRAGMENTS } from "../victims/fragments.ts";
 import { TAGS } from "../victims/types.ts";
@@ -27,6 +28,7 @@ const CONTENT = {
   tools,
   victimTables,
   FRAGMENTS,
+  ANGLES,
   bossLines,
   coworkers,
   endings,
