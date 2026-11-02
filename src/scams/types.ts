@@ -56,6 +56,4 @@ export interface ScamDef {
   readonly whatToSpot: readonly [string, string, string];
   /** What a victim says after falling for it. `{name}` allowed. */
   readonly successLine: string;
-  /** One-line takeaway for the player (the real-world defense). */
-  readonly lesson: string;
 }

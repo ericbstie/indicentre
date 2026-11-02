@@ -16,8 +16,6 @@ export default {
   ],
   successLine:
     "He was so patient with me. Forty minutes! You don't get service like that anymore.",
-  lesson:
-    "No real company calls you about your computer. Hang up, then call them on a number you looked up yourself.",
   templates: [
     {
       id: "error-reports",
