@@ -1,0 +1,56 @@
+/* Shared design tokens and base styles. Component styles live next to their
+   module (e.g. src/apps/mail.css) and are imported from its .ts file. */
+:root {
+  --ink: #222;
+  --ink-soft: #555;
+  --muted: #777;
+  --paper: #f4f4f0;
+  --card: #fff;
+  --line: #ccc;
+  --accent: #2a6ad0;
+  --warn: #e8b030;
+  --danger: #e03030;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #111;
+  color: #eee;
+  font:
+    14px/1.4 system-ui,
+    sans-serif;
+}
+
+canvas {
+  display: block;
+}
+
+.empty {
+  color: var(--muted);
+}
+
+.btn {
+  padding: 6px 14px;
+  font: inherit;
+  color: #fff;
+  background: var(--accent);
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.link {
+  padding: 0;
+  font: inherit;
+  color: var(--accent);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}

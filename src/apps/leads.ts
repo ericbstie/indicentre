@@ -1,3 +1,4 @@
+import "./leads.css";
 import { seeded } from "../core/rng.ts";
 import { isUnlocked } from "../core/state.ts";
 import { scams } from "../scams/registry.ts";
@@ -60,7 +61,7 @@ export default {
             <div><b>${esc(tpl.label)}</b>
             <p class="subject">${esc(personalize(tpl.subject, t))}</p>
             <p class="body">${escLines(personalize(tpl.body, t))}</p></div>
-            <button data-send="${esc(s.id)}/${esc(tpl.id)}">Send</button>
+            <button class="btn" data-send="${esc(s.id)}/${esc(tpl.id)}">Send</button>
           </div>`,
           )
           .join("")}`,
@@ -81,7 +82,7 @@ export default {
         <h4>Red flags ${esc(first)} ${o.success ? "missed" : "spotted"}</h4>
         <ul>${r.template.redFlags.map((f) => `<li>${esc(f)}</li>`).join("")}</ul>
         <p class="lesson">${esc(r.scam.lesson)}</p>
-        <button data-next>Next leads</button>
+        <button class="btn" data-next>Next leads</button>
       </div>`;
     };
 

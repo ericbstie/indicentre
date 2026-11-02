@@ -1,3 +1,4 @@
+import "./mail.css";
 import { unreadCount } from "../core/state.ts";
 import { esc, escLines } from "../desktop/html.ts";
 import type { DesktopApp } from "./app.ts";
