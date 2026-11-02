@@ -32,18 +32,25 @@ export default {
       const m = mails.find((x) => x.id === selected);
       reader.innerHTML = m
         ? `<h3>${esc(m.subject)}</h3><p class="from">From: ${esc(m.from)}</p><p>${escLines(m.body)}</p>`
-        : `<p class="empty">Select a message.</p>`;
+        : "";
     };
 
-    list.onclick = (e) => {
-      const id = (e.target as HTMLElement).closest<HTMLElement>("[data-id]")
-        ?.dataset["id"];
-      if (!id) return;
+    const open = (id: string) => {
       selected = id;
       game.dispatch(readMail(id));
     };
+    list.onclick = (e) => {
+      const id = (e.target as HTMLElement).closest<HTMLElement>("[data-id]")
+        ?.dataset["id"];
+      if (id) open(id);
+    };
 
     render();
-    return game.subscribe(render);
+    const off = game.subscribe(render);
+    // Open on the newest unread mail, else the newest.
+    const mails = inbox.get(game.state());
+    const first = mails.find((m) => !m.read) ?? mails[0];
+    if (first) open(first.id);
+    return off;
   },
 } satisfies DesktopApp;
