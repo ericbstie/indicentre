@@ -21,6 +21,7 @@ import {
   warmed,
 } from "../src/scams/resolve.ts";
 import type { ScamDef, ScamTemplate } from "../src/scams/types.ts";
+import { freshness, markLanded } from "../src/scams/wear.ts";
 import { catalog, type CatalogItem } from "../src/shop/catalog.ts";
 import { type Modifiers, modifiersFor } from "../src/shop/tools.ts";
 import { generateVictims } from "../src/victims/generate.ts";
@@ -97,6 +98,7 @@ interface Option {
 
 /** Odds a careful player reads off hints (or persondata). Warm-ups compound. */
 const option = (
+  s: GameState,
   victim: Victim,
   scam: ScamDef,
   template: ScamTemplate,
@@ -110,7 +112,8 @@ const option = (
   }
   p *= successChance(v, pulls(scam, template), m.chanceBonus);
   const score =
-    p * payout(scam, victim) - (1 - p) * failHeat(scam, m) * HEAT_PRICE;
+    p * payout(scam, victim, freshness(s, scam.id)) -
+    (1 - p) * failHeat(scam, m) * HEAT_PRICE;
   return { victim, scam, template, p, score };
 };
 
@@ -121,7 +124,7 @@ const play = (rng: Rng, s: GameState, pl: Player): GameState => {
   const m = modifiersFor(s.ownedTools);
   const open = workable(s, pl);
   const opts = generateVictims(rng, LEADS).flatMap((v) =>
-    open.flatMap((sc) => sc.templates.map((t) => option(v, sc, t, m))),
+    open.flatMap((sc) => sc.templates.map((t) => option(s, v, sc, t, m))),
   );
   const o =
     rng() < pl.skill + (pl.skill && m.reveal >= 2 ? READ_ODDS : 0)
@@ -147,9 +150,10 @@ const play = (rng: Rng, s: GameState, pl: Player): GameState => {
     warmed(o.victim, o.scam, landed),
     o.template,
     m,
+    freshness(s, o.scam.id),
   );
   for (const a of out.actions) next = reduce(next, a);
-  return next;
+  return out.success ? reduce(next, markLanded(next, o.scam.id)) : next;
 };
 
 /** Scams the player would pitch that still fit in today's shift. */
