@@ -3,11 +3,13 @@ import type { GameSystem } from "./system.ts";
 import boss from "./boss.ts";
 import clock from "./clock.ts";
 import coworkers from "./coworkers.ts";
+import dayReport from "./day-report.ts";
 import welcome from "./welcome.ts";
 
 export const systems: ReadonlyArray<GameSystem> = [
   boss,
   clock,
   coworkers,
+  dayReport,
   welcome,
 ];

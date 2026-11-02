@@ -1,5 +1,10 @@
 import { describe, expect, test } from "bun:test";
-import { OVERNIGHT_COOLDOWN, SHIFT_MINUTES } from "./economy.ts";
+import {
+  missStreak,
+  OVERNIGHT_COOLDOWN,
+  quotaFor,
+  SHIFT_MINUTES,
+} from "./economy.ts";
 import { type Action, clock, initialState, reduce } from "./state.ts";
 
 const s0 = initialState(["phishing"]);
@@ -27,6 +32,8 @@ describe("shift clock", () => {
       earned: 30,
       heatStart: 0,
       heatEnd: 40,
+      quota: quotaFor(1),
+      met: false,
     });
   });
 
@@ -39,5 +46,25 @@ describe("shift clock", () => {
     expect(s.day).toBe(2);
     expect(s.shutdownMeter).toBe(0);
     expect(s.days).toHaveLength(1);
+  });
+});
+
+describe("quota", () => {
+  test("rises every day", () => {
+    expect(quotaFor(2)).toBeGreaterThan(quotaFor(1));
+    expect(quotaFor(10)).toBeGreaterThan(quotaFor(9));
+  });
+
+  test("met when the day's earnings reach it; misses streak until a hit", () => {
+    const met = run({ type: "earn", amount: quotaFor(1) }, { type: "endDay" });
+    expect(met.days.at(-1)?.met).toBe(true);
+    expect(missStreak(met)).toBe(0);
+    const missed = reduce(met, { type: "endDay" });
+    expect(missStreak(missed)).toBe(1);
+    const recovered = [
+      { type: "earn", amount: quotaFor(3) } as const,
+      { type: "endDay" } as const,
+    ].reduce(reduce, missed);
+    expect(missStreak(recovered)).toBe(0);
   });
 });
