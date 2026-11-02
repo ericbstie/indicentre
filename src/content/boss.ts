@@ -15,7 +15,8 @@ export type BossReaction =
   | "watchStart"
   | "watchSuccess"
   | "watchFail"
-  | "newDesk";
+  | "newDesk"
+  | "heatWarning";
 
 export interface MoodLines {
   readonly low: ReadonlyArray<string>;
@@ -103,6 +104,16 @@ export const bossLines: Readonly<Record<BossReaction, MoodLines>> = {
     high: [
       "They noticed. Read your own message once before you send it.",
       "Close. Read it out loud next time. A bad mail sounds bad.",
+    ],
+  },
+  heatWarning: {
+    low: [
+      "Your meter's in the red. Red means people in vests come up the stairs, and then nobody makes quota. Slow down or clock out.",
+      "That bar by your name is past sixty. It cools off overnight. It does not cool off while you keep sending.",
+    ],
+    high: [
+      "Good numbers, but look at your heat. Past sixty the landlord starts asking about the extra phone lines. Go home early, it cools overnight.",
+      "Your meter's past sixty. Every report lands on that bar, and if it fills, they raid the floor. Pick your marks or clock out.",
     ],
   },
   newDesk: {
