@@ -52,17 +52,20 @@ describe("content contract", () => {
     expect(all.filter((s) => triad.test(s))).toEqual([]);
   });
 
-  test("scam text only uses the {name} slot", () => {
-    const bad = strings(scams).filter((s) =>
-      [...s.matchAll(/\{(\w+)\}/g)].some((m) => m[1] !== "name"),
-    );
-    expect(bad).toEqual([]);
-  });
-
-  test("news banks only use the slots news.fill provides", () => {
-    const slots = ["place", "role", "first", "age", "amount", "scam"];
-    const bad = strings(news).filter((s) =>
-      [...s.matchAll(/\{(\w+)\}/g)].some((m) => !slots.includes(m[1]!)),
+  // `{name}` is always the victim's first name; text that nobody fills
+  // must not have slots. Seen: `{first}` in fragments next to `{name}` in scams.
+  test("text only uses the slots its filler provides", () => {
+    const filled: Record<string, ReadonlyArray<string>> = {
+      scams: ["name"],
+      FRAGMENTS: ["name"],
+      news: ["place", "role", "name", "age", "amount", "scam"],
+    };
+    const bad = Object.entries(CONTENT).flatMap(([group, value]) =>
+      strings(value).filter((s) =>
+        [...s.matchAll(/\{(\w+)\}/g)].some(
+          (m) => !(filled[group] ?? []).includes(m[1]!),
+        ),
+      ),
     );
     expect(bad).toEqual([]);
   });

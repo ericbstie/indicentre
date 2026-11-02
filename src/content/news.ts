@@ -1,6 +1,6 @@
 // Text banks for the office news TV. Voice: local paper, flat, one number,
 // one place, one name. Victims are people, not punchlines. No pronouns for
-// victims (we don't know them), no triads. Slots: {place} {role} {first}
+// victims (we don't know them), no triads. Slots: {place} {role} {name}
 // {age} {amount} {scam}. {role} is the victim's occupation, lowercased.
 
 import type { NewsItem } from "../news/news.ts";

@@ -46,7 +46,7 @@ const slotsFor = (
 ): Record<string, string> => ({
   place: pick(rng, PLACES),
   role: e.victim.occupation.toLowerCase(),
-  first: firstName(e.victim),
+  name: firstName(e.victim),
   age: String(e.victim.age),
   amount: kroner(e.bucks),
   scam: (
