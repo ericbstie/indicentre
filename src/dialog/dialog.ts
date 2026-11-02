@@ -1,4 +1,5 @@
 import "./dialog.css";
+import { speak } from "../audio/speak.ts";
 
 export interface DialogChoice {
   readonly label: string;
@@ -66,6 +67,7 @@ const render = (node: DialogNode) => {
   root.replaceChildren(box);
   root.hidden = false;
   current = node;
+  speak({ speaker: node.speaker, text: node.line });
 };
 
 const choose = (c: DialogChoice) => {
