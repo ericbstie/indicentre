@@ -1,9 +1,16 @@
 import { describe, expect, test } from "bun:test";
-import { initialState, reduce } from "../core/state.ts";
+import { type Action, initialState, reduce } from "../core/state.ts";
+import catfish from "./catfish.ts";
 import { TAGS, type Victim } from "../victims/types.ts";
 import phishing from "./phishing.ts";
 import { availableScams, scams, starterScams } from "./registry.ts";
-import { personalize, pulls, resolveScam } from "./resolve.ts";
+import {
+  personalize,
+  pulls,
+  resolveScam,
+  resolveWarmup,
+  warmed,
+} from "./resolve.ts";
 import { CHANNELS } from "./types.ts";
 
 const victim = (over: Partial<Victim> = {}): Victim => ({
@@ -94,5 +101,41 @@ describe("resolution", () => {
 
   test("personalize uses the first name", () => {
     expect(personalize("Hi {name}!", victim())).toBe("Hi Kari!");
+  });
+});
+
+describe("warm-ups", () => {
+  const lonely = victim({ weaknesses: ["lonely", "romance"], trust: 0.4 });
+  const hello = catfish.warmups![0]!;
+  const ask = catfish.templates[0]!;
+  const apply = (o: { actions: ReadonlyArray<Action> }) =>
+    o.actions.reduce(reduce, initialState());
+
+  test("each landed warm-up closes part of the gap to full trust", () => {
+    expect(warmed(lonely, catfish, 0).trust).toBeCloseTo(0.4);
+    expect(warmed(lonely, catfish, 1).trust).toBeCloseTo(0.7);
+    expect(warmed(lonely, catfish, 9).trust).toBeCloseTo(1);
+    expect(warmed(lonely, phishing, 2).trust).toBeCloseTo(0.4);
+  });
+
+  test("trust raises the odds of the ask", () => {
+    const cold = resolveScam(() => 0.99, catfish, lonely, ask).chance;
+    const warm = resolveScam(
+      () => 0.99,
+      catfish,
+      warmed(lonely, catfish, 2),
+      ask,
+    ).chance;
+    expect(warm).toBeGreaterThan(cold);
+  });
+
+  test("a warm-up pays nothing; a failed one costs the success heat", () => {
+    const ok = apply(resolveWarmup(() => 0, catfish, lonely, hello));
+    expect(ok.scamBucks).toBe(0);
+    expect(ok.shutdownMeter).toBe(0);
+    expect(ok.minute).toBe(catfish.minutes);
+    const blocked = resolveWarmup(() => 0.99, catfish, lonely, hello);
+    expect(blocked.success).toBe(false);
+    expect(apply(blocked).shutdownMeter).toBe(catfish.heat.success);
   });
 });

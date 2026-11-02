@@ -8,6 +8,8 @@ import {
   payout,
   personalize,
   resolveScam,
+  resolveWarmup,
+  warmed,
 } from "../scams/resolve.ts";
 import { type Modifiers, modifiersFor } from "../shop/tools.ts";
 import type { ScamDef, ScamTemplate } from "../scams/types.ts";
@@ -72,6 +74,11 @@ export default {
     let leads = draw();
     let target: Victim | undefined;
     let result: Result | undefined;
+    /** Warm-ups landed per `${victim}/${scam}` in this batch of leads. */
+    let landed = new Map<string, number>();
+    const key = (t: Victim, s: ScamDef) => `${t.id}/${s.id}`;
+    const current = (t: Victim, s: ScamDef) =>
+      warmed(t, s, landed.get(key(t, s)) ?? 0);
 
     const available = () => availableScams(game.state());
 
@@ -94,6 +101,30 @@ export default {
         )
         .join("")}</div>`;
 
+    const viewTemplate = (
+      t: Victim,
+      tpl: ScamTemplate,
+      action: string,
+      stakes: string,
+    ) => `
+      <div class="template">
+        <div><b>${esc(tpl.label)}</b>
+        <p class="subject">${esc(personalize(tpl.subject, t))}</p>
+        <p class="body">${escLines(personalize(tpl.body, t))}</p></div>
+        <button class="btn" ${action}>Send<small>${esc(stakes)}</small></button>
+      </div>`;
+
+    const viewWarmups = (t: Victim, s: ScamDef) => {
+      const warmups = s.warmups ?? [];
+      if (!warmups.length) return "";
+      const done = landed.get(key(t, s)) ?? 0;
+      const next = warmups[done];
+      return `
+        <p class="trust">Trust <meter value="${esc(current(t, s).trust)}"></meter>
+          ${esc(done)}/${esc(warmups.length)} warm-ups. Ask now or keep talking.</p>
+        ${next ? viewTemplate(t, next, `data-warm="${esc(s.id)}"`, `no bucks yet · heat +${s.heat.success} if blocked · ${s.minutes} min`) : ""}`;
+    };
+
     const viewTemplates = (t: Victim) => `
       <button class="link" data-back>← Leads</button>
       <h3>Scam ${esc(t.name)}</h3>
@@ -101,15 +132,15 @@ export default {
         .map(
           (s) => `
         <h4>${esc(s.name)}</h4>
+        ${viewWarmups(t, s)}
         ${s.templates
-          .map(
-            (tpl) => `
-          <div class="template">
-            <div><b>${esc(tpl.label)}</b>
-            <p class="subject">${esc(personalize(tpl.subject, t))}</p>
-            <p class="body">${escLines(personalize(tpl.body, t))}</p></div>
-            <button class="btn" data-send="${esc(s.id)}/${esc(tpl.id)}">Send<small>${esc(stakes(s, tpl, t))}</small></button>
-          </div>`,
+          .map((tpl) =>
+            viewTemplate(
+              t,
+              tpl,
+              `data-send="${esc(s.id)}/${esc(tpl.id)}"`,
+              stakes(s, tpl, current(t, s)),
+            ),
           )
           .join("")}`,
         )
@@ -160,7 +191,7 @@ export default {
       const outcome = resolveScam(
         seeded(seedNow() + 7),
         scam,
-        target,
+        current(target, scam),
         template,
         mods(),
       );
@@ -187,6 +218,35 @@ export default {
       }
     };
 
+    const warm = (scamId: string) => {
+      const scam = available().find((s) => s.id === scamId);
+      if (!scam || !target) return;
+      const done = landed.get(key(target, scam)) ?? 0;
+      const template = scam.warmups?.[done];
+      if (!template) return;
+      const outcome = resolveWarmup(
+        seeded(seedNow() + 3),
+        scam,
+        current(target, scam),
+        template,
+        mods(),
+      );
+      outcome.actions.forEach(game.dispatch);
+      if (outcome.success) {
+        landed.set(key(target, scam), done + 1);
+        return;
+      }
+      result = { target, scam, template, outcome };
+      game.emit({
+        type: "ScamResolved",
+        scam: scam.id,
+        target: target.id,
+        success: false,
+        bucks: 0,
+        heat: outcome.heat,
+      });
+    };
+
     el.onclick = (e) => {
       const b = (e.target as HTMLElement).closest<HTMLElement>("button");
       if (!b) return;
@@ -194,11 +254,13 @@ export default {
       if (d["target"])
         target = leads.find((l) => l.view.id === d["target"])?.victim;
       else if (d["back"] !== undefined) target = undefined;
+      else if (d["warm"]) warm(d["warm"]);
       else if (d["send"]) {
         const [scamId = "", templateId = ""] = d["send"].split("/");
         send(scamId, templateId);
       } else if (d["next"] !== undefined) {
         result = target = undefined;
+        landed = new Map();
         leads = draw();
       }
       render();
