@@ -3,7 +3,10 @@ import {
   clueMailId,
   clues,
   cluesDue,
+  fileComplete,
+  fileCompleteMail,
 } from "../content/catfisher.ts";
+import { WIN_DAY } from "../core/economy.ts";
 import { coworkers } from "../content/coworkers.ts";
 import { dialogOpen, openDialog } from "../dialog/dialog.ts";
 import { modalOpen } from "../hud/modal.ts";
@@ -15,7 +18,8 @@ const LEAN_OVER_DELAY = 4;
 /**
  * EXTRA: drops the day's catfisher clue. Mail clues land in the inbox and
  * count once read; coworker clues are said after a scam, when nothing else
- * is on screen. The File app lists what was found.
+ * is on screen. The File app lists what was found;
+ * a complete file gets a mail from the Boss on the last day.
  */
 export default {
   id: "catfisher",
@@ -51,7 +55,11 @@ export default {
         const c = clues.find((x) => clueMailId(x) === action.id);
         if (c) game.dispatch({ type: "findClue", id: c.id });
       }),
-      game.on("DayAdvanced", () => due().forEach(sendMail)),
+      game.on("DayAdvanced", ({ day }) => {
+        due().forEach(sendMail);
+        if (day === WIN_DAY && fileComplete(game.state()))
+          game.dispatch({ type: "mail", mail: fileCompleteMail });
+      }),
       game.on("ScamResolved", () => {
         wait ??= LEAN_OVER_DELAY;
       }),
