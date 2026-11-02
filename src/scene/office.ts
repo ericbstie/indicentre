@@ -38,7 +38,7 @@ const box = (
 /** Kenney Furniture Kit models are about half real size. */
 const FURNITURE_SCALE = 2;
 export const DESK_TOP = 0.768;
-const TUBE_INTENSITY = 6;
+export const TUBE_INTENSITY = 6;
 
 /** Adds a scaled model to `parent` once it has loaded. */
 export const place = (
