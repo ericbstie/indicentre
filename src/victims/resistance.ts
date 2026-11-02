@@ -70,3 +70,9 @@ export const attempt = (
     defense: fitting.length ? pick(rng, fitting) : v.defense,
   };
 };
+
+/** Coarse read of a success chance, free on every pitch. Persondata shows the exact %. */
+export type FitLabel = "good fit" | "maybe" | "long shot";
+
+export const fitLabel = (p: number): FitLabel =>
+  p >= 0.5 ? "good fit" : p >= 0.25 ? "maybe" : "long shot";
