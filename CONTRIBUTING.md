@@ -129,6 +129,7 @@ synchronous `Game` facade and stays Effect-free. New long-lived services
 | a multi-contact scam                   | `warmups` on the `ScamDef` (see `scams/catfish.ts`)          |
 | shared colors                          | `client/tokens.css` (rarely; prefer your own `.css`)         |
 | a voice for a new speaker              | nothing (derived from the name); tune in `content/voices.ts` |
+| a catfisher file clue (EXTRA)          | `src/content/catfisher.ts` (one per day, one red flag each)  |
 | a sound effect                         | `audio/sfx.ts`, played from a system on a `game.on(...)`     |
 | a 3D model                             | `assets/manifest.json` + `bun run assets` (`docs/assets.md`) |
 
