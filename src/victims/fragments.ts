@@ -36,6 +36,7 @@ export const FRAGMENTS: Readonly<Record<Tag, ReadonlyArray<string>>> = {
     "Has to know who the parcel at the neighbour's is from.",
     "{name} clicks 'see who viewed your profile' every single time.",
     "Answers unknown numbers 'just to see'.",
+    "{name} watches every video a friend sends. Even the ones that need a login.",
   ],
   fear: [
     "Worries about viruses the way other people worry about weather.",
@@ -44,6 +45,7 @@ export const FRAGMENTS: Readonly<Record<Tag, ReadonlyArray<string>>> = {
     "Unplugs the router in thunderstorms. Sometimes just in case.",
     "{name} covered the laptop camera with a plaster. Then a second one.",
     "Believes every chain message about hackers. Forwards them, too.",
+    "Gets a 'new login' alert and {name}'s hands go cold. Clicks whatever it says.",
   ],
   lonely: [
     "Keeps callers on the line. Any caller.",
@@ -100,5 +102,6 @@ export const FRAGMENTS: Readonly<Record<Tag, ReadonlyArray<string>>> = {
     "Sends money to a nephew every birthday, no questions asked.",
     "{name} has nine grandchildren and mixes up the voices.",
     "A 'Hi Mum, new phone' text would get money within the hour.",
+    "{name} has four hundred friends on Flokk and messages most of them.",
   ],
 };
