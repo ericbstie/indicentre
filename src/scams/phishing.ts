@@ -7,7 +7,7 @@ export default {
   price: 0,
   minutes: 20,
   payout: 40,
-  heat: { success: 2, fail: 9 },
+  heat: { success: 2, fail: 8 },
   fitTags: ["parcel", "bank"],
   whatToSpot: [
     "Urgency is the tell. Real deadlines don't arrive by surprise email.",

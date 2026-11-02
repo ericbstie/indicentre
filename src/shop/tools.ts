@@ -35,7 +35,7 @@ export const tools: ReadonlyArray<ToolDef> = [
   {
     id: "persondata",
     name: "Persondata package",
-    price: 120,
+    price: 80,
     blurb:
       "Profiles scraped from public posts. Shows your odds on every pitch.",
     lesson: "Everything you post publicly is research material for someone.",
@@ -44,7 +44,7 @@ export const tools: ReadonlyArray<ToolDef> = [
   {
     id: "fake-website",
     name: "Fake website",
-    price: 200,
+    price: 150,
     blurb:
       "A login page that looks right at a glance. +10% odds on every pitch.",
     lesson: "Check the address bar, not the logo.",
@@ -53,7 +53,7 @@ export const tools: ReadonlyArray<ToolDef> = [
   {
     id: "spoofed-id",
     name: "Spoofed caller ID",
-    price: 250,
+    price: 180,
     blurb:
       "Mail and calls show someone else's name. Failed pitches cost half the heat.",
     lesson:

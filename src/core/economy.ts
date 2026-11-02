@@ -6,11 +6,11 @@ import type { GameState, ScamId } from "./state.ts";
 /** Shift length (09:00 -> 17:00). Time only moves when a scam runs. */
 export const SHIFT_MINUTES = 8 * 60;
 /** Heat that cools off overnight, so one bad day is not game over. */
-export const OVERNIGHT_COOLDOWN = 25;
+export const OVERNIGHT_COOLDOWN = 40;
 
 /** Day 1 quota and how much it rises each day. */
-const QUOTA_BASE = 60;
-const QUOTA_STEP = 15;
+const QUOTA_BASE = 45;
+const QUOTA_STEP = 17;
 export const quotaFor = (day: number) => QUOTA_BASE + QUOTA_STEP * (day - 1);
 
 /** Missing the quota this many days in a row gets you fired. */
