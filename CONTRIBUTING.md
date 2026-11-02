@@ -90,7 +90,8 @@ src/
     resolve.ts         fitTags(), resolveScam(victim) -> Outcome{actions}
     <id>.ts            a scam
   victims/             procedural victims: tables, generator, hints,
-                       resistance (odds), reveal(level) view
+                       resistance (odds), reveal(level) view, angles
+                       (Persondata dossier lines)
   shop/                tools.ts (tools as data + Modifiers), catalog.ts
   workplace/           desk upgrades: slice.ts (owned, desk tier, call odds), upgrades.ts
   systems/             REGISTRY: one gameplay system per file
@@ -147,6 +148,7 @@ synchronous `Game` facade and stays Effect-free. New long-lived services
 | new persistent state                   | append field + `Action` + `reduce` case + test in `state.ts`    |
 | a shop tool                            | `src/shop/tools.ts` (+ `Modifiers` field if a new effect)       |
 | a new lure                             | `LURES` in `scams/types.ts` + `TAGS` in `victims/types.ts`      |
+| a Persondata dossier fact or angle     | `HOBBIES`/`RECENT_EVENTS` in `victims/tables.ts`, `ANGLES`      |
 | a multi-contact scam                   | `warmups` on the `ScamDef` (see `scams/catfish.ts`)             |
 | shared colors                          | `client/tokens.css` (rarely; prefer your own `.css`)            |
 | a voice for a new speaker              | nothing (derived from the name); tune in `content/voices.ts`    |
