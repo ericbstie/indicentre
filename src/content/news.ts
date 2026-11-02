@@ -46,6 +46,7 @@ export const VICTIM_QUOTES = [
   "The screen said Fjellstad Bank. I checked. That was the whole problem.",
   "It was 1.99. Who checks a link for 1.99?",
   "It was our plumbing supplier's name. Their logo. One extra dash in the address.",
+  "It had my old password in the subject. I paid for a video that never existed.",
 ];
 
 /**
@@ -103,6 +104,10 @@ export const AMBIENT: ReadonlyArray<NewsItem> = (
       `"Bring the letter. Or the phone. Or your grandson."`,
     ],
     ["Study: most scam victims aren't old. Most are in a hurry", ""],
+    [
+      "Police: 'I saw you through your camera' mails are a bluff",
+      `"The password comes from an old leak. There is no video. Don't pay, report it," an officer said.`,
+    ],
     [
       "Skien plumbing firm pays 34,600 kr to a supplier's 'new account'",
       `"The supplier never moved banks," the owner said. "We ring them now. Every time."`,
