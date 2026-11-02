@@ -68,7 +68,8 @@
   background: #f8e0e0;
 }
 
-.leads button[data-send] small {
+.leads button[data-send] small,
+.leads button[data-warm] small {
   display: block;
   font-size: 11px;
   opacity: 0.85;
@@ -81,4 +82,15 @@
 .result blockquote {
   margin: 8px 0;
   font-style: italic;
+}
+
+.trust {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.trust meter {
+  width: 120px;
 }

@@ -53,5 +53,39 @@ export const resolveScam = (
   };
 };
 
+/**
+ * The victim as warm-ups left them: each one that landed closes part of the
+ * gap to full trust, so landing all of them means trust 1.
+ */
+export const warmed = (victim: Victim, scam: ScamDef, landed: number) => {
+  const n = scam.warmups?.length ?? 0;
+  const share = n ? Math.min(1, landed / n) : 0;
+  return { ...victim, trust: victim.trust + (1 - victim.trust) * share };
+};
+
+/**
+ * A warm-up contact: no payout. On failure the victim blocks you and the
+ * scam ends; few report a chat, so it only costs the success heat.
+ */
+export const resolveWarmup = (
+  rng: Rng,
+  scam: ScamDef,
+  victim: Victim,
+  template: ScamTemplate,
+  mods: Modifiers = NO_MODS,
+): Outcome => {
+  const a = attempt(rng, victim, pulls(scam, template), mods.chanceBonus);
+  const heat = a.success ? 0 : scam.heat.success;
+  return {
+    ...a,
+    bucks: 0,
+    heat,
+    actions: [
+      { type: "tick", minutes: scam.minutes },
+      ...(heat ? [{ type: "heat", amount: heat } as const] : []),
+    ],
+  };
+};
+
 export const personalize = (text: string, who: { readonly name: string }) =>
   text.replaceAll("{name}", firstName(who));
