@@ -7,6 +7,7 @@ import {
   quotaToday,
 } from "../core/economy.ts";
 import { esc } from "../desktop/html.ts";
+import { queueCard } from "../dialog/dialog.ts";
 import { showModal } from "../hud/modal.ts";
 import type { GameSystem } from "./system.ts";
 
@@ -31,18 +32,14 @@ export default {
   id: "day-report",
   start({ game }) {
     return game.on("DayEnded", ({ summary }) =>
-      // After every DayEnded handler, so his mood already counts the quota.
+      // After every DayEnded handler, so his mood already counts the quota
+      // and the card goes ahead of the lines they queued.
       queueMicrotask(() => {
         // The run-end card replaces the report on the last day.
-        if (game.state().status === "playing")
-          showModal(
-            reportHtml(
-              summary,
-              bossMood.get(game.state()),
-              quotaToday(game.state()),
-            ),
-            `Start day ${summary.day + 1}`,
-          );
+        const s = game.state();
+        if (s.status !== "playing") return;
+        const html = reportHtml(summary, bossMood.get(s), quotaToday(s));
+        queueCard(() => showModal(html, `Start day ${summary.day + 1}`));
       }),
     );
   },

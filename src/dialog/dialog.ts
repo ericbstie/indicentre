@@ -138,8 +138,9 @@ const drain = () => {
   clearTimeout(retry);
   retry = undefined;
   if (!queue.length) return;
-  if (current || modalOpen()) retry = setTimeout(drain, RETRY_MS);
-  else queue.shift()!();
+  if (!current && !modalOpen()) queue.shift()!();
+  // Lines don't call drain when a card closes, so keep checking.
+  if (queue.length) retry = setTimeout(drain, RETRY_MS);
 };
 
 /**
@@ -147,6 +148,16 @@ const drain = () => {
  * in the order queued, instead of talking over it. Resolves when shown.
  * Waits one tick first, so a card opened by the same event goes up first.
  */
+/**
+ * Shows a modal card (`show` calls hud/modal.ts showModal) once the open
+ * dialog closes, ahead of the lines already waiting: the day report goes up
+ * before the next day's first line.
+ */
+export const queueCard = (show: () => void) => {
+  queue.unshift(show);
+  retry ??= setTimeout(drain);
+};
+
 export const queueDialog = (node: DialogNode, closed?: () => void) =>
   new Promise<void>((shown) => {
     queue.push(() => {
