@@ -25,7 +25,7 @@ export const catalog: ReadonlyArray<CatalogItem> = [
       price: s.price,
       name: s.name,
       blurb: (mods) =>
-        `New scam. +${s.payout} bucks · heat +${s.heat.success}, +${failHeat(s, mods)} if reported.${
+        `+${s.payout} bucks · heat +${s.heat.success}, +${failHeat(s, mods)} if reported.${
           s.requires ? ` Needs ${toolName(s.requires)}.` : ""
         }`,
       ...(s.requires !== undefined && { requires: s.requires }),

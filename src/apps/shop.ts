@@ -26,8 +26,15 @@ const row = (s: GameState, item: CatalogItem) => {
   </div>`;
 };
 
-const rows = (s: GameState, items: ReadonlyArray<CatalogItem>) =>
-  items.map((item) => row(s, item)).join("");
+/** A heading and its rows, or nothing when there is nothing to show. */
+const section = (
+  s: GameState,
+  title: string,
+  items: ReadonlyArray<CatalogItem>,
+) =>
+  items.length
+    ? `<h3>${esc(title)}</h3>${items.map((item) => row(s, item)).join("")}`
+    : "";
 
 /** Buy tools, desk upgrades, and scams once the story has introduced them. */
 export default {
@@ -38,18 +45,14 @@ export default {
   mount(el, { game }) {
     const render = () => {
       const s = game.state();
-      el.innerHTML = `<div class="shop page">${rows(
+      // Owned scams live in Leads; only new ones are for sale here.
+      const of = (kind: CatalogItem["kind"]) =>
+        catalog.filter((c) => c.kind === kind);
+      el.innerHTML = `<div class="shop page">${section(
         s,
-        catalog.filter(
-          (c) =>
-            c.kind === "tool" ||
-            (c.kind === "scam" &&
-              (owns(s, c) || shopSells(beats, c.id, s.day))),
-        ),
-      )}<h3>Your desk</h3>${rows(
-        s,
-        catalog.filter((c) => c.kind === "upgrade"),
-      )}</div>`;
+        "Scams",
+        of("scam").filter((c) => !owns(s, c) && shopSells(beats, c.id, s.day)),
+      )}${section(s, "Tools", of("tool"))}${section(s, "Your desk", of("upgrade"))}</div>`;
     };
     el.onclick = (e) => {
       const id = (e.target as HTMLElement).closest<HTMLElement>("[data-buy]")
