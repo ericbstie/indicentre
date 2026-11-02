@@ -1,0 +1,8 @@
+# Server entry points for hosting (docs/hosting.md). Wraps the bun scripts.
+[tasks.app]
+description = "Production server (built bundle, no watching) on 127.0.0.1:7777"
+run = "bun install --frozen-lockfile --ignore-scripts && bun run start"
+
+[tasks.dev]
+description = "Dev server with hot reload on localhost:3000"
+run = "bun run dev"
