@@ -8,8 +8,10 @@ import {
   dueBeats,
   fill,
   sawBeat,
+  addPaid,
   shopSells,
   story,
+  storyVars,
 } from "./story.ts";
 
 const beat = (id: string, day: number, on: Beat["on"]): Beat => ({
@@ -88,4 +90,13 @@ describe("scam schedule", () => {
   test("beat ids are unique", () => {
     expect(new Set(arc.map((b) => b.id)).size).toBe(arc.length);
   });
+});
+
+test("the ending names the last people who paid, newest first", () => {
+  const s = ["Arne", "Kari", "Lise", "Gunnar"].reduce(
+    (st, name, i) => reduce(st, addPaid({ name, age: 60 + i, bucks: 50 })),
+    initialState(),
+  );
+  expect(storyVars(s).last).toBe("Gunnar");
+  expect(storyVars(s).victims).toBe("Gunnar, 63. Lise, 62. Kari, 61.");
 });

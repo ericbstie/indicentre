@@ -77,7 +77,7 @@ describe("content contract", () => {
       FRAGMENTS: ["name"],
       news: ["place", "role", "name", "age", "amount", "scam"],
       beats: ["nick", "quota", "earned"],
-      endings: ["nick", "quota", "earned"],
+      endings: ["nick", "quota", "earned", "last", "victims"],
     };
     const bad = Object.entries(CONTENT).flatMap(([group, value]) =>
       strings(value).filter((s) =>
