@@ -1,14 +1,11 @@
 import { describe, expect, test } from "bun:test";
 import {
-  clock,
   failsAt,
   hintsHeard,
   initialState,
-  OVERNIGHT_COOLDOWN,
   reduce,
   SHUTDOWN_MAX,
   unreadCount,
-  WORKDAY_MINUTES,
 } from "./state.ts";
 
 const s0 = initialState(["phishing"]);
@@ -33,14 +30,6 @@ describe("reduce", () => {
     expect(reduce(raided, { type: "earn", amount: 10 })).toBe(raided);
   });
 
-  test("tick rolls over to the next day and cools heat overnight", () => {
-    const hot = reduce(s0, { type: "heat", amount: 20 });
-    const next = reduce(hot, { type: "tick", minutes: WORKDAY_MINUTES + 30 });
-    expect(next.day).toBe(2);
-    expect(next.minute).toBe(30);
-    expect(next.shutdownMeter).toBe(20 - OVERNIGHT_COOLDOWN);
-  });
-
   test("unlock is idempotent", () => {
     expect(reduce(s0, { type: "unlock", scam: "phishing" })).toBe(s0);
     expect(
@@ -56,11 +45,6 @@ test("mail arrives newest first, unread, once per id; reading marks it", () => {
   expect(unreadCount(s1)).toBe(1);
   const s2 = reduce(s1, { type: "readMail", id: "m1" });
   expect(unreadCount(s2)).toBe(0);
-});
-
-test("clock formats minutes since 09:00", () => {
-  expect(clock(s0)).toBe("09:00");
-  expect(clock(reduce(s0, { type: "tick", minutes: 95 }))).toBe("10:35");
 });
 
 describe("scamFails", () => {

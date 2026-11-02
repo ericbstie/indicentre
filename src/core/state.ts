@@ -1,10 +1,8 @@
 // Pure game state. No I/O, no Effect: everything here is a plain function
 // so it can be unit-tested and replayed. Side effects live in store.ts.
+import { advance, type DaySummary, endDay } from "./economy.ts";
 
-export const WORKDAY_MINUTES = 8 * 60; // 09:00 -> 17:00
 export const SHUTDOWN_MAX = 100;
-/** Heat that cools off overnight, so one bad day is not game over. */
-export const OVERNIGHT_COOLDOWN = 5;
 
 export const BOSS_MOOD_MAX = 100;
 export const BOSS_MOOD_START = 50;
@@ -36,6 +34,11 @@ export interface GameState {
   readonly talkedTo: Readonly<Record<string, number>>;
   /** 0..BOSS_MOOD_MAX. How the boss feels about you; see core/boss.ts. */
   readonly bossMood: number;
+  /** Bucks earned since this shift started. */
+  readonly earnedToday: number;
+  readonly heatAtDayStart: number;
+  /** DayEnded log, oldest first. */
+  readonly days: ReadonlyArray<DaySummary>;
 }
 
 export type Action =
@@ -48,7 +51,9 @@ export type Action =
   | { readonly type: "readMail"; readonly id: string }
   | { readonly type: "scamFailed"; readonly scam: ScamId }
   | { readonly type: "heardHint"; readonly coworker: string }
-  | { readonly type: "bossMood"; readonly amount: number };
+  | { readonly type: "bossMood"; readonly amount: number }
+  /** Clock out: ends the shift now. */
+  | { readonly type: "endDay" };
 
 export const initialState = (
   unlockedScams: ReadonlyArray<ScamId> = [],
@@ -63,6 +68,9 @@ export const initialState = (
   scamFails: {},
   talkedTo: {},
   bossMood: BOSS_MOOD_START,
+  earnedToday: 0,
+  heatAtDayStart: 0,
+  days: [],
 });
 
 const clamp = (n: number, lo: number, hi: number) =>
@@ -99,21 +107,18 @@ const withHeat = (s: GameState, shutdownMeter: number): GameState => {
   };
 };
 
-const tick = (s: GameState, minutes: number): GameState => {
-  const elapsed = s.minute + Math.max(0, minutes);
-  const days = Math.floor(elapsed / WORKDAY_MINUTES);
-  const next = { ...s, day: s.day + days, minute: elapsed % WORKDAY_MINUTES };
-  return days > 0
-    ? withHeat(next, s.shutdownMeter - OVERNIGHT_COOLDOWN * days)
-    : next;
-};
-
 /** The only way state changes. Invalid actions return the state unchanged. */
 export const reduce = (s: GameState, a: Action): GameState => {
   if (s.status === "shutdown") return s;
   switch (a.type) {
     case "earn":
-      return a.amount > 0 ? { ...s, scamBucks: s.scamBucks + a.amount } : s;
+      return a.amount > 0
+        ? {
+            ...s,
+            scamBucks: s.scamBucks + a.amount,
+            earnedToday: s.earnedToday + a.amount,
+          }
+        : s;
     case "spend":
       return a.amount > 0 && canAfford(s, a.amount)
         ? { ...s, scamBucks: s.scamBucks - a.amount }
@@ -121,7 +126,7 @@ export const reduce = (s: GameState, a: Action): GameState => {
     case "heat":
       return withHeat(s, s.shutdownMeter + a.amount);
     case "tick":
-      return tick(s, a.minutes);
+      return advance(s, a.minutes);
     case "unlock":
       return isUnlocked(s, a.scam)
         ? s
@@ -153,5 +158,7 @@ export const reduce = (s: GameState, a: Action): GameState => {
         ...s,
         bossMood: clamp(s.bossMood + a.amount, 0, BOSS_MOOD_MAX),
       };
+    case "endDay":
+      return endDay(s);
   }
 };

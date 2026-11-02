@@ -1,0 +1,43 @@
+import { describe, expect, test } from "bun:test";
+import { OVERNIGHT_COOLDOWN, SHIFT_MINUTES } from "./economy.ts";
+import { type Action, clock, initialState, reduce } from "./state.ts";
+
+const s0 = initialState(["phishing"]);
+const run = (...as: Action[]) => as.reduce(reduce, s0);
+
+describe("shift clock", () => {
+  test("formats minutes since 09:00", () => {
+    expect(clock(s0)).toBe("09:00");
+    expect(clock(run({ type: "tick", minutes: 95 }))).toBe("10:35");
+  });
+
+  test("work past 17:00 ends the day and logs a DayEnded summary", () => {
+    const s = run(
+      { type: "heat", amount: 40 },
+      { type: "earn", amount: 30 },
+      { type: "tick", minutes: SHIFT_MINUTES - 10 },
+      { type: "tick", minutes: 45 },
+    );
+    expect(s.day).toBe(2);
+    expect(s.minute).toBe(0);
+    expect(s.earnedToday).toBe(0);
+    expect(s.shutdownMeter).toBe(40 - OVERNIGHT_COOLDOWN);
+    expect(s.days.at(-1)).toEqual({
+      day: 1,
+      earned: 30,
+      heatStart: 0,
+      heatEnd: 40,
+    });
+  });
+
+  test("one huge tick ends at most one day", () => {
+    expect(run({ type: "tick", minutes: SHIFT_MINUTES * 3 }).day).toBe(2);
+  });
+
+  test("clocking out ends the shift early; heat never cools below 0", () => {
+    const s = run({ type: "tick", minutes: 60 }, { type: "endDay" });
+    expect(s.day).toBe(2);
+    expect(s.shutdownMeter).toBe(0);
+    expect(s.days).toHaveLength(1);
+  });
+});
