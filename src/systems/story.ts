@@ -40,24 +40,36 @@ export default {
     /** Lines `i`.. as one dialog chain; a line with `choose` remembers the pick. */
     const chain = (lines: ReadonlyArray<Line>, i: number): DialogNode => {
       const l = lines[i]!;
-      const next = i + 1 < lines.length ? chain(lines, i + 1) : undefined;
+      const last = i + 1 >= lines.length;
       const reply = (label: string, pick?: () => void): DialogChoice => ({
         label,
         ...(pick && { pick }),
-        ...(next && { next }),
+        ...(!last && { next: () => chain(lines, i + 1) }),
       });
       const remember = (key: string, value: string) =>
         reply(value, () => game.dispatch(chose(key, value)));
-      const choices: DialogNode["choices"] = l.choose
-        ? [
-            remember(l.choose.key, l.choose.options[0]),
-            remember(l.choose.key, l.choose.options[1]),
-          ]
-        : next && [reply("Go on")];
       return {
         speaker: l.speaker,
         line: fill(l.line, vars()),
-        ...(choices && { choices }),
+        choices: l.choose
+          ? [
+              remember(l.choose.key, l.choose.options[0]),
+              remember(l.choose.key, l.choose.options[1]),
+            ]
+          : [reply("Go on")],
+      };
+    };
+
+    /** Puts the camera at the desk; returns a restore. */
+    const sitAtDesk = () => {
+      const { camera, office } = world;
+      const position = camera.position.clone();
+      const quaternion = camera.quaternion.clone();
+      camera.position.copy(office.seat.position);
+      camera.lookAt(office.seat.lookAt);
+      return () => {
+        camera.position.copy(position);
+        camera.quaternion.copy(quaternion);
       };
     };
 
@@ -73,7 +85,11 @@ export default {
           ? [...b.lines, { speaker: "What to spot", line: b.learn }]
           : b.lines;
         world.player.controls.unlock();
-        openDialog(chain(lines, 0), resolve);
+        const stand = b.atDesk ? sitAtDesk() : undefined;
+        openDialog(chain(lines, 0), () => {
+          stand?.();
+          resolve();
+        });
       });
 
     const queue: Beat[] = [];

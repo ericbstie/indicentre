@@ -6,8 +6,9 @@ export interface DialogChoice {
   readonly label: string;
   /** Runs when picked, before `next` is shown. */
   readonly pick?: () => void;
-  /** Shown after picking; without it the dialog closes. */
-  readonly next?: DialogNode;
+  /** Shown after picking; without it the dialog closes. A function is
+   * called after `pick`, so the next line can depend on the choice. */
+  readonly next?: DialogNode | (() => DialogNode);
 }
 
 /** One line of dialog. Pure data so content files can define whole exchanges. */
@@ -84,7 +85,8 @@ const render = (node: DialogNode) => {
 
 const choose = (c: DialogChoice) => {
   c.pick?.();
-  if (c.next) render(c.next);
+  const next = typeof c.next === "function" ? c.next() : c.next;
+  if (next) render(next);
   else closeDialog();
 };
 
