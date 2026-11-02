@@ -39,6 +39,38 @@
       "author": "Kenney",
       "origin": "https://kenney.nl/assets/furniture-kit",
       "licenseUrl": "https://raw.githubusercontent.com/RetroDECK/RetroQUEST/dfa19a5602a31f64bd890d15279a61f43b127328/assets/kenney_furniture-kit/License.txt"
+    },
+    "divider": {
+      "url": "https://raw.githubusercontent.com/RetroDECK/RetroQUEST/dfa19a5602a31f64bd890d15279a61f43b127328/assets/kenney_furniture-kit/Models/GLTF%20format/bookcaseClosedWide.glb",
+      "sha256": "55b9903e9646dc407ed5237a1c41c1f0a14f9edc22e3392bdb9a4804d846af6a",
+      "license": "CC0-1.0",
+      "author": "Kenney",
+      "origin": "https://kenney.nl/assets/furniture-kit",
+      "licenseUrl": "https://raw.githubusercontent.com/RetroDECK/RetroQUEST/dfa19a5602a31f64bd890d15279a61f43b127328/assets/kenney_furniture-kit/License.txt"
+    },
+    "plant": {
+      "url": "https://raw.githubusercontent.com/RetroDECK/RetroQUEST/dfa19a5602a31f64bd890d15279a61f43b127328/assets/kenney_furniture-kit/Models/GLTF%20format/plantSmall2.glb",
+      "sha256": "d7c8ff42c66dd4f9238a73570549813d1ca6c5f6f661d7af9cb764c4fce314b9",
+      "license": "CC0-1.0",
+      "author": "Kenney",
+      "origin": "https://kenney.nl/assets/furniture-kit",
+      "licenseUrl": "https://raw.githubusercontent.com/RetroDECK/RetroQUEST/dfa19a5602a31f64bd890d15279a61f43b127328/assets/kenney_furniture-kit/License.txt"
+    },
+    "lamp": {
+      "url": "https://raw.githubusercontent.com/RetroDECK/RetroQUEST/dfa19a5602a31f64bd890d15279a61f43b127328/assets/kenney_furniture-kit/Models/GLTF%20format/lampSquareTable.glb",
+      "sha256": "70ec9211af336b1ef3b4da32590b8737b4facf219348c22e6533a1e898cdb13d",
+      "license": "CC0-1.0",
+      "author": "Kenney",
+      "origin": "https://kenney.nl/assets/furniture-kit",
+      "licenseUrl": "https://raw.githubusercontent.com/RetroDECK/RetroQUEST/dfa19a5602a31f64bd890d15279a61f43b127328/assets/kenney_furniture-kit/License.txt"
+    },
+    "rug": {
+      "url": "https://raw.githubusercontent.com/RetroDECK/RetroQUEST/dfa19a5602a31f64bd890d15279a61f43b127328/assets/kenney_furniture-kit/Models/GLTF%20format/rugRectangle.glb",
+      "sha256": "a989d2d59c04e3071e0c90388b113a9a8f339ce1814ef984c51cb6dcd7c8e0eb",
+      "license": "CC0-1.0",
+      "author": "Kenney",
+      "origin": "https://kenney.nl/assets/furniture-kit",
+      "licenseUrl": "https://raw.githubusercontent.com/RetroDECK/RetroQUEST/dfa19a5602a31f64bd890d15279a61f43b127328/assets/kenney_furniture-kit/License.txt"
     }
   }
 }
