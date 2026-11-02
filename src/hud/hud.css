@@ -24,7 +24,7 @@
 }
 
 .hud-stats .met {
-  color: #6c6;
+  color: var(--success);
 }
 
 .meter {

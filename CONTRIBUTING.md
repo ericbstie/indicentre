@@ -80,7 +80,7 @@ src/
   audio/               speak(line) babble hook (no-op until sound lands)
   desktop/             PC overlay shell (desktop.ts/.css), html.ts esc()
   scene/               three.js: office, player, npc, interact registry
-  hud/                 HUD overlay (hud.ts/.css), dialog.ts one-button modal
+  hud/                 HUD overlay (hud.ts/.css), modal.ts one-button blocking card
 scripts/
   gen.ts               writes the three generated index.ts files
   new.ts               scaffolds an app / scam / system
