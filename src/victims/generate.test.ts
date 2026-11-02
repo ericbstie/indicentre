@@ -76,6 +76,18 @@ describe("generateVictims", () => {
     expect(today(2).names.size).toBe(0);
   });
 
+  test("a day's leads never repeat a detail until every detail was used", () => {
+    const today = daily();
+    const rng = seeded(12);
+    const seen = new Set<string>();
+    for (let i = 0; i < 4; i++)
+      for (const v of generateVictims(rng, 3, today(1))) {
+        expect(seen.has(v.detail.text)).toBe(false);
+        seen.add(v.detail.text);
+      }
+    expect(today(2).details.size).toBe(0);
+  });
+
   test("within a day, a defense never says the same line twice in a row", () => {
     const today = daily();
     const rng = seeded(11);

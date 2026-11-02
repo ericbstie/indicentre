@@ -24,11 +24,12 @@ import { type Defense, firstName, type Victim } from "./types.ts";
 const MAX_NAME_TRIES = 50;
 
 /**
- * What one day's leads have used so far: names (first and full) and, per
- * line pool, the line said last. `newDay()` starts clean.
+ * What one day's leads have used so far: names (first and full), details
+ * and, per line pool, the line said last. `newDay()` starts clean.
  */
 const newDay = () => ({
   names: new Set<string>(),
+  details: new Set<string>(),
   pickLine: noRepeat(),
 });
 type Today = ReturnType<typeof newDay>;
@@ -70,7 +71,12 @@ export const generateVictim = (
 ): Victim => {
   const job = weighted(rng, OCCUPATIONS, (o) => o.w);
   const age = int(rng, job.age[0], job.age[1]);
-  const detail = weighted(rng, DETAILS, (d) => (fits(age, d) ? d.w : 0));
+  // A detail comes back only once every detail that fits the age was used today.
+  const fresh = DETAILS.some((d) => fits(age, d) && !today.details.has(d.text));
+  const detail = weighted(rng, DETAILS, (d) =>
+    fits(age, d) && !(fresh && today.details.has(d.text)) ? d.w : 0,
+  );
+  today.details.add(detail.text);
   const weaknesses = [
     ...new Set([detail.tag, ...sample(rng, job.leans, int(rng, 1, 2))]),
   ];
