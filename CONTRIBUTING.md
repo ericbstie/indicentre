@@ -73,9 +73,11 @@ src/
     system.ts          GameSystem, SystemContext {game, world}
     index.ts           generated
     <id>.ts            clock.ts, welcome.ts, NPCs, news TV, boss...
-  content/             static text (mails, later dialogue/news)
+  content/             static text and data (mails, coworkers, later news)
+  dialog/              openDialog({ speaker, line, choices }) overlay
+  audio/               speak(line) babble hook (no-op until sound lands)
   desktop/             PC overlay shell (desktop.ts/.css), html.ts esc()
-  scene/               three.js: office, player, interact registry
+  scene/               three.js: office, player, npc, interact registry
   hud/                 HUD overlay (hud.ts/.css)
 scripts/
   gen.ts               writes the three generated index.ts files
@@ -136,8 +138,10 @@ Generated `index.ts` files never count as shared (regenerate them).
 ## Playtesting
 
 Open `http://localhost:3000/?debug` to expose `window.indicentre`
-(`game`, `desktop`, `sitDown()`, `standUp()`) for automation. Pointer lock
-does not work headless, so drive the desktop with `sitDown()` and DOM clicks.
+(`game`, `world`, `desktop`, `sitDown()`, `standUp()`) for automation.
+Pointer lock does not work headless, so drive the desktop with `sitDown()`
+and DOM clicks. To use an `[E]` interaction, aim `world.camera` at it and
+fake the lock: `Object.defineProperty(world.player.controls, "isLocked", { value: true })`.
 Playwright with Chromium is preinstalled in agent containers
 (`require("playwright")`); launch with
 `--use-gl=angle --use-angle=swiftshader --enable-unsafe-swiftshader` for WebGL.

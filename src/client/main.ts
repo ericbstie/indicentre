@@ -17,4 +17,4 @@ world.onFrame(() =>
 for (const system of systems) system.start({ game, world });
 world.start();
 
-exposeDebug({ game, desktop, sitDown, standUp });
+exposeDebug({ game, desktop, sitDown, standUp, world });
