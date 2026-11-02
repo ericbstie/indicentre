@@ -1,8 +1,7 @@
-import { PcOpened } from "../client/desktop.ts";
 import { beats } from "../content/story.ts";
+import { PcOpened } from "../client/desktop.ts";
 import { BossWatching, WatchRequested } from "../core/boss.ts";
-import { dialogOpen, openDialog } from "../dialog/dialog.ts";
-import { modalOpen } from "../hud/modal.ts";
+import { queueDialog } from "../dialog/dialog.ts";
 import { type Call, callDialog } from "../story/call.ts";
 import { type LinesContext, linesDialog } from "../story/lines.ts";
 import {
@@ -17,8 +16,7 @@ import type { GameSystem } from "./system.ts";
 
 /**
  * Plays story beats (src/content/story.ts) in the shared dialog overlay.
- * Beats queue up and wait until nothing else is talking: no dialog and
- * no day report.
+ * Beats queue behind whatever is talking (dialog.ts queueDialog), in order.
  */
 export default {
   id: "story",
@@ -59,8 +57,35 @@ export default {
       });
     };
 
-    const play = (b: Beat) =>
-      new Promise<void>((resolve) => {
+    // Only a watch the story asked for plays its "watching" beat.
+    let watchRequested = false;
+
+    /** Queues `b` behind any open dialog or card (dialog.ts queueDialog). */
+    const play = (b: Beat) => {
+      const learn = b.learn;
+      const debrief = learn
+        ? () => linesDialog(ctx, [{ speaker: "What to spot", line: learn }])
+        : undefined;
+      const { call } = b;
+      let started = false;
+      let won = false;
+      const tail = call
+        ? () => {
+            started = true;
+            return callDialog(call, (w) => (won = w), debrief);
+          }
+        : debrief;
+      let stand: (() => void) | undefined;
+      void queueDialog(linesDialog(ctx, b.lines, tail), () => {
+        stand?.();
+        // Settled once the player is done reading, so the boss's verdict
+        // doesn't talk over the debrief. Leaving mid-call is a hang-up.
+        if (call && started) settle(call, won);
+        if (b.watch && dueBeats(beats, game.state(), b.day, "watching")[0]) {
+          watchRequested = true;
+          game.emit(WatchRequested, {});
+        }
+      }).then(() => {
         game.dispatch(sawBeat(b.id));
         if (b.introduces && b.free)
           game.dispatch({
@@ -68,56 +93,20 @@ export default {
             item: { kind: "scam", id: b.introduces, price: 0 },
           });
         world.player.controls.unlock();
-        const stand = b.atDesk ? sitAtDesk() : undefined;
-        const learn = b.learn;
-        const debrief = learn
-          ? () => linesDialog(ctx, [{ speaker: "What to spot", line: learn }])
-          : undefined;
-        const { call } = b;
-        let started = false;
-        let won = false;
-        const tail = call
-          ? () => {
-              started = true;
-              return callDialog(call, (w) => (won = w), debrief);
-            }
-          : debrief;
-        openDialog(linesDialog(ctx, b.lines, tail), () => {
-          stand?.();
-          // Settled once the player is done reading, so the boss's verdict
-          // doesn't talk over the debrief. Leaving mid-call is a hang-up.
-          if (call && started) settle(call, won);
-          if (b.watch && dueBeats(beats, game.state(), b.day, "watching")[0]) {
-            watchRequested = true;
-            game.emit(WatchRequested, {});
-          }
-          resolve();
-        });
+        if (b.atDesk) stand = sitAtDesk();
       });
+    };
 
-    const queue: Beat[] = [];
+    const queued = new Set<string>();
     const enqueue = (day: number, on: Trigger) => {
       for (const b of dueBeats(beats, game.state(), day, on))
-        if (!queue.includes(b)) queue.push(b);
+        if (!queued.has(b.id)) {
+          queued.add(b.id);
+          play(b);
+        }
     };
-    let playing = false;
-    // Only a watch the story asked for plays its "watching" beat.
-    let watchRequested = false;
-    // The beat for the boss's watch plays once he's behind the player.
-    const ready = (b: Beat) =>
-      !playing && !modalOpen() && (b.on === "watching" || !dialogOpen());
 
     const stops = [
-      world.onFrame(() => {
-        const i = queue.findIndex(ready);
-        const next = queue[i];
-        if (!next) return;
-        queue.splice(i, 1);
-        playing = true;
-        void play(next).then(() => {
-          playing = false;
-        });
-      }),
       game.on(BossWatching, () => {
         if (watchRequested) enqueue(game.state().day, "watching");
         watchRequested = false;
