@@ -21,6 +21,9 @@ let root: HTMLElement | undefined;
 let onClose: (() => void) | undefined;
 let current: DialogNode | undefined;
 
+/** True while a line is up, so systems can wait instead of replacing it. */
+export const dialogOpen = () => current !== undefined;
+
 const mount = () => {
   const el = document.createElement("div");
   el.className = "dialog-layer";
