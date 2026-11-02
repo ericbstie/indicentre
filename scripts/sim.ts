@@ -6,6 +6,7 @@ import { initialState, reduce, type GameState } from "../src/core/state.ts";
 import {
   canBuy,
   quotaFor,
+  quotaToday,
   SHIFT_MINUTES,
   WIN_DAY,
 } from "../src/core/economy.ts";
@@ -214,7 +215,7 @@ const run = (seed: number, pl: Player): Run => {
   while (s.status === "playing") {
     const day = s.day;
     const cap =
-      s.earnedToday >= quotaFor(day) ? pl.heatCapAfterQuota : pl.heatCap;
+      s.earnedToday >= quotaToday(s) ? pl.heatCapAfterQuota : pl.heatCap;
     if (workable(s, pl).length && s.shutdownMeter + worstFail(s, pl) < cap) {
       s = play(rng, s, pl);
       continue;

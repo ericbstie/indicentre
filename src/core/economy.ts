@@ -10,8 +10,18 @@ export const OVERNIGHT_COOLDOWN = 40;
 
 /** Day 1 quota and how much it rises each day. */
 const QUOTA_BASE = 45;
-const QUOTA_STEP = 17;
+const QUOTA_STEP = 24;
 export const quotaFor = (day: number) => QUOTA_BASE + QUOTA_STEP * (day - 1);
+/** A good day raises the bar: today's quota is at least this share of
+ * yesterday's take. */
+const QUOTA_RATCHET = 0.6;
+
+/** Today's quota: the day's base, or more after a big day. Fixed all day. */
+export const quotaToday = (s: GameState) =>
+  Math.max(
+    quotaFor(s.day),
+    Math.round(QUOTA_RATCHET * (s.days.at(-1)?.earned ?? 0)),
+  );
 
 /** Missing the quota this many days in a row gets you fired. The first miss of
  * the run is a written warning instead and starts no streak. */
@@ -33,13 +43,14 @@ export interface DaySummary {
 
 /** Close the shift: log it, cool heat overnight, start the next day at 09:00. */
 export const endDay = (s: GameState): GameState => {
-  const met = s.earnedToday >= quotaFor(s.day);
+  const quota = quotaToday(s);
+  const met = s.earnedToday >= quota;
   const summary: DaySummary = {
     day: s.day,
     earned: s.earnedToday,
     heatStart: s.heatAtDayStart,
     heatEnd: s.shutdownMeter,
-    quota: quotaFor(s.day),
+    quota,
     met,
     warned: !met && s.days.every((d) => d.met),
   };

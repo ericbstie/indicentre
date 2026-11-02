@@ -4,6 +4,7 @@ import {
   missStreak,
   OVERNIGHT_COOLDOWN,
   quotaFor,
+  quotaToday,
   SHIFT_MINUTES,
   WIN_DAY,
 } from "./economy.ts";
@@ -57,6 +58,17 @@ describe("quota", () => {
   test("rises every day", () => {
     expect(quotaFor(2)).toBeGreaterThan(quotaFor(1));
     expect(quotaFor(10)).toBeGreaterThan(quotaFor(9));
+  });
+
+  test("a big day raises tomorrow's quota above the usual step", () => {
+    const normal = run(
+      { type: "earn", amount: quotaFor(1) },
+      { type: "endDay" },
+    );
+    expect(quotaToday(normal)).toBe(quotaFor(2));
+    const big = run({ type: "earn", amount: 1000 }, { type: "endDay" });
+    expect(quotaToday(big)).toBeGreaterThan(quotaFor(2));
+    expect(big.days[0]!.quota).toBe(quotaFor(1));
   });
 
   test("met when the day's earnings reach it; misses streak until a hit", () => {

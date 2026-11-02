@@ -1,5 +1,5 @@
 import "./hud.css";
-import { quotaFor } from "../core/economy.ts";
+import { quotaToday } from "../core/economy.ts";
 import { clock, type GameState, SHUTDOWN_MAX } from "../core/state.ts";
 
 /** Always-on overlay: day/time, bucks, quota, heat. Nothing else. */
@@ -22,10 +22,10 @@ export const createHud = (root: HTMLElement) => {
 
   return {
     render(s: GameState) {
-      const q = quotaFor(s.day);
+      const q = quotaToday(s);
       time.textContent = `Day ${s.day} · ${clock(s)}`;
       bucks.textContent = `${s.scamBucks} bucks`;
-      quota.textContent = `Quota ${Math.min(s.earnedToday, q)}/${q}`;
+      quota.textContent = `Quota ${s.earnedToday}/${q}`;
       quota.classList.toggle("met", s.earnedToday >= q);
       meter.style.width = `${(s.shutdownMeter / SHUTDOWN_MAX) * 100}%`;
     },
