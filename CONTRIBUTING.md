@@ -45,7 +45,7 @@ src/
   css.d.ts             lets .ts files `import "./x.css"`
   client/              composition root: wiring only, no features
     index.html         entry page (links tokens.css)
-    tokens.css         color tokens + base/.btn/.link/.empty styles
+    tokens.css         color tokens + base/.btn/.link/.empty/.lesson
     main.ts            boots game, world, HUD, desktop; starts systems
     boot.ts            fresh-run game + ?debug hook
     scene.ts           renderer, camera, player, interactions, onFrame loop
