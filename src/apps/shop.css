@@ -1,0 +1,35 @@
+.shop {
+  padding: 16px 24px;
+}
+
+.shop .item {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  margin-bottom: 8px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.shop .item p {
+  margin: 4px 0 0;
+  color: var(--ink-soft);
+}
+
+.shop .lesson {
+  padding: 6px 10px;
+  background: #fff8d0;
+  border-left: 4px solid var(--warn);
+}
+
+.shop .btn {
+  white-space: nowrap;
+}
+
+.shop .btn:disabled {
+  background: var(--muted);
+  cursor: default;
+}
