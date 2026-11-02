@@ -16,6 +16,8 @@ describe("catalog", () => {
     expect(new Set(catalog.map((c) => c.id)).size).toBe(catalog.length);
     for (const c of catalog) expect(c.price).toBeGreaterThan(0);
     for (const t of tools) expect(t.lesson.length).toBeGreaterThan(0);
+    for (const c of catalog)
+      if (c.requires) expect(tools.map((t) => t.id)).toContain(c.requires);
   });
 
   test("scams list the tags their templates pull, tools list none", () => {
