@@ -17,7 +17,18 @@
   border-radius: 6px;
 }
 
+.heat {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.hud-stats .met {
+  color: #6c6;
+}
+
 .meter {
+  display: inline-block;
   width: 120px;
   height: 8px;
   background: #333;
