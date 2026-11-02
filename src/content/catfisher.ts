@@ -1,3 +1,5 @@
+import { clueCount, type GameState } from "../core/state.ts";
+
 // EXTRA: the catfisher file. One clue a day about "Sam", the match who
 // catfished the player before day 1. Each clue names one catfishing red
 // flag, from the victim's side. Ignoring them costs nothing but the story.
@@ -128,3 +130,12 @@ Sam has a desk on this floor and a chipped green mug. You'll figure out which. T
 
 - The Boss`,
 };
+
+/** Inbox id of a mail clue; reading that mail finds the clue. */
+export const clueMailId = (c: Clue) => `clue-${c.id}`;
+
+/** Clues that can turn up by `day` and aren't found yet, oldest first. */
+export const cluesDue = (day: number, found: ReadonlyArray<string>) =>
+  clues.filter((c) => c.day <= day && !found.includes(c.id));
+
+export const fileComplete = (s: GameState) => clueCount(s) >= FILE_COMPLETE;
