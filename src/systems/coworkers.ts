@@ -1,6 +1,7 @@
 import {
   type Coworker,
   coworkers,
+  idleLine,
   unlockedHints,
 } from "../content/coworkers.ts";
 import { hintsHeard } from "../core/state.ts";
@@ -25,7 +26,7 @@ export default {
     // Hints `from`..`to`-1 as a chain of "Anything else?" replies.
     const chain = (c: Coworker, from: number, to: number): DialogNode => ({
       speaker: c.name,
-      line: c.hints[from] ?? c.idle,
+      line: c.hints[from] ?? idleLine(c, game.state()),
       ...(from + 1 < to && {
         choices: [
           {
@@ -41,7 +42,8 @@ export default {
       world.player.controls.unlock();
       const heard = hintsHeard(game.state(), c.id);
       const open = unlockedHints(c, game.state()).length;
-      if (heard >= open) return openDialog({ speaker: c.name, line: c.idle });
+      if (heard >= open)
+        return openDialog({ speaker: c.name, line: idleLine(c, game.state()) });
       give(c, heard);
       openDialog(chain(c, heard, open));
     };
