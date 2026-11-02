@@ -1,4 +1,4 @@
-// EXTRA: the catfisher file. One clue a day about "Sam", the match who
+// EXTRA: the catfisher file. One clue a day about "Angel", the match who
 // catfished the player before day 1. Each clue names one catfishing red
 // flag, from the victim's side. Ignoring them costs nothing but the story.
 
@@ -17,7 +17,7 @@ export interface Clue {
   readonly via: ClueVia;
   /** Mail body, or the coworker's line. */
   readonly text: string;
-  /** The File app row: what you now know about Sam. */
+  /** The File app row: what you now know about Angel. */
   readonly note: string;
   readonly redFlag: string;
 }
@@ -26,23 +26,23 @@ export const clues: ReadonlyArray<Clue> = [
   {
     id: "no-video",
     day: 1,
-    via: { kind: "mail", from: "Sam ♥", subject: "miss u already" },
+    via: { kind: "mail", from: "Angel ♥", subject: "miss u already" },
     text: `hey you
 
 Sorry I went quiet. Phone camera broke AGAIN, third one this year, the rig eats electronics. So no video call this week either. Next week promise.
 
 Was thinking about you on my lunch break. 12:30 sharp, same as always lol
 
-Sam`,
-    note: "Sam's camera has been broken for the whole relationship.",
+Angel`,
+    note: "Angel's camera has been broken for the whole relationship.",
     redFlag: "Always a reason they can't video call or meet.",
   },
   {
     id: "too-fast",
     day: 2,
     via: { kind: "coworker", coworker: "priya" },
-    text: "You left your chat open. Your Sam said 'soulmate' on day three? That's quick. We're told to wait until day five.",
-    note: "Sam called you a soulmate three days in.",
+    text: "You left your chat open. Your Angel said 'soulmate' on day three? That's quick. We're told to wait until day five.",
+    note: "Angel called you a soulmate three days in.",
     redFlag: "Big feelings, very fast, from someone you've never met.",
   },
   {
@@ -61,7 +61,7 @@ Biggest offender: /marketing/profiles/smiles/ with 4,000 copies of the same phot
 
 IT Desk
 (this is an automated message, please do not reply, we will not read it)`,
-    note: "Sam's beach photo, green mug and all, sits in a folder on our own drive.",
+    note: "Angel's beach photo, green mug and all, sits in a folder on our own drive.",
     redFlag: "Their photo turns up somewhere else. Search the image.",
   },
   {
@@ -75,14 +75,14 @@ IT Desk
   {
     id: "off-app",
     day: 5,
-    via: { kind: "mail", from: "Sam ♥", subject: "new number!!" },
+    via: { kind: "mail", from: "Angel ♥", subject: "new number!!" },
     text: `Hi!! Let's stop using the dating app, the mods read everything and it's creepy. Text me on this number instead, it's just us there.
 
 Can't wait for Friday's chat. 9:00 like always.
 
-Sam
+Angel
 Sent from my work phone`,
-    note: "Sam wanted off the dating app. And has a 9-to-5 'work phone'.",
+    note: "Angel wanted off the dating app. And has a 9-to-5 'work phone'.",
     redFlag: "Pushes you off the dating app to a private chat.",
   },
   {
@@ -90,19 +90,19 @@ Sent from my work phone`,
     day: 6,
     via: { kind: "coworker", coworker: "rohan" },
     text: "Found a binder by the printer. 'Week two: introduce a crisis. Hospital or customs, never both.' Coffee ring on the cover. Green mug, I'd say.",
-    note: "Sam's crisis came out of a binder by our printer.",
+    note: "Angel's crisis came out of a binder by our printer.",
     redFlag: "A sudden crisis right before the first money ask.",
   },
   {
     id: "secret",
     day: 7,
-    via: { kind: "mail", from: "Sam ♥", subject: "just between us" },
+    via: { kind: "mail", from: "Angel ♥", subject: "just between us" },
     text: `Please don't tell your friends about us yet. They'll get jealous and say things. They don't know me like you do.
 
 Also customs are holding my parcel again, can you help one more time? I'll pay you back the day I'm home.
 
-Sam`,
-    note: "Sam asked you to keep it from your friends. Then asked for money again.",
+Angel`,
+    note: "Angel asked you to keep it from your friends. Then asked for money again.",
     redFlag: "Asks you to keep the relationship secret.",
   },
   {
@@ -110,7 +110,7 @@ Sam`,
     day: 8,
     via: { kind: "coworker", coworker: "priya" },
     text: "Gift card rack at the corner shop is empty again. Someone on this floor is 'stuck at customs' every Thursday. Same mug on his desk every Thursday too.",
-    note: "Sam's customs fees are paid in gift cards. Someone here drinks from a green mug.",
+    note: "Angel's customs fees are paid in gift cards. Someone here drinks from a green mug.",
     redFlag: "Wants gift cards, crypto or a wire. Money you can't get back.",
   },
 ];
@@ -123,11 +123,11 @@ export const fileCompleteMail = {
   id: "clue-finale",
   from: "The Boss",
   subject: "That file of yours",
-  body: `Heard you've been keeping a file on our Sam.
+  body: `Heard you've been keeping a file on our Angel.
 
 Cute. Curious people sell. That's why we hired you.
 
-Sam has a desk on this floor and a chipped green mug. You'll figure out which. Today's a good day to return the favour.
+Angel has a desk on this floor and a chipped green mug. You'll figure out which. Today's a good day to return the favour.
 
 - The Boss`,
 };

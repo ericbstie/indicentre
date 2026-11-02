@@ -8,7 +8,7 @@ import {
 import { esc } from "../desktop/html.ts";
 import type { DesktopApp } from "./app.ts";
 
-/** EXTRA: the catfisher file. What you know about Sam, one red flag per clue. */
+/** EXTRA: the catfisher file. What you know about Angel, one red flag per clue. */
 export default {
   id: "file",
   title: "File",
@@ -26,11 +26,11 @@ export default {
         )
         .join("");
       el.innerHTML = `<div class="file page">
-        <h3>Sam</h3>
+        <h3>Angel</h3>
         <p class="empty">${
           fileComplete(s)
-            ? "Enough to find Sam."
-            : `${esc(found.length)} of ${esc(clues.length)} clues. ${esc(FILE_COMPLETE)} would be enough to find Sam.`
+            ? "Enough to find Angel."
+            : `${esc(found.length)} of ${esc(clues.length)} clues. ${esc(FILE_COMPLETE)} would be enough to find Angel.`
         }</p>
         <ul>${rows}</ul></div>`;
     };
