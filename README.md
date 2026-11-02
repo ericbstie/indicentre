@@ -27,5 +27,8 @@ Click to look around, WASD to move, E to use the PC, Esc to stand up.
 | `bun run fmt`   | Format everything                                  |
 | `bun run test`  | Unit tests                                         |
 
+To host it behind Caddy on your own server, see
+[docs/hosting.md](docs/hosting.md).
+
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the architecture and how to add
 scams, apps and NPCs.
