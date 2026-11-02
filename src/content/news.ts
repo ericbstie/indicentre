@@ -3,6 +3,8 @@
 // victims (we don't know them), no triads. Slots: {place} {role} {first}
 // {age} {amount} {scam}. {role} is the victim's occupation, lowercased.
 
+import type { NewsItem } from "../news/news.ts";
+
 export const PLACES = [
   "Bergen",
   "Drammen",
@@ -42,3 +44,95 @@ export const VICTIM_QUOTES = [
   "The police said I'm the third one on this street this month.",
   "I was on the bus. I just wanted it sorted before my stop.",
 ];
+
+/** World news the TV cycles when nothing has happened. Tagged for later. */
+export const AMBIENT: ReadonlyArray<NewsItem> = (
+  [
+    ["Hamar council votes 7 to 6 to keep the Thursday market", "", ["local"]],
+    [
+      "BankCo repeats: it will never ask for your code",
+      `"We print it on the receipts now," a spokesperson said.`,
+      ["bank", "police"],
+    ],
+    ["Parcel volumes up 18% before Christmas, ParcelPost says", "", ["parcel"]],
+    [
+      "Bodø police: fake delivery texts are up again this autumn",
+      `"If you didn't order anything, there is no parcel."`,
+      ["parcel", "police"],
+    ],
+    [
+      "Skien pensioners' club starts Tuesday 'scam coffee'",
+      `"We read the strange emails out loud. It's become quite popular."`,
+      ["elderly", "local"],
+    ],
+    [
+      "Sleet in the west tomorrow, 4 degrees. Bring the good gloves",
+      "",
+      ["local"],
+    ],
+    [
+      "Survey: one in three has clicked a link they regretted",
+      "",
+      ["tech", "money"],
+    ],
+    [
+      "Student loans pay out Friday. So do the fake 'loan office' mails",
+      "",
+      ["young", "money"],
+    ],
+    ["Lottery board: you can't win a draw you never entered", "", ["prize"]],
+    [
+      "Moss man, 81, takes his first computer course. Passes",
+      `"The teacher said hover before you click. I hover over everything now."`,
+      ["elderly", "tech"],
+    ],
+    ["Ålesund ferry 40 minutes late, seagull blamed", "", ["local"]],
+    [
+      "Report: overseas call centres 'more organised than ever'",
+      `"Some of them have quarterly targets," one investigator said.`,
+      ["police", "phone"],
+    ],
+    [
+      "Phone networks to label suspected spam calls from March",
+      "",
+      ["phone", "tech"],
+    ],
+    [
+      "Drammen bakery wins the regional cinnamon bun prize again",
+      "",
+      ["local"],
+    ],
+    [
+      "Bank fraud in the region: 412 cases so far this year",
+      "",
+      ["bank", "police", "money"],
+    ],
+    [
+      "Kristiansand school teaches 12-year-olds to spot fake prize mails",
+      `"They're better at it than the staff," the head teacher admitted.`,
+      ["young", "prize"],
+    ],
+    [
+      "Police: no real officer asks you to move money to a 'safe account'",
+      "",
+      ["bank", "police"],
+    ],
+    [
+      "Local man wins 2,000 kr on a scratch card, tells everyone",
+      "",
+      ["prize", "local"],
+    ],
+    [
+      "Tromsø library opens an 'is this a scam?' desk on Saturdays",
+      `"Bring the letter. Or the phone. Or your grandson."`,
+      ["elderly", "tech", "local"],
+    ],
+    ["Study: most scam victims aren't old. Most are in a hurry", "", ["money"]],
+  ] as const
+).map(([headline, quote, tags]) => ({
+  headline,
+  profile: "",
+  quote,
+  kind: "ambient",
+  tags,
+}));
