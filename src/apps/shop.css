@@ -1,17 +1,8 @@
-.shop {
-  padding: 16px 24px;
-}
-
 .shop .item {
   display: flex;
   gap: 16px;
   align-items: center;
   justify-content: space-between;
-  padding: 12px;
-  margin-bottom: 8px;
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 6px;
 }
 
 .shop .item p {
@@ -23,11 +14,10 @@
   white-space: nowrap;
 }
 
-.shop .btn:disabled {
-  background: var(--muted);
-  cursor: default;
-}
-
 .shop h3 {
   margin: 20px 0 8px;
+}
+
+.shop h3:first-child {
+  margin-top: 0;
 }

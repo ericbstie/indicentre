@@ -12,7 +12,7 @@ const row = (s: GameState, item: CatalogItem) => {
   const have = owns(s, item);
   const lesson = have ? lessonFor(item.id) : undefined;
   return `
-  <div class="item">
+  <div class="item panel">
     <div><b>${esc(item.name)}</b>${item.tags ? ` ${tagList(item.tags)}` : ""}<p>${esc(item.blurb(modifiersFor(s.ownedTools)))}</p>${
       lesson ? `<p class="lesson">${esc(lesson)}</p>` : ""
     }</div>
@@ -38,7 +38,7 @@ export default {
   mount(el, { game }) {
     const render = () => {
       const s = game.state();
-      el.innerHTML = `<div class="shop">${rows(
+      el.innerHTML = `<div class="shop page">${rows(
         s,
         catalog.filter(
           (c) =>

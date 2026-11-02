@@ -1,19 +1,7 @@
-.file {
-  padding: 16px 24px;
-}
-
 .file ul {
   margin: 0;
   padding: 0;
   list-style: none;
-}
-
-.file .clue {
-  padding: 12px;
-  margin-bottom: 8px;
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 6px;
 }
 
 .file .lesson {

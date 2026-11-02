@@ -13,7 +13,7 @@ export default {
     return n ? String(n) : "";
   },
   mount(el, { game }) {
-    el.innerHTML = `<div class="mail"><ul class="mail-list"></ul><article class="mail-read"></article></div>`;
+    el.innerHTML = `<div class="mail"><ul class="mail-list"></ul><article class="mail-read page"></article></div>`;
     const list = el.querySelector<HTMLElement>(".mail-list")!;
     const reader = el.querySelector<HTMLElement>(".mail-read")!;
     let selected: string | undefined;

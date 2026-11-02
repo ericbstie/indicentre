@@ -21,11 +21,11 @@ export default {
       const rows = clues
         .map((c) =>
           found.includes(c.id)
-            ? `<li class="clue"><b>${esc(c.note)}</b><p class="lesson">Red flag: ${esc(c.redFlag)}</p></li>`
-            : `<li class="clue empty">?</li>`,
+            ? `<li class="clue panel"><b>${esc(c.note)}</b><p class="lesson">Red flag: ${esc(c.redFlag)}</p></li>`
+            : `<li class="clue panel empty">?</li>`,
         )
         .join("");
-      el.innerHTML = `<div class="file">
+      el.innerHTML = `<div class="file page">
         <h3>Sam</h3>
         <p class="empty">${
           fileComplete(s)

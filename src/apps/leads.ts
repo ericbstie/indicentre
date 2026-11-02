@@ -76,7 +76,7 @@ const viewCard = (v: VictimView) => `
 const viewDossier = (v: VictimView, best?: { label: string; p: number }) => {
   const top = v.weaknesses?.[0];
   return v.hobby && v.recent && top
-    ? `<section class="dossier">
+    ? `<section class="dossier panel">
         <h4>Dossier <small>scraped from public posts</small></h4>
         <dl>
           <dt>Who</dt><dd>${esc(v.ageBand)} · ${esc(v.occupation)}</dd>
@@ -152,7 +152,7 @@ export default {
       <div class="cards">${leads
         .map(
           ({ view }) => `
-        <button class="card" data-target="${esc(view.id)}">${viewCard(view)}</button>`,
+        <button class="card panel" data-target="${esc(view.id)}">${viewCard(view)}</button>`,
         )
         .join("")}</div>`;
 
@@ -163,7 +163,7 @@ export default {
       action: string,
       stakes: string,
     ) => `
-      <div class="template">
+      <div class="template panel">
         <div><b>${esc(tpl.label)}</b> ${tagList(pulls(s, tpl))}
         <p class="subject">${esc(personalize(tpl.subject, t))}</p>
         <p class="body">${escLines(personalize(tpl.body, t))}</p></div>
@@ -250,10 +250,10 @@ export default {
 
     const render = () => {
       if (game.state().status !== "playing") {
-        el.innerHTML = `<div class="leads"><p class="empty">No more leads.</p></div>`;
+        el.innerHTML = `<div class="leads page"><p class="empty">No more leads.</p></div>`;
         return;
       }
-      el.innerHTML = `<div class="leads">${
+      el.innerHTML = `<div class="leads page">${
         result
           ? viewResult(result)
           : target

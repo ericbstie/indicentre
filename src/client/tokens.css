@@ -11,6 +11,7 @@
   --warn: #e8b030;
   --danger: #e03030;
   --success: #3a9a4a;
+  --selected: #dfe8f6;
 }
 
 * {
@@ -47,6 +48,11 @@ canvas {
   cursor: pointer;
 }
 
+.btn:disabled {
+  background: var(--muted);
+  cursor: default;
+}
+
 .link {
   padding: 0;
   font: inherit;
@@ -54,6 +60,20 @@ canvas {
   background: none;
   border: 0;
   cursor: pointer;
+}
+
+/* An app's content area (src/apps). */
+.page {
+  padding: 16px 24px;
+}
+
+/* A white box in an app: a lead, a pitch, a shop row, a clue. */
+.panel {
+  padding: 12px;
+  margin-bottom: 8px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 6px;
 }
 
 /* The takeaway box after a scam or purchase. */
