@@ -80,7 +80,10 @@ export const AMBIENT: ReadonlyArray<NewsItem> = (
       `"We read the strange emails out loud. It's become quite popular."`,
     ],
     ["Sleet in the west tomorrow, 4 degrees. Bring the good gloves", ""],
-    ["Survey: one in three has clicked a link they regretted", ""],
+    [
+      "Fjellstad Bank survey: one in three customers has clicked a link they regretted",
+      "",
+    ],
     ["Student loans pay out Friday. So do the fake 'loan office' mails", ""],
     ["Lottery board: you can't win a draw you never entered", ""],
     [
@@ -89,7 +92,7 @@ export const AMBIENT: ReadonlyArray<NewsItem> = (
     ],
     ["Ålesund ferry 40 minutes late, seagull blamed", ""],
     [
-      "Report: scam call centres 'more organised than ever'",
+      "Police report: scam call centres 'more organised than ever'",
       `"Some of them have quarterly targets," one investigator said.`,
     ],
     ["Phone networks to label suspected spam calls from March", ""],
@@ -105,7 +108,10 @@ export const AMBIENT: ReadonlyArray<NewsItem> = (
       "Tromsø library opens an 'is this a scam?' desk on Saturdays",
       `"Bring the letter, or the phone, or the grandson who set the phone up."`,
     ],
-    ["Study: most scam victims aren't old. Most are in a hurry", ""],
+    [
+      "Hamar police: most fraud victims this year weren't old. They were in a hurry",
+      "",
+    ],
     [
       "Bergen illustrator finds her pet portraits on a stranger's commission page",
       `"Twelve people paid him for my work. None of them got it," she said.`,
