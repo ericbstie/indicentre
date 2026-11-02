@@ -25,6 +25,8 @@ export interface Mail {
   readonly read: boolean;
 }
 
+/** The whole run. Saved as JSON (core/save.ts): keep it plain data, and bump
+ * SAVE_VERSION when its shape changes. Slices nest here (e.g. workplace). */
 export interface GameState {
   readonly scamBucks: number;
   /** 0..SHUTDOWN_MAX. At max the call center is raided and the run ends. */

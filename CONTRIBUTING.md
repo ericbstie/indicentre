@@ -75,6 +75,8 @@ src/
     economy.ts         shift clock, DayEnded log, quota, buy, win/lose
     events.ts          GameEvent union, diffEvents(), createBus()
     store.ts           GameStore Effect service (Ref + listeners + bus)
+    save.ts            one saved run in localStorage; SAVE_VERSION guards
+                       GameState's shape (save.test.ts lists its keys)
     rng.ts             seeded Rng; never Math.random in logic
   apps/                REGISTRY: one desktop app per file
     app.ts             DesktopApp, AppContext
