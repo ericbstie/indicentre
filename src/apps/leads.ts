@@ -1,11 +1,11 @@
-import { seeded } from "../../core/rng.ts";
-import { isUnlocked } from "../../core/state.ts";
-import { scams } from "../../scams/registry.ts";
-import { type Outcome, personalize, resolveScam } from "../../scams/resolve.ts";
-import { generateTargets } from "../../scams/targets.ts";
-import type { ScamDef, ScamTemplate, Target } from "../../scams/types.ts";
-import type { DesktopApp } from "../desktop.ts";
-import { esc, escLines } from "../html.ts";
+import { seeded } from "../core/rng.ts";
+import { isUnlocked } from "../core/state.ts";
+import { scams } from "../scams/registry.ts";
+import { type Outcome, personalize, resolveScam } from "../scams/resolve.ts";
+import { generateTargets } from "../scams/targets.ts";
+import type { ScamDef, ScamTemplate, Target } from "../scams/types.ts";
+import { esc, escLines } from "../desktop/html.ts";
+import type { DesktopApp } from "./app.ts";
 
 const LEADS_PER_BATCH = 3;
 
@@ -17,11 +17,12 @@ interface Result {
 }
 
 /** Pick a target, pick a scam template, send, see what happened and why. */
-export const leadsApp: DesktopApp = {
+export default {
   id: "leads",
   title: "Leads",
   icon: "☎",
-  mount(el, game) {
+  order: 10,
+  mount(el, { game }) {
     const seedNow = () => {
       const s = game.state();
       return s.day * 10_000 + s.minute;
@@ -149,4 +150,4 @@ export const leadsApp: DesktopApp = {
 
     render();
   },
-};
+} satisfies DesktopApp;

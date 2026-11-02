@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { apps } from "../desktop/apps/index.ts";
+import { apps } from "../apps/index.ts";
 import { createDesktop } from "../desktop/desktop.ts";
 import type { Game } from "./game.ts";
 import type { World } from "./scene.ts";
