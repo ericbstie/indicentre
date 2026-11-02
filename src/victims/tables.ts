@@ -431,6 +431,7 @@ export const DEFENSES: ReadonlyArray<
     lines: [
       "I phoned the actual office. They'd never heard of you.",
       "The real number's on their website. Shall we both ring it now?",
+      "I rang them on the number we already had. Nothing has changed, they said.",
     ],
   },
   {
