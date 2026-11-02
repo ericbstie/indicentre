@@ -1,6 +1,6 @@
 // Story beats: pure data types and the rules for which beat plays when.
 // The beats themselves live in src/content/story.ts; systems/story.ts plays them.
-import { quotaFor } from "../core/economy.ts";
+import { quotaToday } from "../core/economy.ts";
 import { defineSlice } from "../core/slice.ts";
 import type { GameState, ScamId } from "../core/state.ts";
 import type { Call } from "./call.ts";
@@ -93,7 +93,7 @@ export const dueBeats = (
 /** Placeholder values for story lines. */
 export const storyVars = (s: GameState) => ({
   nick: story.get(s).choices["nick"] ?? "you",
-  quota: String(quotaFor(s.day)),
+  quota: String(quotaToday(s)),
   earned: String(s.earnedToday),
 });
 
