@@ -29,7 +29,7 @@ export const ageBand = (age: number): AgeBand =>
     Math.min(AGE_BANDS.length - 1, Math.max(0, Math.floor(age / 10) - 2))
   ]!;
 
-/** The habit that beats a scam. Shown when the victim wins: the lesson. */
+/** The habit that beats a scam. Its line ends the result card; the TV news tells the behavior. */
 export interface Defense {
   readonly id: string;
   /** What they did, third person, no pronouns. "Called the bank back on the number on the card." */
