@@ -88,9 +88,14 @@ const choose = (c: DialogChoice) => {
   else closeDialog();
 };
 
-/** Shows `node`, replacing any open dialog. `closed` runs once when it ends. */
+/**
+ * Shows `node`, replacing any open dialog. `closed` runs once when it ends,
+ * including when another dialog replaces it.
+ */
 export const openDialog = (node: DialogNode, closed?: () => void) => {
+  const replaced = onClose;
   onClose = closed;
+  replaced?.();
   render(node);
 };
 

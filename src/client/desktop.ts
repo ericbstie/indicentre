@@ -1,8 +1,12 @@
 import * as THREE from "three";
 import { apps } from "../apps/index.ts";
 import { createDesktop } from "../desktop/desktop.ts";
+import { defineEvent } from "../core/events.ts";
 import type { Game } from "./game.ts";
 import type { World } from "./scene.ts";
+
+/** The player sat down at their PC. */
+export const PcOpened = defineEvent<Record<never, never>>("PcOpened");
 
 /** Mounts the PC desktop overlay and wires sitting down / standing up. */
 export const mountDesktop = (game: Game, world: World) => {
@@ -27,6 +31,7 @@ export const mountDesktop = (game: Game, world: World) => {
     camera.position.copy(office.seat.position);
     camera.lookAt(office.seat.lookAt);
     desktop.open();
+    game.emit(PcOpened, {});
   };
   const standUp = () => {
     desktop.close();
