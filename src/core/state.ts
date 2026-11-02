@@ -1,6 +1,13 @@
 // Pure game state. No I/O, no Effect: everything here is a plain function
 // so it can be unit-tested and replayed. Side effects live in store.ts.
-import { advance, type DaySummary, endDay } from "./economy.ts";
+import {
+  advance,
+  buy,
+  type DaySummary,
+  endDay,
+  type Purchase,
+  type ToolId,
+} from "./economy.ts";
 
 export const SHUTDOWN_MAX = 100;
 
@@ -39,6 +46,7 @@ export interface GameState {
   readonly heatAtDayStart: number;
   /** DayEnded log, oldest first. */
   readonly days: ReadonlyArray<DaySummary>;
+  readonly ownedTools: ReadonlyArray<ToolId>;
 }
 
 export type Action =
@@ -53,7 +61,8 @@ export type Action =
   | { readonly type: "heardHint"; readonly coworker: string }
   | { readonly type: "bossMood"; readonly amount: number }
   /** Clock out: ends the shift now. */
-  | { readonly type: "endDay" };
+  | { readonly type: "endDay" }
+  | { readonly type: "buy"; readonly item: Purchase };
 
 export const initialState = (
   unlockedScams: ReadonlyArray<ScamId> = [],
@@ -71,6 +80,7 @@ export const initialState = (
   earnedToday: 0,
   heatAtDayStart: 0,
   days: [],
+  ownedTools: [],
 });
 
 const clamp = (n: number, lo: number, hi: number) =>
@@ -160,5 +170,7 @@ export const reduce = (s: GameState, a: Action): GameState => {
       };
     case "endDay":
       return endDay(s);
+    case "buy":
+      return buy(s, a.item);
   }
 };
