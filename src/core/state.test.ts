@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import {
   clock,
+  failsAt,
   initialState,
   OVERNIGHT_COOLDOWN,
   reduce,
@@ -59,4 +60,13 @@ test("mail arrives newest first, unread, once per id; reading marks it", () => {
 test("clock formats minutes since 09:00", () => {
   expect(clock(s0)).toBe("09:00");
   expect(clock(reduce(s0, { type: "tick", minutes: 95 }))).toBe("10:35");
+});
+
+describe("scamFails", () => {
+  test("counts failures per scam type", () => {
+    const once = reduce(s0, { type: "scamFailed", scam: "phishing" });
+    const twice = reduce(once, { type: "scamFailed", scam: "phishing" });
+    expect(failsAt(twice, "phishing")).toBe(2);
+    expect(failsAt(twice, "tech-support")).toBe(0);
+  });
 });
