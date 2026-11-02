@@ -50,7 +50,8 @@ describe("scam data", () => {
       expect(
         s.fitTags.filter((t) => (LURES as ReadonlyArray<string>).includes(t)),
       ).toEqual([]);
-      expect(s.successLine.trim().length).toBeGreaterThan(0);
+      // Seen: every phishing win said the same line (playtest 1).
+      expect(new Set(s.successLines).size).toBeGreaterThanOrEqual(3);
       expect(s.templates.length).toBeGreaterThan(0);
       const steps = [...(s.warmups ?? []), ...s.templates];
       expect(new Set(steps.map((t) => t.id)).size).toBe(steps.length);

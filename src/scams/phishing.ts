@@ -9,8 +9,11 @@ export default {
   payout: 40,
   heat: { success: 2, fail: 8 },
   fitTags: ["parcel", "bank"],
-  successLine:
+  successLines: [
     "Done! I filled everything in. Thank you so much for warning me, you are very kind.",
+    "I typed my code in twice because the first time the page went white. All sorted now, I think.",
+    "Verified! My husband says I should have asked him first, but he wasn't home and it said 24 hours.",
+  ],
   templates: [
     {
       id: "account-locked",

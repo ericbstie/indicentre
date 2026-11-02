@@ -9,8 +9,11 @@ export default {
   payout: 60,
   heat: { success: 3, fail: 8 },
   fitTags: ["parcel"],
-  successLine:
+  successLines: [
     "Sent the difference to his mover. Nice man. Shame nobody ever came for the bike.",
+    "Entered my card so the money could come in. Still waiting. The courier page had a lovely little truck on it.",
+    "He paid too much, so of course I sent the rest back. I'd want someone to do the same for me.",
+  ],
   templates: [
     {
       id: "overpay",

@@ -9,8 +9,11 @@ export default {
   payout: 90,
   heat: { success: 4, fail: 12 },
   fitTags: ["tech-help", "fear"],
-  successLine:
+  successLines: [
     "He was so patient with me. Forty minutes! You don't get service like that anymore.",
+    "I let him into the computer and he found all the viruses. Hundreds of them. I had no idea.",
+    "Took the lifetime licence. At my age, lifetime isn't that long, so it felt like good value.",
+  ],
   templates: [
     {
       id: "error-reports",

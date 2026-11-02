@@ -46,7 +46,11 @@ export default {
   payout: 60,
   heat: { success: 3, fail: 10 },
   fitTags: ["bank"],
-  successLine: "TODO: what a victim says after falling for it.",
+  successLines: [
+    "TODO: what a victim says after falling for it.",
+    "TODO: a second one.",
+    "TODO: a third one.",
+  ],
   templates: [
     {
       id: "first",

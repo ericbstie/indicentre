@@ -59,6 +59,9 @@ export interface ScamDef {
    * top of its templates' lures. Never a lure itself: those are per template.
    */
   readonly fitTags: ReadonlyArray<Tag>;
-  /** What a victim says after falling for it. `{name}` allowed. */
-  readonly successLine: string;
+  /**
+   * What a victim says after falling for it, 3+ so wins don't repeat.
+   * Picked with `noRepeat()`. `{name}` allowed.
+   */
+  readonly successLines: ReadonlyArray<string>;
 }
