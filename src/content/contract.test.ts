@@ -10,9 +10,9 @@ import { FRAGMENTS } from "../victims/fragments.ts";
 import { TAGS } from "../victims/types.ts";
 import { bossLines } from "./boss.ts";
 import { coworkers } from "./coworkers.ts";
-import { endings } from "./endings.ts";
 import { welcomeMail } from "./mail.ts";
 import * as news from "./news.ts";
+import { beats, endings } from "./story.ts";
 import { voices } from "./voices.ts";
 
 /** Every string reachable from a value. */
@@ -31,6 +31,7 @@ const CONTENT = {
   ANGLES,
   bossLines,
   coworkers,
+  beats,
   endings,
   welcomeMail,
   news,
@@ -61,6 +62,8 @@ describe("content contract", () => {
       scams: ["name"],
       FRAGMENTS: ["name"],
       news: ["place", "role", "name", "age", "amount", "scam"],
+      beats: ["nick", "quota", "earned"],
+      endings: ["nick", "quota", "earned"],
     };
     const bad = Object.entries(CONTENT).flatMap(([group, value]) =>
       strings(value).filter((s) =>

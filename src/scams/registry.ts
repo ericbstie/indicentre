@@ -1,4 +1,4 @@
-import { type GameState, isUnlocked, type ScamId } from "../core/state.ts";
+import { type GameState, isUnlocked } from "../core/state.ts";
 import { allScams } from "./index.ts";
 import type { ScamDef } from "./types.ts";
 
@@ -6,11 +6,6 @@ import type { ScamDef } from "./types.ts";
 export const scams: ReadonlyArray<ScamDef> = [...allScams].sort(
   (a, b) => a.price - b.price || a.id.localeCompare(b.id),
 );
-
-/** Scams unlocked on a fresh run. */
-export const starterScams: ReadonlyArray<ScamId> = scams
-  .filter((s) => s.price === 0)
-  .map((s) => s.id);
 
 /** Scams the player can run right now. Locked ones stay hidden. */
 export const availableScams = (s: GameState) =>
