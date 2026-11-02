@@ -51,57 +51,54 @@ Why these sources and this approach: [3d-research.md](3d-research.md).
    `loadModel` loads each file once; clones share geometry and materials.
    The id is type-checked against the manifest.
 
-To shrink or convert a model (e.g. `.gltf` → `.glb`, drop animation clips),
-run [glTF-Transform](https://gltf-transform.dev) through `bunx`. It is a tool,
-never a dependency; record the processed file's hash and keep the upstream
-file's URL in `url` with a note in the commit message:
+**Embedded `.gltf` with animations** (the Quaternius characters): add
+`"pack": { "sha256": "<sha256 of the downloaded .gltf>", "clips": ["Idle", "Walk"] }`
+and set `sha256` to the hash of the packed `.glb`. `bun run assets` checks
+the download against `pack.sha256`, packs it with only those clips
+(`scripts/glb.ts`, deterministic) and checks the result against `sha256`.
+To get the packed hash the first time, put any value in `sha256`, run
+`bun run assets` and copy the "packed sha256" it reports.
 
-```sh
-bunx @gltf-transform/cli@4.2.1 copy in.gltf out.glb
-bunx @gltf-transform/cli@4.2.1 optimize in.glb out.glb --compress false --texture-compress false
-```
-
-A processed file can't be re-fetched by `bun run assets`, so only process
-when the size win is large.
+For heavier processing (mesh quantization, texture resizing) use
+[glTF-Transform](https://gltf-transform.dev) through `bunx`, as a tool,
+never a dependency. Its output can't be re-fetched by `bun run assets`, so
+only do it when the size win is large.
 
 ## Sources ready to use
 
-| Pack                                                                         | License | Mirror (pin a commit)                                                                                                                                                          |
-| ---------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Kenney Furniture Kit: desk, chairs, PCs, laptop, plants, trashcan, bookcases | CC0     | `RetroDECK/RetroQUEST` `assets/kenney_furniture-kit/Models/GLTF format/`                                                                                                       |
-| KayKit Furniture Bits: shelves, cabinets, lamps, frames, rugs                | CC0     | `KayKit-Game-Assets/KayKit-Furniture-Bits-1.0` (official; glTF + .bin + one atlas png)                                                                                         |
-| Quaternius Ultimate Animated Character Pack: Suit, Casual, Worker people     | CC0     | `BMOxOMB/Proyecto_ProgramacionConPatrones` `Assets/Characters/Ultimate Animated Character Pack - Nov 2019/glTF/` (Git LFS: fetch from `media.githubusercontent.com/media/...`) |
+| Pack                                                                              | License | Mirror (pin a commit)                                                                                                                                                          |
+| --------------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Kenney Furniture Kit: desk, chairs, PCs, laptop, plants, trashcan, bookcases      | CC0     | `RetroDECK/RetroQUEST` `assets/kenney_furniture-kit/Models/GLTF format/`                                                                                                       |
+| KayKit Furniture Bits: shelves, cabinets, lamps, frames, rugs                     | CC0     | `KayKit-Game-Assets/KayKit-Furniture-Bits-1.0` (official; glTF + .bin + one atlas png)                                                                                         |
+| Quaternius Ultimate Animated Character Pack: Suit, Casual, Worker people (in use) | CC0     | `BMOxOMB/Proyecto_ProgramacionConPatrones` `Assets/Characters/Ultimate Animated Character Pack - Nov 2019/glTF/` (Git LFS: fetch from `media.githubusercontent.com/media/...`) |
 
 ## Characters
 
-Recommended: **Quaternius Ultimate Animated Character Pack.** Low-poly,
-rigged, 16 clips per character including `Idle`, `Walk`, `SitDown`,
-`StandUp`, `Victory` and `Defeat`, which covers coworkers typing, the boss
-walking over and reactions to good or bad days. Office looks: `Suit_Male`,
-`Suit_Female`, `Casual_*`, `Casual2_*`, `Casual3_*`, `Worker_*`,
-`OldClassy_*`. Each is a ~2 MB `.gltf` with an embedded buffer; converted to
-`.glb` it is ~1.2 MB (`Suit_Male.gltf` sha256
-`d89d245d10c81ee637116b3400657dad2873ec1bbfb7f90579b2f77a8779fa5b`).
-The model is about 3.3 units tall, so scale by ~0.5.
+Coworkers and the boss are **Quaternius Ultimate Animated Character Pack**
+models (CC0), packed with `Idle`, `Walk`, `SitDown` and `StandUp`
+(0.5 to 0.8 MB each). In the manifest: `suit-male` (the boss),
+`casual-female`, `casual2-male`, `casual3-female`. The pack has more office
+looks (`Suit_Female`, `Casual_Male`, `Casual2_Female`, `Casual3_Male`,
+`Worker_*`, `OldClassy_*`) at the same mirror; budget about 0.7 MB each.
 
-Skinned meshes must be cloned with `SkeletonUtils`, not `Object3D.clone`,
-and animated with one `AnimationMixer` per instance:
+An NPC is `createNpc(look, desk)` from `src/scene/npc.ts`. `look.outfit`
+picks the model; `shirt`, `skin` and `hair` recolor its `Shirt`, `Skin` and
+`Hair` materials, so one outfit can be several people.
+
+Lower level, in `src/scene/characters.ts`:
 
 ```ts
-import * as THREE from "three";
-import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { clone } from "three/addons/utils/SkeletonUtils.js";
+import { animate, loadCharacter, tint } from "../scene/characters.ts";
 
-const gltf = await new GLTFLoader().loadAsync("/assets/models/suit-male.glb");
-const npc = clone(gltf.scene);
-const mixer = new THREE.AnimationMixer(npc);
-const idle = THREE.AnimationClip.findByName(gltf.animations, "Idle");
-if (idle) mixer.clipAction(idle).play();
-world.onFrame((dt) => mixer.update(dt));
+const c = await loadCharacter("casual2-male"); // own skeleton + materials
+tint(c.object, "Shirt", 0x3b6e8f);
+group.add(c.object); // feet at origin, faces +z, ~1.75 m
+const anim = animate(c, group); // Idle; Walk while `group` moves
+anim.play("SitDown"); // one-shot, holds the last frame
+anim.auto(); // back to Idle/Walk
 ```
 
-When the first NPC lands, extend `loadModel` (or add a sibling
-`loadCharacter`) that returns `{ object, clips }` and clones with
-`SkeletonUtils.clone`. Fallback if size becomes a problem: a stylized
-procedural humanoid (capsule body, sphere head, box arms) with bob and turn
-animation in code.
+`animate` registers with `tickCharacters(dt)`, which the world's frame loop
+already calls; don't update mixers yourself. Skinned meshes skip raycasts,
+so give anything interactive a hitbox (see `createNpc`). The pack's `Face`
+material (eyes, brows) ships near-white; `createNpc` draws it dark.
