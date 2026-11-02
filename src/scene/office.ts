@@ -15,6 +15,8 @@ export interface Office {
   readonly spawn: THREE.Vector3;
   /** Coworker desk centers (not the player's), for NPCs and props. */
   readonly desks: ReadonlyArray<THREE.Vector3>;
+  /** The ceiling tube lights, for time-of-day color and heat flicker. */
+  readonly tubes: ReadonlyArray<THREE.PointLight>;
 }
 
 const mat = (color: number) => new THREE.MeshLambertMaterial({ color });
@@ -36,6 +38,7 @@ const box = (
 /** Kenney Furniture Kit models are about half real size. */
 const FURNITURE_SCALE = 2;
 export const DESK_TOP = 0.768;
+const TUBE_INTENSITY = 6;
 
 /** Adds a scaled model to `parent` once it has loaded. */
 export const place = (
@@ -103,8 +106,10 @@ export const buildOffice = (): Office => {
   );
 
   scene.add(new THREE.HemisphereLight(0xfff6e0, 0x404040, 1.6));
+  const tubes: THREE.PointLight[] = [];
   for (const x of [-4, 0, 4]) {
-    const tube = new THREE.PointLight(0xfff2d0, 6, 9);
+    const tube = new THREE.PointLight(0xfff2d0, TUBE_INTENSITY, 9);
+    tubes.push(tube);
     tube.position.set(x, H - 0.2, 0);
     scene.add(tube, box(1.2, 0.05, 0.2, 0xffffff, x, H - 0.03, 0));
   }
@@ -130,5 +135,6 @@ export const buildOffice = (): Office => {
     },
     spawn: new THREE.Vector3(0, 1.6, 3.5),
     desks,
+    tubes,
   };
 };
