@@ -2,5 +2,6 @@
 import type { DesktopApp } from "./app.ts";
 import leads from "./leads.ts";
 import mail from "./mail.ts";
+import shop from "./shop.ts";
 
-export const apps: ReadonlyArray<DesktopApp> = [leads, mail];
+export const apps: ReadonlyArray<DesktopApp> = [leads, mail, shop];

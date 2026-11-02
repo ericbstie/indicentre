@@ -1,15 +1,18 @@
 import "./leads.css";
 import { seedFrom, seeded } from "../core/rng.ts";
-import { isUnlocked } from "../core/state.ts";
-import { scams } from "../scams/registry.ts";
+import { availableScams } from "../scams/registry.ts";
 import {
+  failHeat,
+  fitTags,
   type Outcome,
   payout,
   personalize,
   resolveScam,
 } from "../scams/resolve.ts";
+import { type Modifiers, modifiersFor } from "../shop/tools.ts";
 import type { ScamDef, ScamTemplate } from "../scams/types.ts";
 import { generateVictims } from "../victims/generate.ts";
+import { successChance } from "../victims/resistance.ts";
 import { writeHints } from "../victims/hints.ts";
 import type { Victim } from "../victims/types.ts";
 import { type RevealLevel, reveal, type VictimView } from "../victims/view.ts";
@@ -17,19 +20,17 @@ import { esc, escLines } from "../desktop/html.ts";
 import type { DesktopApp } from "./app.ts";
 
 const LEADS_PER_BATCH = 3;
-/** Raised later by buying persondata. */
-const REVEAL: RevealLevel = 0;
 
 interface Lead {
   readonly victim: Victim;
   readonly view: VictimView;
 }
 
-const drawLeads = (seed: number): ReadonlyArray<Lead> => {
+const drawLeads = (seed: number, level: RevealLevel): ReadonlyArray<Lead> => {
   const rng = seeded(seed);
   return generateVictims(rng, LEADS_PER_BATCH).map((victim) => ({
     victim,
-    view: reveal(victim, writeHints(rng, victim), REVEAL),
+    view: reveal(victim, writeHints(rng, victim), level),
   }));
 };
 
@@ -66,11 +67,23 @@ export default {
       const s = game.state();
       return runSeed + s.day * 10_000 + s.minute;
     };
-    let leads = drawLeads(seedNow());
+    const mods = (): Modifiers => modifiersFor(game.state().ownedTools);
+    const draw = () => drawLeads(seedNow(), mods().reveal);
+    let leads = draw();
     let target: Victim | undefined;
     let result: Result | undefined;
 
-    const available = () => scams.filter((s) => isUnlocked(game.state(), s.id));
+    const available = () => availableScams(game.state());
+
+    // Payout and heat are always shown before sending; odds need persondata.
+    const stakes = (s: ScamDef, tpl: ScamTemplate, t: Victim) => {
+      const m = mods();
+      const odds =
+        m.reveal >= 2
+          ? ` · ${pct(successChance(t, fitTags(tpl), m.chanceBonus))} odds`
+          : "";
+      return `+${payout(s, t)} bucks · heat +${s.heat.success}, +${failHeat(s, m)} if reported${odds}`;
+    };
 
     const viewTargets = () => `
       <h3>Today's leads</h3>
@@ -95,7 +108,7 @@ export default {
             <div><b>${esc(tpl.label)}</b>
             <p class="subject">${esc(personalize(tpl.subject, t))}</p>
             <p class="body">${escLines(personalize(tpl.body, t))}</p></div>
-            <button class="btn" data-send="${esc(s.id)}/${esc(tpl.id)}">Send<small>+${esc(payout(s, t))} bucks · heat +${esc(s.heat.success)}, +${esc(s.heat.fail)} if reported</small></button>
+            <button class="btn" data-send="${esc(s.id)}/${esc(tpl.id)}">Send<small>${esc(stakes(s, tpl, t))}</small></button>
           </div>`,
           )
           .join("")}`,
@@ -149,6 +162,7 @@ export default {
         scam,
         target,
         template,
+        mods(),
       );
       result = { target, scam, template, outcome };
       outcome.actions.forEach(game.dispatch);
@@ -185,7 +199,7 @@ export default {
         send(scamId, templateId);
       } else if (d["next"] !== undefined) {
         result = target = undefined;
-        leads = drawLeads(seedNow());
+        leads = draw();
       }
       render();
     };

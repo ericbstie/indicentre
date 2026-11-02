@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { initialState, reduce } from "../core/state.ts";
 import type { Victim } from "../victims/types.ts";
 import phishing from "./phishing.ts";
-import { scams, starterScams } from "./registry.ts";
+import { availableScams, scams, starterScams } from "./registry.ts";
 import { fitTags, personalize, resolveScam } from "./resolve.ts";
 
 const victim = (over: Partial<Victim> = {}): Victim => ({
@@ -38,6 +38,11 @@ describe("scam data", () => {
 
   test("phishing is a starter scam", () => {
     expect(starterScams).toContain("phishing");
+  });
+
+  test("locked scams are not available", () => {
+    expect(availableScams(initialState())).toEqual([]);
+    expect(availableScams(initialState(["phishing"]))).toEqual([phishing]);
   });
 });
 
