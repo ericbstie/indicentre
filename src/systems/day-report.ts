@@ -19,11 +19,10 @@ const warningHtml = (d: DaySummary) => {
 const reportHtml = (d: DaySummary, mood: number, next: number) => `
   <h2>Day ${esc(d.day)} is over</h2>
   <table>
-    <tr><td>Earned</td><td>${esc(d.earned)} / ${esc(d.quota)} bucks quota</td></tr>
+    <tr><td>Earned</td><td class="${d.met ? "met" : "missed"}">${esc(d.earned)} / ${esc(d.quota)} bucks quota</td></tr>
     <tr><td>Tomorrow</td><td>${esc(next)} bucks quota${next > quotaFor(d.day + 1) ? " (raised after today)" : ""}</td></tr>
     <tr><td>Heat</td><td>${esc(d.heatStart)} → ${esc(d.heatEnd)} (cools ${esc(OVERNIGHT_COOLDOWN)} overnight)</td></tr>
   </table>
-  <p class="${d.met ? "met" : "missed"}">${d.met ? "Quota met." : "Quota missed."}</p>
   <p class="verdict"><b>Boss:</b> "${esc(verdictLine(d, mood))}"</p>
   ${d.warned ? warningHtml(d) : ""}`;
 
