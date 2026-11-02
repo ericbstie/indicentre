@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { loadModel, type ModelId } from "./models.ts";
 
 export const ROOM = { width: 14, depth: 10, height: 3 } as const;
 
@@ -32,24 +33,50 @@ const box = (
   return m;
 };
 
-/** A desk with a monitor facing +z (the chair side). */
-const desk = (x: number, z: number, screenColor = 0x1a2a3a) => {
-  const g = new THREE.Group();
-  g.add(box(1.6, 0.06, 0.8, 0x8a6a48, 0, 0.75, 0));
-  for (const [lx, lz] of [
-    [-0.75, -0.35],
-    [0.75, -0.35],
-    [-0.75, 0.35],
-    [0.75, 0.35],
-  ] as const) {
-    g.add(box(0.05, 0.75, 0.05, 0x555555, lx, 0.375, lz));
-  }
-  g.add(box(0.7, 0.45, 0.04, 0x222222, 0, 1.08, -0.25));
-  const screen = new THREE.Mesh(
-    new THREE.PlaneGeometry(0.64, 0.39),
-    new THREE.MeshBasicMaterial({ color: screenColor }),
+/** Kenney Furniture Kit models are about half real size. */
+const FURNITURE_SCALE = 2;
+const DESK_TOP = 0.768;
+
+/** Adds a scaled model to `parent` once it has loaded. */
+const place = (
+  parent: THREE.Object3D,
+  id: ModelId,
+  x: number,
+  y: number,
+  z: number,
+  rotY = 0,
+) => {
+  loadModel(id).then(
+    (m) => {
+      m.scale.setScalar(FURNITURE_SCALE);
+      m.position.set(x, y, z);
+      m.rotation.y = rotY;
+      parent.add(m);
+    },
+    (err: unknown) => console.error(`model ${id} failed to load`, err),
   );
-  screen.position.set(0, 1.08, -0.228);
+};
+
+/**
+ * A desk with a monitor facing +z (the chair side). Models stream in;
+ * the screen plane exists immediately so interactions work from frame one.
+ */
+const desk = (x: number, z: number, mine = false) => {
+  const g = new THREE.Group();
+  place(g, "desk", 0, 0, 0);
+  place(g, "monitor", 0, DESK_TOP, -0.15);
+  place(g, "keyboard", 0, DESK_TOP, 0.15);
+  place(g, "mouse", 0.32, DESK_TOP, 0.15);
+  // Coworkers stand at +x (scene/npc.ts), so their chair is pushed aside.
+  if (mine) place(g, "chair", 0, 0, 0.7, Math.PI);
+  else place(g, "chair", -0.38, 0, 0.75, Math.PI + 0.3);
+  const screen = new THREE.Mesh(
+    new THREE.PlaneGeometry(0.7, 0.42),
+    new THREE.MeshBasicMaterial({ color: mine ? 0x2a5a8a : 0x1a2a3a }),
+  );
+  // Sits just in front of the Kenney monitor's panel, which leans back ~8°.
+  screen.position.set(0, DESK_TOP + 0.335, -0.135);
+  screen.rotation.x = -0.145;
   g.add(screen);
   g.position.set(x, 0, z);
   return { group: g, screen };
@@ -91,15 +118,15 @@ export const buildOffice = (): Office => {
       desks.push(new THREE.Vector3(x, 0, z));
     }
   }
-  const mine = desk(-4, 0.5, 0x2a5a8a);
+  const mine = desk(-4, 0.5, true);
   scene.add(mine.group);
 
   return {
     scene,
     pcScreen: mine.screen,
     seat: {
-      position: new THREE.Vector3(-4, 1.2, 1.05),
-      lookAt: new THREE.Vector3(-4, 1.08, 0.25),
+      position: new THREE.Vector3(-4, 1.3, 1.25),
+      lookAt: new THREE.Vector3(-4, 1.1, 0.46),
     },
     spawn: new THREE.Vector3(0, 1.6, 3.5),
     desks,

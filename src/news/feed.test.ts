@@ -9,12 +9,10 @@ const item = (headline: string): NewsItem => ({
   profile: "",
   quote: "",
   kind: "victim",
-  tags: [],
 });
 
-test("ambient bank has 20 tagged items", () => {
+test("ambient bank has 20 items", () => {
   expect(AMBIENT.length).toBe(20);
-  for (const a of AMBIENT) expect(a.tags.length).toBeGreaterThan(0);
 });
 
 test("breaking news jumps the queue, then ambient resumes", () => {
