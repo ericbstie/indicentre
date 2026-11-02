@@ -140,9 +140,3 @@ export const shopSells = (
   const intro = introOf(beats, scam);
   return intro !== undefined && !intro.free && intro.day <= day;
 };
-
-/** Every "What to spot" line the player has seen, in arc order. */
-export const learned = (beats: ReadonlyArray<Beat>, s: GameState) =>
-  beats.flatMap((b) =>
-    b.learn && story.get(s).seen.includes(b.id) ? [b.learn] : [],
-  );
