@@ -18,3 +18,4 @@
 - [ ] Each new scam has `redFlags` and a `lesson`
 - [ ] No new dependencies (or: reason, exact version, lockfile committed)
 - [ ] Dead code removed
+- [ ] Consistency: no second way to do something [docs/consistency.md](../docs/consistency.md) already covers
