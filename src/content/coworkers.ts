@@ -92,6 +92,7 @@ export const coworkers: ReadonlyArray<Coworker> = [
       "Ask for a small deposit to 'hold it'. Someone who's paid a bit will pay the rest.",
       "A buyer who says 'I'll pick it up and pay cash' is not your buyer. Move on.",
       "Never use the same photos twice in one city. Somebody always does an image search.",
+      "Invoices? Write as the supplier, a week before payday. Bookkeepers who ring the old number to check, you just lost.",
     ],
     idle: [
       "Someone ate my yoghurt. It had my name on it. In marker. I'm sending a mail to all.",

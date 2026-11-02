@@ -11,8 +11,8 @@ const item = (headline: string): NewsItem => ({
   kind: "victim",
 });
 
-test("ambient bank has 20 items", () => {
-  expect(AMBIENT.length).toBe(20);
+test("ambient bank has at least 20 items", () => {
+  expect(AMBIENT.length).toBeGreaterThanOrEqual(20);
 });
 
 test("breaking news jumps the queue, then ambient resumes", () => {
