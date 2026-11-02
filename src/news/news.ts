@@ -12,26 +12,12 @@ import { pick, type Rng } from "../core/rng.ts";
 import { scams } from "../scams/registry.ts";
 import { firstName } from "../victims/types.ts";
 
-/** Tags let later features relate a story to a victim ("bank", "elderly"...). */
-export type NewsTag =
-  | "bank"
-  | "parcel"
-  | "prize"
-  | "phone"
-  | "elderly"
-  | "young"
-  | "police"
-  | "tech"
-  | "money"
-  | "local";
-
 export interface NewsItem {
   readonly headline: string;
   /** "Gunnar, 74. Plays bridge on Thursdays." Empty for ambient news. */
   readonly profile: string;
   readonly quote: string;
   readonly kind: "victim" | "spotted" | "ambient";
-  readonly tags: ReadonlyArray<NewsTag>;
 }
 
 /** Scam bucks are game money; the news reports kroner, rounded like a paper would. */
@@ -68,13 +54,6 @@ const slotsFor = (
   ).toLowerCase(),
 });
 
-const tagsFor = ({ victim: { age } }: EventOf<"ScamResolved">) => {
-  const tags: NewsTag[] = ["money"];
-  if (age >= 65) tags.push("elderly");
-  if (age < 26) tags.push("young");
-  return tags;
-};
-
 /** The story the TV runs after a scam worked. */
 export const victimStory = (rng: Rng, e: EventOf<"ScamResolved">): NewsItem => {
   const slots = slotsFor(rng, e);
@@ -83,7 +62,6 @@ export const victimStory = (rng: Rng, e: EventOf<"ScamResolved">): NewsItem => {
     profile: profileLine(e.victim),
     quote: `"${pick(rng, VICTIM_QUOTES)}"`,
     kind: "victim",
-    tags: tagsFor(e),
   };
 };
 
@@ -95,7 +73,6 @@ const spottedStory = (rng: Rng, e: EventOf<"ScamResolved">): NewsItem => {
     profile: `${firstName(e.victim)}, ${e.victim.age}. ${sentence(e.victim.defense.behavior)}`,
     quote: `"${e.victim.defense.line}"`,
     kind: "spotted",
-    tags: tagsFor(e),
   };
 };
 
