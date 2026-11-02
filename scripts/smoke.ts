@@ -1,6 +1,7 @@
 // End-to-end smoke test: boots the real server, loads the page in headless
 // Chrome (Bun.WebView), sits at the PC, runs one phishing scam and checks
-// that it worked. `bun run smoke`. Set BUN_CHROME_PATH if Chrome is elsewhere.
+// that it worked, then reloads and checks the run resumes (Continue) and
+// resets (New run). `bun run smoke`. Set BUN_CHROME_PATH if Chrome is elsewhere.
 export {};
 const fail = (msg: string): never => {
   throw new Error(msg);
@@ -38,10 +39,17 @@ const view = new Bun.WebView({
 });
 
 try {
-  await view.navigate(`${url}?debug&seed=smoke`);
-  await view.evaluate(
-    `void addEventListener("error", (e) => console.error("uncaught", e.message))`,
-  );
+  const page = `${url}?debug&seed=smoke`;
+  const load = async () => {
+    await view.navigate(page);
+    await view.evaluate(
+      `void addEventListener("error", (e) => console.error("uncaught", e.message))`,
+    );
+  };
+  await load();
+  // The browser profile may keep an earlier run's save.
+  await view.evaluate(`localStorage.clear()`);
+  await load();
   const hud = () =>
     view.evaluate<string>(
       `document.querySelector(".hud-stats").textContent.replace(/\\s+/g, " ").trim()`,
@@ -61,8 +69,28 @@ try {
   if (spot !== 3) fail(`result card shows ${spot} What-to-spot lines, want 3`);
   const after = await hud();
   if (after === before) fail(`HUD unchanged after a scam: ${after}`);
+
+  await load();
+  const card = await view.evaluate<string>(
+    `document.querySelector(".modal-card")?.textContent ?? ""`,
+  );
+  if (!card.includes("Welcome back")) fail(`no Continue card after reload`);
+  await view.click(".modal .btn", { timeout: 5000 });
+  if ((await hud()) !== after) fail(`Continue lost the run: ${await hud()}`);
+
+  await load();
+  await view.click(".modal .link", { timeout: 5000 });
+  // New run reloads the page: wait for the fresh boot.
+  const fresh = `!!window.indicentre && !document.querySelector(".modal")`;
+  for (let i = 0; i < 50; i++) {
+    if (await view.evaluate<boolean>(fresh).catch(() => false)) break;
+    await Bun.sleep(100);
+  }
+  if (!(await view.evaluate<boolean>(fresh))) fail("New run did not reset");
+  if ((await hud()) !== before) fail(`New run kept the run: ${await hud()}`);
+
   if (errors.length) fail(`console errors:\n  ${errors.join("\n  ")}`);
-  console.log(`smoke: ok (${before} -> ${after})`);
+  console.log(`smoke: ok (${before} -> ${after}, resumed and reset)`);
 } catch (e) {
   console.error(`smoke: FAIL ${e instanceof Error ? e.message : e}`);
   process.exitCode = 1;
