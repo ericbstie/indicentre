@@ -1,6 +1,6 @@
 import type { ScamDef } from "./types.ts";
 
-export const phishing: ScamDef = {
+export default {
   id: "phishing",
   name: "Phishing mail",
   price: 0,
@@ -81,4 +81,4 @@ Barrister Reginald P. Fortune, Esq.`,
       ],
     },
   ],
-};
+} satisfies ScamDef;

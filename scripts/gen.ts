@@ -20,6 +20,12 @@ export const REGISTRIES: ReadonlyArray<Registry> = [
     exportName: "apps",
   },
   {
+    dir: "src/scams",
+    typeName: "ScamDef",
+    typeFrom: "./types.ts",
+    exportName: "allScams",
+  },
+  {
     dir: "src/systems",
     typeName: "GameSystem",
     typeFrom: "./system.ts",

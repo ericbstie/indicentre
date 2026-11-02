@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { seeded } from "../core/rng.ts";
 import { initialState, reduce } from "../core/state.ts";
-import { phishing } from "./phishing.ts";
+import phishing from "./phishing.ts";
 import { scams, starterScams } from "./registry.ts";
 import {
   MAX_CHANCE,
@@ -35,6 +35,11 @@ describe("scam data", () => {
       expect(s.lesson.length).toBeGreaterThan(0);
       for (const t of s.templates) expect(t.redFlags.length).toBeGreaterThan(0);
     }
+  });
+
+  test("each scam lives in src/scams/<id>.ts", async () => {
+    for (const s of scams)
+      expect(await Bun.file(`src/scams/${s.id}.ts`).exists()).toBe(true);
   });
 
   test("phishing is a starter scam", () => {

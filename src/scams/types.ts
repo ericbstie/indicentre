@@ -37,7 +37,8 @@ export interface ScamTemplate {
 }
 
 /**
- * A scam type. Adding a scam = adding one of these to scams/registry.ts.
+ * A scam type: one file in src/scams/ with `export default { ... } satisfies ScamDef`.
+ * `bun run gen` collects it into src/scams/index.ts.
  * Keep mechanics abstract: no real-world operational detail.
  */
 export interface ScamDef {

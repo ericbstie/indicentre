@@ -1,9 +1,11 @@
 import type { ScamId } from "../core/state.ts";
-import { phishing } from "./phishing.ts";
+import { allScams } from "./index.ts";
 import type { ScamDef } from "./types.ts";
 
-/** Every scam in the game. Add new ones here; order = shop order. */
-export const scams: ReadonlyArray<ScamDef> = [phishing];
+/** Every scam in the game, in shop order (cheapest first). */
+export const scams: ReadonlyArray<ScamDef> = [...allScams].sort(
+  (a, b) => a.price - b.price || a.id.localeCompare(b.id),
+);
 
 /** Scams unlocked on a fresh run. */
 export const starterScams: ReadonlyArray<ScamId> = scams
