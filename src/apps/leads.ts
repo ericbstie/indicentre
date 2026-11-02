@@ -12,7 +12,7 @@ import {
   warmed,
 } from "../scams/resolve.ts";
 import { type Modifiers, modifiersFor } from "../shop/tools.ts";
-import type { ScamDef, ScamTemplate } from "../scams/types.ts";
+import type { Channel, ScamDef, ScamTemplate } from "../scams/types.ts";
 import { generateVictims } from "../victims/generate.ts";
 import { successChance } from "../victims/resistance.ts";
 import { writeHints } from "../victims/hints.ts";
@@ -34,6 +34,13 @@ const drawLeads = (seed: number, level: RevealLevel): ReadonlyArray<Lead> => {
     victim,
     view: reveal(victim, writeHints(rng, victim), level),
   }));
+};
+
+const CHANNEL: Record<Channel, string> = {
+  mail: "Mail",
+  call: "Phone call",
+  marketplace: "Marketplace",
+  social: "Social",
 };
 
 const pct = (x: number) => `${Math.round(x * 100)}%`;
@@ -89,7 +96,7 @@ export default {
         m.reveal >= 2
           ? ` · ${pct(successChance(t, pulls(s, tpl), m.chanceBonus))} odds`
           : "";
-      return `+${payout(s, t)} bucks · heat +${s.heat.success}, +${failHeat(s, m)} if reported · ${s.minutes} min${odds}`;
+      return `${CHANNEL[s.channel]} · +${payout(s, t)} bucks · heat +${s.heat.success}, +${failHeat(s, m)} if reported · ${s.minutes} min${odds}`;
     };
 
     const viewTargets = () => `
@@ -122,7 +129,7 @@ export default {
       return `
         <p class="trust">Trust <meter value="${esc(current(t, s).trust)}"></meter>
           ${esc(done)}/${esc(warmups.length)} warm-ups. Ask now or keep talking.</p>
-        ${next ? viewTemplate(t, next, `data-warm="${esc(s.id)}"`, `no bucks yet · heat +${s.heat.success} if blocked · ${s.minutes} min`) : ""}`;
+        ${next ? viewTemplate(t, next, `data-warm="${esc(s.id)}"`, `${CHANNEL[s.channel]} · no bucks yet · heat +${s.heat.success} if blocked · ${s.minutes} min`) : ""}`;
     };
 
     const viewTemplates = (t: Victim) => `
@@ -154,18 +161,19 @@ export default {
         <h3>${
           o.success
             ? `${esc(first)} fell for it. +${esc(o.bucks)} bucks`
-            : `${esc(first)} didn't bite. Heat +${esc(o.heat)}`
+            : `${esc(first)} ${r.scam.warmups?.includes(r.template) ? "blocked you" : "didn't bite"}. Heat +${esc(o.heat)}`
         }</h3>
         ${
           o.success
-            ? ""
+            ? `<blockquote>"${esc(personalize(r.scam.successLine, r.target))}"</blockquote>`
             : `<blockquote>"${esc(o.defense.line)}"</blockquote>
         <p><b>What ${esc(first)} did right:</b> ${esc(o.defense.behavior)}</p>`
         }
         <p>Odds were ${esc(pct(o.chance))}.</p>
         <h4>Red flags ${esc(first)} ${o.success ? "missed" : "could have spotted"}</h4>
         <ul>${r.template.redFlags.map((f) => `<li>${esc(f)}</li>`).join("")}</ul>
-        <p class="lesson">${esc(r.scam.lesson)}</p>
+        <div class="lesson"><b>What to spot: ${esc(r.scam.name)}</b>
+        <ul>${r.scam.whatToSpot.map((l) => `<li>${esc(l)}</li>`).join("")}</ul></div>
         <button class="btn" data-next>Next leads</button>
       </div>`;
     };
@@ -212,7 +220,7 @@ export default {
             id: `reply-${seedNow()}`,
             from: target.name,
             subject: `Re: ${personalize(template.subject, target)}`,
-            body: "Done! I filled everything in. Thank you so much for warning me, you are very kind.",
+            body: personalize(scam.successLine, target),
           },
         });
       }
