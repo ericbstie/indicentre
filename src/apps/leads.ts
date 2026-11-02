@@ -82,7 +82,7 @@ export default {
         m.reveal >= 2
           ? ` · ${pct(successChance(t, fitTags(tpl), m.chanceBonus))} odds`
           : "";
-      return `+${payout(s, t)} bucks · heat +${s.heat.success}, +${failHeat(s, m)} if reported${odds}`;
+      return `+${payout(s, t)} bucks · heat +${s.heat.success}, +${failHeat(s, m)} if reported · ${s.minutes} min${odds}`;
     };
 
     const viewTargets = () => `
