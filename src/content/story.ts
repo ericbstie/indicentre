@@ -49,7 +49,7 @@ export const beats: ReadonlyArray<Beat> = [
     lines: [
       {
         speaker: "Boss",
-        line: "Welcome to Windowly tech support! Ahaha. Just kidding. We are a customer care company.",
+        line: "Welcome to Windoze tech support! Ahaha. Just kidding. We are a customer care company.",
       },
       {
         speaker: "Boss",
@@ -359,7 +359,7 @@ export const beats: ReadonlyArray<Beat> = [
 export interface Ending {
   readonly lines: ReadonlyArray<Line>;
   readonly title: string;
-  /** One line above the "What you learned" list. */
+  /** One line above the "What to spot" list. */
   readonly note?: string;
 }
 

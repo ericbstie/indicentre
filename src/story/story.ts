@@ -39,7 +39,7 @@ export interface Beat {
   readonly watch?: true;
   /** Plays with the camera at the player's desk, looking at the screen. */
   readonly atDesk?: true;
-  /** The real-world defense, shown as a last "What to spot" line. */
+  /** The real-world defense, shown as a "What to spot" line after `lines`, before any call. */
   readonly learn?: string;
   /** The scam this day is about. From this day on the Shop sells it... */
   readonly introduces?: ScamId;
