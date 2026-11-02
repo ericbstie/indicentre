@@ -11,7 +11,7 @@ import type { GameSystem } from "./system.ts";
 export default {
   id: "run-end",
   start({ game }) {
-    return game.on("RunEnded", ({ status }) => {
+    game.on("RunEnded", ({ status }) => {
       const end = endings[status];
       const s = game.state();
       const who = paid.get(s);

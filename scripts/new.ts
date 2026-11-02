@@ -69,7 +69,7 @@ export default {
 export default {
   id: "${id}",
   start({ game }) {
-    return game.on("DayAdvanced", () => {});
+    game.on("DayAdvanced", () => {});
   },
 } satisfies GameSystem;
 `,

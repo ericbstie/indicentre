@@ -51,32 +51,29 @@ export default {
     };
 
     let wait: number | undefined;
-    const stops = [
-      // A mail clue counts once its mail has been read.
-      game.subscribe((s) => {
-        const read = inbox.get(s).filter((m) => m.read);
-        const found = foundClues.get(s);
-        for (const c of clues)
-          if (!found.includes(c.id) && read.some((m) => m.id === clueMailId(c)))
-            game.dispatch(findClue(c.id));
-      }),
-      game.on("DayAdvanced", ({ day }) => {
-        due().forEach(sendMail);
-        if (day === WIN_DAY && fileComplete(game.state()))
-          game.dispatch(receiveMail(fileCompleteMail));
-      }),
-      game.on("ScamResolved", () => {
-        wait ??= LEAN_OVER_DELAY;
-      }),
-      world.onFrame((dt) => {
-        if (wait === undefined) return;
-        wait -= dt;
-        if (wait > 0) return;
-        wait = undefined;
-        leanOver();
-      }),
-    ];
+    // A mail clue counts once its mail has been read.
+    game.subscribe((s) => {
+      const read = inbox.get(s).filter((m) => m.read);
+      const found = foundClues.get(s);
+      for (const c of clues)
+        if (!found.includes(c.id) && read.some((m) => m.id === clueMailId(c)))
+          game.dispatch(findClue(c.id));
+    });
+    game.on("DayAdvanced", ({ day }) => {
+      due().forEach(sendMail);
+      if (day === WIN_DAY && fileComplete(game.state()))
+        game.dispatch(receiveMail(fileCompleteMail));
+    });
+    game.on("ScamResolved", () => {
+      wait ??= LEAN_OVER_DELAY;
+    });
+    world.onFrame((dt) => {
+      if (wait === undefined) return;
+      wait -= dt;
+      if (wait > 0) return;
+      wait = undefined;
+      leanOver();
+    });
     due().forEach(sendMail);
-    return () => stops.forEach((stop) => stop());
   },
 } satisfies GameSystem;

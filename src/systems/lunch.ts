@@ -19,6 +19,6 @@ export default {
         );
     };
     deliver();
-    return game.on("DayAdvanced", deliver);
+    game.on("DayAdvanced", deliver);
   },
 } satisfies GameSystem;

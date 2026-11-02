@@ -19,6 +19,5 @@ export default {
       label: "Clock out",
       use: () => game.dispatch({ type: "endDay" }),
     });
-    return () => world.office.scene.remove(punch);
   },
 } satisfies GameSystem;

@@ -108,27 +108,24 @@ export default {
         }
     };
 
-    const stops = [
-      game.on(BossWatching, () => {
-        if (watchRequested) enqueue(game.state().day, "watching");
-        watchRequested = false;
-      }),
-      game.on(PcOpened, () => enqueue(game.state().day, "pc")),
-      game.on("ScamResolved", ({ success, bucks, victim }) => {
-        if (success && bucks > 0)
-          game.dispatch(addPaid({ name: victim.name, age: victim.age, bucks }));
-        enqueue(game.state().day, "scam");
-      }),
-      // DayEnded comes with the rollover, so the next day's start queues here
-      // too, after the day that just ended.
-      game.on("DayEnded", ({ summary }) => {
-        if (game.state().status !== "playing") return;
-        enqueue(summary.day, "dayEnd");
-        enqueue(summary.day + 1, "dayStart");
-      }),
-    ];
+    game.on(BossWatching, () => {
+      if (watchRequested) enqueue(game.state().day, "watching");
+      watchRequested = false;
+    });
+    game.on(PcOpened, () => enqueue(game.state().day, "pc"));
+    game.on("ScamResolved", ({ success, bucks, victim }) => {
+      if (success && bucks > 0)
+        game.dispatch(addPaid({ name: victim.name, age: victim.age, bucks }));
+      enqueue(game.state().day, "scam");
+    });
+    // DayEnded comes with the rollover, so the next day's start queues here
+    // too, after the day that just ended.
+    game.on("DayEnded", ({ summary }) => {
+      if (game.state().status !== "playing") return;
+      enqueue(summary.day, "dayEnd");
+      enqueue(summary.day + 1, "dayStart");
+    });
     enqueue(0, "dayStart");
     enqueue(game.state().day, "dayStart");
-    return () => stops.forEach((stop) => stop());
   },
 } satisfies GameSystem;

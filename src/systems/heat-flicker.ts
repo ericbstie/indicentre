@@ -33,7 +33,7 @@ export default {
       left = d ? d[0] : 0;
       if (light) light.intensity = TUBE_INTENSITY * (d ? d[1] : 1);
     };
-    return world.onFrame((dt) => {
+    world.onFrame((dt) => {
       if (step >= 0) {
         left -= dt;
         if (left <= 0) dip(step + 1);

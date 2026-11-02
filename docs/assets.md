@@ -93,9 +93,7 @@ import { animate, loadCharacter, tint } from "../scene/characters.ts";
 const c = await loadCharacter("casual2-male"); // own skeleton + materials
 tint(c.object, "Shirt", 0x3b6e8f);
 group.add(c.object); // feet at origin, faces +z, ~1.75 m
-const anim = animate(c, group); // Idle; Walk while `group` moves
-anim.play("SitDown"); // one-shot, holds the last frame
-anim.auto(); // back to Idle/Walk
+animate(c, group); // Idle; Walk while `group` moves
 ```
 
 `animate` registers with `tickCharacters(dt)`, which the world's frame loop

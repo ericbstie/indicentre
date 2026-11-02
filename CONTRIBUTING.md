@@ -107,7 +107,7 @@ src/
   shop/                tools.ts (tools as data + Modifiers), catalog.ts
   workplace/           desk upgrades: slice.ts (owned, desk tier, call odds), upgrades.ts
   systems/             REGISTRY: one gameplay system per file
-    system.ts          GameSystem, SystemContext {game, world}
+    system.ts          GameSystem: {id, start({game, world})}
     index.ts           generated, gitignored
     <id>.ts            clock.ts, welcome.ts, NPCs, news TV, boss...
   content/             static text and data (mails, coworkers, story beats)
@@ -194,8 +194,8 @@ synchronous `Game` facade and stays Effect-free. New long-lived services
 A system gets `{ game, world }`: add meshes with
 `world.office.scene.add(...)`, make them usable with
 `world.interactions.add({ object, label, use })`, run per-frame logic with
-`world.onFrame(dt => ...)`, react to events with `game.on(...)`. Return a
-cleanup if you subscribed to anything.
+`world.onFrame(dt => ...)`, react to events with `game.on(...)`. Systems
+live as long as the page, so there is nothing to clean up.
 
 ## Shared seams
 

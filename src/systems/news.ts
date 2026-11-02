@@ -69,14 +69,14 @@ That one yours? The boss says if it makes the news it counts double. It doesn't.
       );
     };
 
-    const off = game.on("ScamResolved", (e) => {
+    game.on("ScamResolved", (e) => {
       const { day, minute } = game.state();
       const story = storyFor(seeded(day * 10_000 + minute + 101), e);
       feed.push(story);
       timer = Math.min(timer, BREAKING_DELAY);
     });
 
-    const stop = world.onFrame((dt) => {
+    world.onFrame((dt) => {
       timer -= dt;
       if (timer > 0) return;
       const item = feed.next();
@@ -85,10 +85,5 @@ That one yours? The boss says if it makes the news it counts double. It doesn't.
       if (item.kind === "victim") mailAbout(item);
       timer = item.kind === "ambient" ? AMBIENT_SECONDS : STORY_SECONDS;
     });
-
-    return () => {
-      off();
-      stop();
-    };
   },
 } satisfies GameSystem;

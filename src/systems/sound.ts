@@ -21,42 +21,30 @@ export default {
     label();
     document.body.append(key);
 
-    const onKey = (e: KeyboardEvent) => {
+    window.addEventListener("keydown", (e) => {
       if (e.code !== "KeyM" || e.repeat || typing(e.target)) return;
       audio.toggleMute();
       label();
-    };
-    window.addEventListener("keydown", onKey);
-    const onClick = (e: MouseEvent) => {
+    });
+    document.addEventListener("click", (e) => {
       if (e.target instanceof Element && e.target.closest(".app-icon"))
         sfx.click();
-    };
-    document.addEventListener("click", onClick);
+    });
     // A scam raises heat just before it resolves: tick after the stinger.
     let heatPending = false;
-    const stops = [
-      game.on("HeatChanged", (e) => {
-        if (e.to <= e.from) return;
-        heatPending = true;
-        queueMicrotask(() => {
-          if (heatPending) sfx.heat();
-          heatPending = false;
-        });
-      }),
-      game.on("ScamResolved", (e) => {
-        (e.success ? sfx.success : sfx.fail)();
-        if (heatPending) sfx.heat(0.55);
+    game.on("HeatChanged", (e) => {
+      if (e.to <= e.from) return;
+      heatPending = true;
+      queueMicrotask(() => {
+        if (heatPending) sfx.heat();
         heatPending = false;
-      }),
-    ];
-    let stopMusic = () => {};
-    audio.ready((ctx) => (stopMusic = startMusic(ctx)));
-    return () => {
-      stopMusic();
-      stops.forEach((stop) => stop());
-      document.removeEventListener("click", onClick);
-      window.removeEventListener("keydown", onKey);
-      key.remove();
-    };
+      });
+    });
+    game.on("ScamResolved", (e) => {
+      (e.success ? sfx.success : sfx.fail)();
+      if (heatPending) sfx.heat(0.55);
+      heatPending = false;
+    });
+    audio.ready(startMusic);
   },
 } satisfies GameSystem;
