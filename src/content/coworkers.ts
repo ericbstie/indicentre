@@ -1,4 +1,5 @@
-import { failsAt, type GameState, type ScamId } from "../core/state.ts";
+import { defineSlice } from "../core/slice.ts";
+import type { GameState, ScamId } from "../core/state.ts";
 import type { NpcLook } from "../scene/npc.ts";
 
 export interface Coworker {
@@ -98,6 +99,35 @@ export const coworkers: ReadonlyArray<Coworker> = [
     ],
   },
 ];
+
+type Counts = Readonly<Record<string, number>>;
+const bump = (counts: Counts, id: string): Counts => ({
+  ...counts,
+  [id]: (counts[id] ?? 0) + 1,
+});
+
+/** Failed attempts per scam type; coworkers open up as this grows. */
+const scamFails = defineSlice(
+  "fails",
+  {} as Counts,
+  (fails, a: { readonly type: "fails/add"; readonly scam: ScamId }) =>
+    bump(fails, a.scam),
+);
+export const scamFailed = (scam: ScamId) =>
+  ({ type: "fails/add", scam }) as const;
+const failsAt = (s: GameState, scam: ScamId) => scamFails.get(s)[scam] ?? 0;
+
+/** Hints heard so far, per coworker id. */
+const hintsHeardSlice = defineSlice(
+  "hints",
+  {} as Counts,
+  (heard, a: { readonly type: "hints/heard"; readonly coworker: string }) =>
+    bump(heard, a.coworker),
+);
+export const heardHint = (coworker: string) =>
+  ({ type: "hints/heard", coworker }) as const;
+export const hintsHeard = (s: GameState, coworker: string) =>
+  hintsHeardSlice.get(s)[coworker] ?? 0;
 
 /** Hints this coworker will share, given how often the player has failed their specialty. */
 export const unlockedHints = (c: Coworker, s: GameState) =>

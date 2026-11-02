@@ -1,3 +1,4 @@
+import { receiveMail } from "../content/mail.ts";
 import { AMBIENT } from "../content/news.ts";
 import { seeded } from "../core/rng.ts";
 import { createFeed } from "../news/feed.ts";
@@ -52,9 +53,8 @@ export default {
       const { day, minute } = game.state();
       if (day === lastMailDay) return;
       lastMailDay = day;
-      game.dispatch({
-        type: "mail",
-        mail: {
+      game.dispatch(
+        receiveMail({
           id: `news-${day}-${minute}`,
           from: "Tommy",
           subject: "Did you see the news?",
@@ -65,8 +65,8 @@ export default {
 That one yours? The boss says if it makes the news it counts double. It doesn't. I asked.
 
 - Tommy`,
-        },
-      });
+        }),
+      );
     };
 
     const off = game.on("ScamResolved", (e) => {

@@ -1,4 +1,5 @@
 import "./leads.css";
+import { receiveMail } from "../content/mail.ts";
 import { seedFrom, seeded } from "../core/rng.ts";
 import { availableScams } from "../scams/registry.ts";
 import {
@@ -283,15 +284,14 @@ export default {
       outcome.actions.forEach(game.dispatch);
       resolved(target, scam, outcome);
       if (outcome.success) {
-        game.dispatch({
-          type: "mail",
-          mail: {
+        game.dispatch(
+          receiveMail({
             id: `reply-${seedNow()}`,
             from: target.name,
             subject: `Re: ${personalize(template.subject, target)}`,
             body: personalize(scam.successLine, target),
-          },
-        });
+          }),
+        );
       }
     };
 

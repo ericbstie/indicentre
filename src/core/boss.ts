@@ -1,5 +1,20 @@
 // Pure boss rules: how scams and quota results move the boss's mood, and
 // when he reacts. The boss system (systems/boss.ts) applies these.
+import { defineSlice } from "./slice.ts";
+import { clamp } from "./state.ts";
+
+export const BOSS_MOOD_MAX = 100;
+const BOSS_MOOD_START = 50;
+
+/** 0..BOSS_MOOD_MAX. How the boss feels about you. */
+export const bossMood = defineSlice(
+  "boss",
+  BOSS_MOOD_START,
+  (mood, a: { readonly type: "boss/mood"; readonly amount: number }) =>
+    clamp(mood + a.amount, 0, BOSS_MOOD_MAX),
+);
+export const changeMood = (amount: number) =>
+  ({ type: "boss/mood", amount }) as const;
 
 /** Earning this multiple of the quota counts as smashing it. */
 export const SMASH_FACTOR = 2;

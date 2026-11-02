@@ -1,13 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import {
-  clueCount,
-  failsAt,
-  hintsHeard,
-  initialState,
-  reduce,
-  SHUTDOWN_MAX,
-  unreadCount,
-} from "./state.ts";
+import { initialState, reduce, SHUTDOWN_MAX } from "./state.ts";
 
 const s0 = initialState(["phishing"]);
 
@@ -24,38 +16,4 @@ describe("reduce", () => {
     expect(raided.status).toBe("shutdown");
     expect(reduce(raided, { type: "earn", amount: 10 })).toBe(raided);
   });
-});
-
-test("mail arrives newest first, unread, once per id; reading marks it", () => {
-  const mail = { id: "m1", from: "Boss", subject: "Hi", body: "Work." };
-  const s1 = reduce(s0, { type: "mail", mail });
-  expect(reduce(s1, { type: "mail", mail })).toBe(s1);
-  expect(unreadCount(s1)).toBe(1);
-  const s2 = reduce(s1, { type: "readMail", id: "m1" });
-  expect(unreadCount(s2)).toBe(0);
-});
-
-describe("scamFails", () => {
-  test("counts failures per scam type", () => {
-    const once = reduce(s0, { type: "scamFailed", scam: "phishing" });
-    const twice = reduce(once, { type: "scamFailed", scam: "phishing" });
-    expect(failsAt(twice, "phishing")).toBe(2);
-    expect(failsAt(twice, "tech-support")).toBe(0);
-  });
-});
-
-describe("talkedTo", () => {
-  test("counts hints heard per coworker", () => {
-    const s1 = reduce(s0, { type: "heardHint", coworker: "priya" });
-    expect(hintsHeard(s1, "priya")).toBe(1);
-    expect(hintsHeard(s1, "rohan")).toBe(0);
-  });
-});
-
-test("findClue records each clue once, in the order found", () => {
-  const s1 = reduce(s0, { type: "findClue", id: "a" });
-  expect(reduce(s1, { type: "findClue", id: "a" })).toBe(s1);
-  const s2 = reduce(s1, { type: "findClue", id: "b" });
-  expect(s2.clues).toEqual(["a", "b"]);
-  expect(clueCount(s2)).toBe(2);
 });

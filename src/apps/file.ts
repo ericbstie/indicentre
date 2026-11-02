@@ -1,5 +1,10 @@
 import "./file.css";
-import { clues, FILE_COMPLETE, fileComplete } from "../content/catfisher.ts";
+import {
+  clues,
+  FILE_COMPLETE,
+  fileComplete,
+  foundClues,
+} from "../content/catfisher.ts";
 import { esc } from "../desktop/html.ts";
 import type { DesktopApp } from "./app.ts";
 
@@ -12,9 +17,10 @@ export default {
   mount(el, { game }) {
     const render = () => {
       const s = game.state();
+      const found = foundClues.get(s);
       const rows = clues
         .map((c) =>
-          s.clues.includes(c.id)
+          found.includes(c.id)
             ? `<li class="clue"><b>${esc(c.note)}</b><p class="lesson">Red flag: ${esc(c.redFlag)}</p></li>`
             : `<li class="clue empty">?</li>`,
         )
@@ -24,7 +30,7 @@ export default {
         <p class="empty">${
           fileComplete(s)
             ? "Enough to find Sam."
-            : `${esc(s.clues.length)} of ${esc(clues.length)} clues. ${esc(FILE_COMPLETE)} would be enough to find Sam.`
+            : `${esc(found.length)} of ${esc(clues.length)} clues. ${esc(FILE_COMPLETE)} would be enough to find Sam.`
         }</p>
         <ul>${rows}</ul></div>`;
     };
