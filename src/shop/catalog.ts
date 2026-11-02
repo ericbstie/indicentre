@@ -1,5 +1,7 @@
 import type { Purchase } from "../core/economy.ts";
 import { scams } from "../scams/registry.ts";
+import { pulls } from "../scams/resolve.ts";
+import type { Tag } from "../victims/types.ts";
 import { upgrades } from "../workplace/upgrades.ts";
 import { tools } from "./tools.ts";
 
@@ -8,6 +10,8 @@ const toolName = (id: string) => tools.find((t) => t.id === id)?.name ?? id;
 export interface CatalogItem extends Purchase {
   readonly name: string;
   readonly blurb: string;
+  /** Scams: every weakness its templates pull, as shown on Leads pitches. */
+  readonly tags?: ReadonlyArray<Tag>;
 }
 
 /** Everything the Shop sells: paid scams, tools, then workplace upgrades. */
@@ -23,6 +27,7 @@ export const catalog: ReadonlyArray<CatalogItem> = [
         s.requires ? ` Needs ${toolName(s.requires)}.` : ""
       }`,
       ...(s.requires !== undefined && { requires: s.requires }),
+      tags: [...new Set(s.templates.flatMap((t) => pulls(s, t)))],
     })),
   ...tools.map((t): CatalogItem => ({
     kind: "tool",
