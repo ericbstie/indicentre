@@ -60,6 +60,7 @@ export const FRAGMENTS: Readonly<Record<Tag, ReadonlyArray<string>>> = {
     "Three tracking numbers on a sticky note by the door.",
     "{name} orders shoelaces online. One pair at a time.",
     "Knows the delivery driver's first name. And the van.",
+    "Taps every link in a text if it mentions a parcel. Asks questions later.",
   ],
   bank: [
     "Trusts the bank more than family. Says so at dinner.",
