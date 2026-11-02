@@ -33,13 +33,21 @@ const mount = () => {
   el.addEventListener("click", (e) => {
     if (e.target === el) closeDialog();
   });
-  window.addEventListener("keydown", (e) => {
-    if (!current) return;
-    if (e.code === "Escape") closeDialog();
-    const i = ["Digit1", "Digit2"].indexOf(e.code);
-    const choice = i >= 0 ? current.choices?.[i] : undefined;
-    if (choice) choose(choice);
-  });
+  // Capture phase: Esc leaves the dialog only, it never also stands you up.
+  window.addEventListener(
+    "keydown",
+    (e) => {
+      if (!current) return;
+      if (e.code === "Escape") {
+        e.stopImmediatePropagation();
+        closeDialog();
+      }
+      const i = ["Digit1", "Digit2"].indexOf(e.code);
+      const choice = i >= 0 ? current?.choices?.[i] : undefined;
+      if (choice) choose(choice);
+    },
+    { capture: true },
+  );
   document.body.append(el);
   return el;
 };
