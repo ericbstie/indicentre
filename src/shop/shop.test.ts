@@ -17,6 +17,11 @@ describe("catalog", () => {
     for (const c of catalog) expect(c.price).toBeGreaterThan(0);
     for (const t of tools) expect(t.lesson.length).toBeGreaterThan(0);
   });
+
+  test("scams list the tags their templates pull, tools list none", () => {
+    for (const c of catalog)
+      expect((c.tags?.length ?? 0) > 0).toBe(c.kind === "scam");
+  });
 });
 
 describe("buy", () => {
