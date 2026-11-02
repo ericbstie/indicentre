@@ -3,6 +3,7 @@
 // CONTRIBUTING.md "Content tone").
 import { describe, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
+import type { DaySummary } from "../core/economy.ts";
 import { scams } from "../scams/registry.ts";
 import { tools } from "../shop/tools.ts";
 import { ANGLES } from "../victims/angles.ts";
@@ -16,6 +17,8 @@ import * as news from "./news.ts";
 import { beats, endings } from "./story.ts";
 import { upgrades } from "../workplace/upgrades.ts";
 import { CALL_BACK } from "./lessons.ts";
+import { lunchMails } from "./lunch.ts";
+import { initialState } from "../core/state.ts";
 import { voices } from "./voices.ts";
 
 /** Every string reachable from a value. */
@@ -39,6 +42,13 @@ const CONTENT = {
   endings,
   welcomeMail,
   news,
+  // Bodies as both quota outcomes of the day before can write them.
+  lunch: lunchMails.flatMap((m) => [
+    m.subject,
+    ...[true, false].map((met) =>
+      m.body({ ...initialState(), days: [{ met } as DaySummary] }),
+    ),
+  ]),
 };
 
 // Real companies, products and payment rails that tend to sneak into scam
@@ -143,6 +153,7 @@ describe("content contract", () => {
       lines: b.lines.filter((l) => !CHAT.includes(l.speaker)),
     })),
     welcomeMail: welcomeMail.subject,
+    lunch: [],
   };
   // Grouped by the array each string sits in: one pool of lines.
   const pools = (v: unknown, pool: unknown = v): [unknown, string][] =>
