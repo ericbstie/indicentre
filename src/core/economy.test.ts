@@ -1,10 +1,13 @@
 import { describe, expect, test } from "bun:test";
 import {
+  FIRE_AFTER_MISSES,
   missStreak,
   OVERNIGHT_COOLDOWN,
   quotaFor,
   SHIFT_MINUTES,
+  WIN_DAY,
 } from "./economy.ts";
+import { diffEvents } from "./events.ts";
 import { type Action, clock, initialState, reduce } from "./state.ts";
 
 const s0 = initialState(["phishing"]);
@@ -66,5 +69,32 @@ describe("quota", () => {
       { type: "endDay" } as const,
     ].reduce(reduce, missed);
     expect(missStreak(recovered)).toBe(0);
+  });
+});
+
+describe("run end", () => {
+  const meetQuota = (s: ReturnType<typeof run>) =>
+    [
+      { type: "earn", amount: quotaFor(s.day) } as const,
+      { type: "endDay" } as const,
+    ].reduce(reduce, s);
+
+  test(`missing quota ${FIRE_AFTER_MISSES} days in a row gets you fired`, () => {
+    const one = run({ type: "endDay" });
+    expect(one.status).toBe("playing");
+    const s = reduce(one, { type: "endDay" });
+    expect(s.status).toBe("fired");
+    expect(diffEvents(one, s)).toContainEqual({
+      type: "RunEnded",
+      status: "fired",
+    });
+    expect(reduce(s, { type: "earn", amount: 5 })).toBe(s);
+  });
+
+  test(`surviving to the end of day ${WIN_DAY} wins`, () => {
+    let s = s0;
+    while (s.status === "playing") s = meetQuota(s);
+    expect(s.status).toBe("won");
+    expect(s.days).toHaveLength(WIN_DAY);
   });
 });
