@@ -11,7 +11,7 @@ export default {
   heat: { success: 2, fail: 7 },
   fitTags: ["parcel"],
   successLines: [
-    "Paid it. It was only 1.99. It asked for my card number twice, which was odd, but the page was very yellow.",
+    "Paid it. It was only 1.99. Then the card paid 2,400 more overnight.",
     "Rebooked the delivery for Thursday. I'm not sure what I ordered, but I'll find out Thursday.",
     "Paid the fee on the bus. Quicker than queueing at the post office, and the link was right there.",
   ],

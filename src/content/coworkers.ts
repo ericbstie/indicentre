@@ -46,7 +46,7 @@ export const coworkers: ReadonlyArray<Coworker> = [
     idle: [
       "That's my fourteenth mail today and it's not even lunch. Don't stand there, it shows up on my numbers.",
       "The printer jammed on my quota sheet. I'm taking it as a sign.",
-      "Can't talk. The boss walks past every eleven minutes. I timed it.",
+      "Can't talk. The boss walks past every eleven minutes and I've timed it.",
     ],
   },
   {
@@ -64,14 +64,14 @@ export const coworkers: ReadonlyArray<Coworker> = [
       "Fear sells repairs. Tell them the computer is 'sending errors'. Nobody can see an error, so it sounds expensive.",
       "Authority is a department, not a name. 'The security desk' beats 'Rohan' every time.",
       "Urgency keeps them off the official number. Once they say they'll ring back, it's over. Hang up before they do.",
-      "New tablet, grandkids set it up, nobody showed them anything. That's a tech-help lead. Call.",
+      "New tablet, grandkids set it up, nobody showed them anything. That's a tech-help lead, so call them first.",
       "The lonely ones stay on the line. The second they ask someone else in the house, you've lost them.",
       "Bank calls? Say 'fraud department' and they thank you for stealing from them. Just don't let them hang up to ring the card number.",
     ],
     idle: [
       "My chair lost a wheel on Tuesday. Facilities said Q3. It's November.",
       "I've been on hold with our own IT for twenty minutes. Professionally, I respect it.",
-      "Bring coffee next time. Talking costs coffee.",
+      "Talking costs coffee, so bring some next time.",
     ],
     newDesk:
       "You got a partition? I've asked for one since March. Enjoy hearing yourself think, I guess.",

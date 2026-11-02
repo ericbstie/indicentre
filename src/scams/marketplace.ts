@@ -10,7 +10,7 @@ export default {
   heat: { success: 3, fail: 8 },
   fitTags: ["parcel"],
   successLines: [
-    "Sent the difference to his mover. Nice man. Shame nobody ever came for the bike.",
+    "Sent the 1,800 to his mover. The bank says the 3,000 was never sent.",
     "Entered my card so the money could come in. Still waiting. The courier page had a lovely little truck on it.",
     "He paid too much, so of course I sent the rest back. I'd want someone to do the same for me.",
   ],

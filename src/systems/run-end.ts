@@ -14,9 +14,10 @@ export default {
     return game.on("RunEnded", ({ status }) => {
       const end = endings[status];
       const s = game.state();
-      const card = `<h2>${esc(end.title)}</h2>${
-        end.note ? `<p class="lesson">${esc(end.note)}</p>` : ""
-      }<h4>What to spot</h4><ul>${learned(beats, s)
+      const card = `<h2>${esc(end.title)}</h2><h4>What to spot</h4><ul>${learned(
+        beats,
+        s,
+      )
         .map((l) => `<li>${esc(l)}</li>`)
         .join("")}</ul>`;
       const ctx = { vars: () => storyVars(s), remember: () => {} };

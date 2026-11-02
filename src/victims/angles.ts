@@ -15,6 +15,6 @@ export const ANGLES: Readonly<Record<Tag, string>> = {
   bank: "Be the bank. The trust is already there.",
   romance: "Slow and warm. Ask for nothing at first.",
   job: "Offer work. Easy money, starts Monday.",
-  "tech-help": "Offer to fix the computer. It's always slow.",
+  "tech-help": "Offer to fix the computer. Every computer is slow.",
   family: "Be family in trouble. Nobody checks the number first.",
 };

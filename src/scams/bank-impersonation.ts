@@ -13,7 +13,7 @@ export default {
   successLines: [
     "She had my account number already, so I knew she was real. The money's safe now. She said not to ring the branch, they're part of the problem.",
     "I read him the code and the payment stopped. Well, he said it stopped. The bank's app is slow to update.",
-    "Moved it all to the safe account. I sleep better knowing it's protected. They were very calm on the phone.",
+    "Moved it all to the safe account. That was the money for the roof.",
   ],
   templates: [
     {
