@@ -19,10 +19,10 @@ export default {
       const s = game.state();
       const found = foundClues.get(s);
       const rows = clues
-        .map((c) =>
-          found.includes(c.id)
-            ? `<li class="clue panel"><b>${esc(c.note)}</b><p class="lesson">Red flag: ${esc(c.redFlag)}</p></li>`
-            : `<li class="clue panel empty">?</li>`,
+        .filter((c) => found.includes(c.id))
+        .map(
+          (c) =>
+            `<li class="clue panel"><b>${esc(c.note)}</b><p class="lesson">Red flag: ${esc(c.redFlag)}</p></li>`,
         )
         .join("");
       el.innerHTML = `<div class="file page">
