@@ -28,6 +28,10 @@ indicentre.ericbs.dev {
 
 Then `caddy reload` (or `sudo systemctl reload caddy`).
 
+No `encode` line is needed: the app gzips the bundle and models itself
+(`src/server/static.ts`) and sets cache headers (hashed bundle files are
+immutable; models revalidate by their manifest hash).
+
 ## Settings
 
 | Env var         | Default                 | Does                                       |
