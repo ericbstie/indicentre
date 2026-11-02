@@ -57,8 +57,8 @@ const PLAYERS: ReadonlyArray<Player> = [
   {
     name: "random",
     skill: 0,
-    heatCap: Infinity,
-    heatCapAfterQuota: Infinity,
+    heatCap: 90,
+    heatCapAfterQuota: 90,
     buys: () => true,
   },
 ];
