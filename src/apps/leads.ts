@@ -77,9 +77,8 @@ const viewDossier = (v: VictimView, best?: { label: string; p: number }) => {
   const top = v.weaknesses?.[0];
   return v.hobby && v.recent && top
     ? `<section class="dossier panel">
-        <h4>Dossier <small>scraped from public posts</small></h4>
+        <h4>Dossier</h4>
         <dl>
-          <dt>Who</dt><dd>${esc(v.ageBand)} · ${esc(v.occupation)}</dd>
           <dt>Hobby</dt><dd>${esc(v.hobby.text)} <small>${esc(v.hobby.source)}</small></dd>
           <dt>Recently</dt><dd>${esc(v.recent.text)} <small>${esc(v.recent.source)}</small></dd>
           <dt>Falls for</dt><dd>${tagList(v.weaknesses ?? [])} tech ${esc(pct(v.techComfort ?? 0))}</dd>
@@ -92,7 +91,7 @@ const viewDossier = (v: VictimView, best?: { label: string; p: number }) => {
         </dl>
         <p class="lesson"><b>What ${esc(firstName(v))} could have hidden:</b> ${esc(v.recent.hide)}</p>
       </section>`
-    : `<p class="empty">No dossier. Persondata in the Shop builds one from public posts.</p>`;
+    : "";
 };
 
 interface Result {
@@ -144,11 +143,10 @@ export default {
       const p = successChance(t, pulls(s, tpl), bonusFor(s, m));
       const odds = m.reveal >= 2 ? `, ${pct(p)} odds` : "";
       const fresh = freshness(game.state(), s.id);
-      return `${CHANNEL[s.channel]} · +${payout(s, t, fresh)} bucks · heat +${s.heat.success}, +${failHeat(s, m)} if reported · ${s.minutes} min · ${fitLabel(p)}${odds}`;
+      return `+${payout(s, t, fresh)} bucks · heat +${s.heat.success}, +${failHeat(s, m)} if reported · ${fitLabel(p)}${odds}`;
     };
 
     const viewTargets = () => `
-      <h3>Today's leads</h3>
       <div class="cards">${leads
         .map(
           ({ view }) => `
@@ -177,8 +175,8 @@ export default {
       const next = warmups[done];
       return `
         <p class="trust">Trust <meter value="${esc(current(t, s).trust)}"></meter>
-          ${esc(done)}/${esc(warmups.length)} warm-ups. Ask now or keep talking.</p>
-        ${next ? viewTemplate(t, s, next, `data-warm="${esc(s.id)}"`, `${CHANNEL[s.channel]} · no bucks yet · heat +${s.heat.success} if blocked · ${s.minutes} min`) : ""}`;
+          ${esc(done)}/${esc(warmups.length)} warm-ups</p>
+        ${next ? viewTemplate(t, s, next, `data-warm="${esc(s.id)}"`, `no bucks yet · heat +${s.heat.success} if blocked`) : ""}`;
     };
 
     const viewOf = (t: Victim) => leads.find((l) => l.victim === t)?.view;
@@ -210,13 +208,16 @@ export default {
     const viewTemplates = (t: Victim) => {
       const view = viewOf(t);
       return `
-      <button class="link" data-back>← Leads</button>
-      <h3>Scam ${esc(t.name)}</h3>
+      <h3><button class="link" data-back>← Leads</button> ${esc(t.name)}${
+        view
+          ? ` <small>${esc(view.ageBand)} · ${esc(view.occupation)}</small>`
+          : ""
+      }</h3>
       ${view ? viewDossier(view, bestPitch(t)) : ""}
       ${available()
         .map(
           (s) => `
-        <h4>${esc(s.name)}${worn(s)}</h4>
+        <h4>${esc(s.name)} <small>${CHANNEL[s.channel]} · ${esc(s.minutes)} min</small>${worn(s)}</h4>
         ${viewWarmups(t, s)}
         ${s.templates
           .map((tpl) =>
