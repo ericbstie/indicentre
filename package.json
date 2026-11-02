@@ -7,7 +7,8 @@
     "dev": "bun --hot src/server.ts",
     "start": "bun src/server.ts",
     "build": "bun build ./src/client/index.html --outdir=dist --minify",
-    "check": "bun check --no-script && bun fmt --no-script --check",
+    "check": "bun scripts/gen.ts --check && bun check --no-script && bun fmt --no-script --check",
+    "gen": "bun scripts/gen.ts",
     "fmt": "bun fmt --no-script",
     "test": "bun test --pass-with-no-tests"
   },

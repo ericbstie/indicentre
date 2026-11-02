@@ -1,24 +1,17 @@
+import type { AppContext, DesktopApp } from "../apps/app.ts";
 import type { Game } from "../client/game.ts";
 
-/**
- * A desktop app. `mount` renders into `el` and may return a cleanup.
- * Register new apps in src/desktop/apps/index.ts.
- */
-export interface DesktopApp {
-  readonly id: string;
-  readonly title: string;
-  readonly icon: string;
-  /** Optional badge text (e.g. unread count); re-evaluated on state change. */
-  readonly badge?: (game: Game) => string;
-  readonly mount: (el: HTMLElement, game: Game) => (() => void) | void;
-}
+const byOrder = (a: DesktopApp, b: DesktopApp) =>
+  (a.order ?? Infinity) - (b.order ?? Infinity) || a.id.localeCompare(b.id);
 
 /** The in-world PC screen as an HTML overlay with an icon bar and one open window. */
 export const createDesktop = (
   root: HTMLElement,
   game: Game,
-  apps: ReadonlyArray<DesktopApp>,
+  registry: ReadonlyArray<DesktopApp>,
 ) => {
+  const apps = [...registry].sort(byOrder);
+  const ctx: AppContext = { game };
   root.className = "desktop";
   root.hidden = true;
   root.innerHTML = `
@@ -43,7 +36,7 @@ export const createDesktop = (
   });
   const renderIcons = () => {
     for (const { app, b } of icons) {
-      const badge = app.badge?.(game) ?? "";
+      const badge = app.badge?.(ctx) ?? "";
       b.innerHTML = `<span>${app.icon}</span>${app.title}${badge ? `<b>${badge}</b>` : ""}`;
     }
   };
@@ -63,7 +56,7 @@ export const createDesktop = (
     closeApp();
     title.textContent = app.title;
     win.hidden = false;
-    cleanup = app.mount(body, game);
+    cleanup = app.mount(body, ctx);
   };
 
   root.querySelector<HTMLElement>("[data-close]")!.onclick = closeApp;

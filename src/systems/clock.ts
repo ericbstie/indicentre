@@ -4,7 +4,7 @@ import type { GameSystem } from "./system.ts";
 const SECONDS_PER_GAME_MINUTE = 1;
 
 /** Advances the in-game clock while the page runs. */
-export const clockSystem: GameSystem = {
+export default {
   id: "clock",
   start({ game, world }) {
     let acc = 0;
@@ -16,4 +16,4 @@ export const clockSystem: GameSystem = {
       }
     });
   },
-};
+} satisfies GameSystem;

@@ -1,16 +1,17 @@
-import { unreadCount } from "../../core/state.ts";
-import type { DesktopApp } from "../desktop.ts";
-import { esc, escLines } from "../html.ts";
+import { unreadCount } from "../core/state.ts";
+import { esc, escLines } from "../desktop/html.ts";
+import type { DesktopApp } from "./app.ts";
 
-export const mailApp: DesktopApp = {
+export default {
   id: "mail",
   title: "Mail",
   icon: "✉",
-  badge: (game) => {
+  order: 0,
+  badge: ({ game }) => {
     const n = unreadCount(game.state());
     return n ? String(n) : "";
   },
-  mount(el, game) {
+  mount(el, { game }) {
     el.innerHTML = `<div class="mail"><ul class="mail-list"></ul><article class="mail-read"></article></div>`;
     const list = el.querySelector<HTMLElement>(".mail-list")!;
     const reader = el.querySelector<HTMLElement>(".mail-read")!;
@@ -44,4 +45,4 @@ export const mailApp: DesktopApp = {
     render();
     return game.subscribe(render);
   },
-};
+} satisfies DesktopApp;

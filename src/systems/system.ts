@@ -10,7 +10,8 @@ export interface SystemContext {
 /**
  * A self-contained gameplay feature (NPC, clock, news TV, boss...).
  * `start` subscribes to events / frames / interactions and may return a cleanup.
- * One file per system in src/systems/; register it in src/systems/index.ts.
+ * One file per system in src/systems/ with `export default { ... } satisfies GameSystem`;
+ * `bun run gen` collects it into src/systems/index.ts (started in file-name order).
  */
 export interface GameSystem {
   readonly id: string;
