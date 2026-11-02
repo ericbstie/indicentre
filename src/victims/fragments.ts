@@ -20,6 +20,7 @@ export const FRAGMENTS: Readonly<Record<Tag, ReadonlyArray<string>>> = {
     "Paid one parking fine twice because the reminder looked angrier.",
     "{name} can't sleep with an unread message on the phone.",
     "Everything is 'just quickly'. Even the big stuff.",
+    "{name} pays an invoice before the coffee's poured.",
   ],
   greed: [
     "Thinks the big win is one form away.",
@@ -69,6 +70,7 @@ export const FRAGMENTS: Readonly<Record<Tag, ReadonlyArray<string>>> = {
     "Thinks the bank would never let anything bad happen. That's what it's for.",
     "{name} gave the bank's chat assistant five stars.",
     "Still has the pen from the branch opening in 1998.",
+    "Updates a payee's account number without a second look. It's just paperwork.",
   ],
   romance: [
     "Recently single and very online about it.",
