@@ -26,6 +26,11 @@ export type GameEvent =
       readonly coworker: string;
       readonly scam: ScamId;
       readonly hint: string;
+    }
+  | {
+      readonly type: "BossMoodChanged";
+      readonly from: number;
+      readonly to: number;
     };
 
 export type EventType = GameEvent["type"];
@@ -47,6 +52,12 @@ export const diffEvents = (prev: GameState, next: GameState): GameEvent[] => {
       to: next.shutdownMeter,
     });
   if (prev.day !== next.day) out.push({ type: "DayAdvanced", day: next.day });
+  if (prev.bossMood !== next.bossMood)
+    out.push({
+      type: "BossMoodChanged",
+      from: prev.bossMood,
+      to: next.bossMood,
+    });
   return out;
 };
 
