@@ -39,6 +39,7 @@ export const beats: ReadonlyArray<Beat> = [
     learn:
       "Never met, camera always broken, then a crisis that needs money: stop there. Here you learn each scam by running it, so it doesn't happen to you again.",
   },
+  // Day 1: phishing. Priya shows you the ropes; the boss counts.
   {
     id: "d1-start",
     day: 1,
@@ -48,7 +49,50 @@ export const beats: ReadonlyArray<Beat> = [
     lines: [
       {
         speaker: "Boss",
-        line: "Mail first. Email is cheap, email is fast, and people still click things.",
+        line: "Welcome to Windowly tech support! Ahaha. Just kidding. We are a customer care company.",
+      },
+      {
+        speaker: "Boss",
+        line: "Quota today: {quota} bucks. And more than Tommy.",
+      },
+    ],
+  },
+  {
+    id: "d1-pc",
+    day: 1,
+    on: "pc",
+    lines: [
+      {
+        speaker: "Priya",
+        line: "You're the new one? Leads app. Pick a person, pick a mail, send.",
+      },
+      {
+        speaker: "Priya",
+        line: 'After every send it shows what they should have spotted. Read it. The boss calls that "quality". I call it knowing which mails to stop sending.',
+      },
+    ],
+    learn:
+      "A deadline, a link, a sender that's almost right. If a mail has all three, don't click. Open the real site yourself.",
+  },
+  {
+    id: "d1-scam",
+    day: 1,
+    on: "scam",
+    lines: [
+      {
+        speaker: "Priya",
+        line: "{earned} of {quota}. Every send eats clock. At five the boss walks over, and you'll want a number by then.",
+      },
+    ],
+  },
+  {
+    id: "d1-end",
+    day: 1,
+    on: "dayEnd",
+    lines: [
+      {
+        speaker: "Tommy",
+        line: "First day? I did four hundred on my first day. Ask anyone. Like the watch? It's real. Mostly.",
       },
     ],
   },
