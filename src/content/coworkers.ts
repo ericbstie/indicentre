@@ -45,7 +45,7 @@ export const coworkers: ReadonlyArray<Coworker> = [
     ],
     idle: [
       "That's my fourteenth mail today and it's not even lunch. Don't stand there, it shows up on my numbers.",
-      "The printer jammed on my quota sheet. I'm taking it as a sign.",
+      "Fined fifty for no first mail before nine. The fines list is longer than my script now.",
       "Can't talk. The boss walks past every eleven minutes and I've timed it.",
     ],
   },
@@ -71,7 +71,7 @@ export const coworkers: ReadonlyArray<Coworker> = [
     idle: [
       "My chair lost a wheel on Tuesday. Facilities said Q3. It's November.",
       "I've been on hold with our own IT for twenty minutes. Professionally, I respect it.",
-      "Talking costs coffee, so bring some next time.",
+      "Coffee is for closers. I closed once in August, so I get the decaf.",
     ],
     newDesk:
       "You got a partition? I've asked for one since March. Enjoy hearing yourself think, I guess.",
@@ -96,7 +96,7 @@ export const coworkers: ReadonlyArray<Coworker> = [
     ],
     idle: [
       "Someone ate my yoghurt. It had my name on it. In marker. I'm sending a mail to all.",
-      "The fridge has a rota now. I made the rota. Nobody reads the rota.",
+      "This week's prize is a phone charger. Last week it was the same charger.",
       "Don't touch the plant. It's the only thing in here that's growing.",
     ],
   },
