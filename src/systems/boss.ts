@@ -4,6 +4,7 @@ import { createWalker } from "../boss/walker.ts";
 import { type BossReaction, bossLines } from "../content/boss.ts";
 import {
   BIG_WIN,
+  BossWatching,
   bossMood,
   changeMood,
   FAIL_STREAK,
@@ -12,6 +13,7 @@ import {
   quotaMood,
   quotaResult,
   scamMood,
+  WatchRequested,
 } from "../core/boss.ts";
 import type { EventOf } from "../core/events.ts";
 import { queueDialog } from "../dialog/dialog.ts";
@@ -81,20 +83,29 @@ export default {
     /** "Show me your technique": his line waits behind the day report, then
      * he stands behind your chair for one scam, grades it and walks back. */
     let busy = false;
-    const watchNextScam = async () => {
-      if (busy) return;
+    let watchWanted = false;
+    const watchNextScam = async (): Promise<void> => {
+      if (busy) {
+        watchWanted = true;
+        return;
+      }
       busy = true;
       const scam = nextScam();
       void react("watchStart");
       await walker.walkTo(AISLE);
       await walker.walkTo(BEHIND_DESK);
       walker.face(office.seat.lookAt);
+      game.emit(BossWatching, {});
       const e = await scam;
       await react(e.success ? "watchSuccess" : "watchFail");
       await walker.walkTo(AISLE);
       await walker.walkTo(HOME);
       walker.face(office.seat.position);
       busy = false;
+      if (watchWanted) {
+        watchWanted = false;
+        await watchNextScam();
+      }
     };
     // Unlocked by the first missed quota. From then on he watches after any
     // missed quota, and on days that end with his mood low.
@@ -123,12 +134,14 @@ export default {
     const offDesk = game.on("DeskUpgraded", () => {
       if (!busy) void react("newDesk");
     });
+    const offWatch = game.on(WatchRequested, () => void watchNextScam());
     const offFrame = world.onFrame((dt) => walker.update(dt));
     return () => {
       offFrame();
       offScam();
       offDay();
       offDesk();
+      offWatch();
     };
   },
 } satisfies GameSystem;

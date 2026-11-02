@@ -2,6 +2,7 @@
 // The beats themselves live in src/content/story.ts; systems/story.ts plays them.
 import { defineSlice } from "../core/slice.ts";
 import type { GameState, ScamId } from "../core/state.ts";
+import type { Call } from "./call.ts";
 
 /**
  * When a beat plays. Each beat plays once per run.
@@ -9,8 +10,9 @@ import type { GameState, ScamId } from "../core/state.ts";
  * - pc: the player sits down at their PC
  * - scam: the first scam of the day resolves
  * - dayEnd: the shift is over (after the day report)
+ * - watching: the boss stands behind the player, waiting for a scam
  */
-export type Trigger = "dayStart" | "pc" | "scam" | "dayEnd";
+export type Trigger = "dayStart" | "pc" | "scam" | "dayEnd" | "watching";
 
 export interface Line {
   readonly speaker: string;
@@ -30,6 +32,10 @@ export interface Beat {
   readonly day: number;
   readonly on: Trigger;
   readonly lines: ReadonlyArray<Line>;
+  /** A phone call played after the lines; it counts as a scam attempt. */
+  readonly call?: Call;
+  /** After the lines, the boss comes over to watch (see `watching`). */
+  readonly watch?: true;
   /** Plays with the camera at the player's desk, looking at the screen. */
   readonly atDesk?: true;
   /** The real-world defense, shown as a last "What to spot" line. */

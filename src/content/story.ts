@@ -96,4 +96,80 @@ export const beats: ReadonlyArray<Beat> = [
       },
     ],
   },
+  // Day 2: tech support. "Show me your technique" with the boss behind you.
+  {
+    id: "d2-start",
+    day: 2,
+    on: "dayStart",
+    introduces: "tech-support",
+    free: true,
+    watch: true,
+    lines: [
+      {
+        speaker: "Boss",
+        line: "Phones today. Rohan's script is on your desk. It has a coffee ring on it. That's how you know it works.",
+      },
+      { speaker: "Boss", line: "And today I watch. Show me your technique." },
+    ],
+  },
+  {
+    id: "d2-watch",
+    day: 2,
+    on: "watching",
+    lines: [
+      {
+        speaker: "Boss",
+        line: "Rhythm, junior. They doubt, you push. They do what you say, you stall. Never let them hang up.",
+      },
+    ],
+    call: {
+      scam: "tech-support",
+      victim: {
+        name: "Arne",
+        age: 71,
+        occupation: "retired bus driver",
+        detail:
+          "Got a tablet for his birthday and keeps it in the box it came in.",
+        defense: {
+          behavior:
+            "Asked his daughter before doing anything a caller told him to.",
+          line: "My daughter says real companies don't ring people about their computer. So. Bye.",
+        },
+      },
+      ms: 3500,
+      pass: 4,
+      steps: [
+        {
+          line: "Hello? Who is this? My computer seems fine to me.",
+          want: "Push",
+        },
+        { line: "Oh. Errors? Alright. What do I click?", want: "Stall" },
+        {
+          line: "Hang on, let me get my daughter. She does computers.",
+          want: "Push",
+        },
+        {
+          line: "I'm at the shop. The lad at the till asked what the cards are for.",
+          want: "Push",
+        },
+        {
+          line: "Right, I've scratched the back. Lots of numbers. Shall I read them?",
+          want: "Stall",
+        },
+      ],
+      won: {
+        speaker: "You",
+        line: "Five hundred. Thank you, Arne. Do not redeem.",
+      },
+      lost: {
+        speaker: "Arne",
+        line: "My daughter says real companies don't ring people about their computer. So. Bye.",
+      },
+      payout: 50,
+      minutes: 30,
+      heat: { success: 3, fail: 8 },
+    },
+    learn:
+      "Real companies don't call you about your computer. Gift cards are never a payment. If a caller won't let you hang up or ask someone, hang up.",
+  },
 ];

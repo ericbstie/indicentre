@@ -1,5 +1,6 @@
 import { PcOpened } from "../client/desktop.ts";
 import { beats } from "../content/story.ts";
+import { BossWatching, WatchRequested } from "../core/boss.ts";
 import { quotaFor } from "../core/economy.ts";
 import {
   type DialogChoice,
@@ -8,6 +9,7 @@ import {
   openDialog,
 } from "../dialog/dialog.ts";
 import { modalOpen } from "../hud/modal.ts";
+import { type Call, callDialog } from "../story/call.ts";
 import {
   type Beat,
   chose,
@@ -38,13 +40,19 @@ export default {
     };
 
     /** Lines `i`.. as one dialog chain; a line with `choose` remembers the pick. */
-    const chain = (lines: ReadonlyArray<Line>, i: number): DialogNode => {
+    const chain = (
+      lines: ReadonlyArray<Line>,
+      i: number,
+      after?: () => DialogNode,
+    ): DialogNode => {
       const l = lines[i]!;
       const last = i + 1 >= lines.length;
       const reply = (label: string, pick?: () => void): DialogChoice => ({
         label,
         ...(pick && { pick }),
-        ...(!last && { next: () => chain(lines, i + 1) }),
+        ...(last
+          ? after && { next: after }
+          : { next: () => chain(lines, i + 1, after) }),
       });
       const remember = (key: string, value: string) =>
         reply(value, () => game.dispatch(chose(key, value)));
@@ -73,6 +81,24 @@ export default {
       };
     };
 
+    /** The call's result, applied like any other scam attempt. */
+    const settle = (call: Call, won: boolean) => {
+      const bucks = won ? call.payout : 0;
+      const heat = won ? call.heat.success : call.heat.fail;
+      game.dispatch({ type: "tick", minutes: call.minutes });
+      game.dispatch({ type: "earn", amount: bucks });
+      game.dispatch({ type: "heat", amount: heat });
+      game.emit({
+        type: "ScamResolved",
+        scam: call.scam,
+        target: call.victim.name,
+        victim: call.victim,
+        success: won,
+        bucks,
+        heat,
+      });
+    };
+
     const play = (b: Beat) =>
       new Promise<void>((resolve) => {
         game.dispatch(sawBeat(b.id));
@@ -81,13 +107,30 @@ export default {
             type: "buy",
             item: { kind: "scam", id: b.introduces, price: 0 },
           });
-        const lines = b.learn
-          ? [...b.lines, { speaker: "What to spot", line: b.learn }]
-          : b.lines;
         world.player.controls.unlock();
         const stand = b.atDesk ? sitAtDesk() : undefined;
-        openDialog(chain(lines, 0), () => {
+        const learn = b.learn;
+        const debrief = learn
+          ? () => chain([{ speaker: "What to spot", line: learn }], 0)
+          : undefined;
+        const { call } = b;
+        let started = false;
+        let won = false;
+        const tail = call
+          ? () => {
+              started = true;
+              return callDialog(call, (w) => (won = w), debrief);
+            }
+          : debrief;
+        openDialog(chain(b.lines, 0, tail), () => {
           stand?.();
+          // Settled once the player is done reading, so the boss's verdict
+          // doesn't talk over the debrief. Leaving mid-call is a hang-up.
+          if (call && started) settle(call, won);
+          if (b.watch && dueBeats(beats, game.state(), b.day, "watching")[0]) {
+            watchRequested = true;
+            game.emit(WatchRequested, {});
+          }
           resolve();
         });
       });
@@ -98,17 +141,26 @@ export default {
         if (!queue.includes(b)) queue.push(b);
     };
     let playing = false;
-    const idle = () => !playing && !dialogOpen() && !modalOpen();
+    // Only a watch the story asked for plays its "watching" beat.
+    let watchRequested = false;
+    // The beat for the boss's watch plays once he's behind the player.
+    const ready = (b: Beat) =>
+      !playing && !modalOpen() && (b.on === "watching" || !dialogOpen());
 
     const stops = [
       world.onFrame(() => {
-        const next = queue[0];
-        if (!next || !idle()) return;
-        queue.shift();
+        const i = queue.findIndex(ready);
+        const next = queue[i];
+        if (!next) return;
+        queue.splice(i, 1);
         playing = true;
         void play(next).then(() => {
           playing = false;
         });
+      }),
+      game.on(BossWatching, () => {
+        if (watchRequested) enqueue(game.state().day, "watching");
+        watchRequested = false;
       }),
       game.on(PcOpened, () => enqueue(game.state().day, "pc")),
       game.on("ScamResolved", () => enqueue(game.state().day, "scam")),

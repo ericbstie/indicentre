@@ -1,5 +1,6 @@
 // Pure boss rules: how scams and quota results move the boss's mood, and
 // when he reacts. The boss system (systems/boss.ts) applies these.
+import { defineEvent } from "./events.ts";
 import { defineSlice } from "./slice.ts";
 import { clamp } from "./state.ts";
 
@@ -72,3 +73,9 @@ export const scamMood = (
 /** Which line pool the boss speaks from. */
 export const moodPool = (mood: number): "low" | "high" =>
   mood < WATCH_BELOW ? "low" : "high";
+
+type NoPayload = Record<never, never>;
+/** The story wants the boss to come and watch the player's next scam. */
+export const WatchRequested = defineEvent<NoPayload>("WatchRequested");
+/** The boss stands behind the player, waiting for the next ScamResolved. */
+export const BossWatching = defineEvent<NoPayload>("BossWatching");

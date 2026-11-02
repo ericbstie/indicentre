@@ -17,11 +17,14 @@ export interface DialogNode {
   readonly line: string;
   /** Up to two replies. None = the player can only leave. */
   readonly choices?: readonly [DialogChoice, DialogChoice?];
+  /** A countdown bar; when it runs out, `then` is picked for the player. */
+  readonly timeout?: { readonly ms: number; readonly then: DialogChoice };
 }
 
 let root: HTMLElement | undefined;
 let onClose: (() => void) | undefined;
 let current: DialogNode | undefined;
+let timer: ReturnType<typeof setTimeout> | undefined;
 
 /** True while a line is up, so systems can wait instead of replacing it. */
 export const dialogOpen = () => current !== undefined;
@@ -77,6 +80,15 @@ const render = (node: DialogNode) => {
   leave.textContent = "[Esc] Leave";
   replies.append(leave);
   box.append(who, line, replies);
+  clearTimeout(timer);
+  const t = node.timeout;
+  if (t) {
+    const bar = document.createElement("div");
+    bar.className = "dialog-timer";
+    bar.style.animationDuration = `${t.ms}ms`;
+    box.append(bar);
+    timer = setTimeout(() => current === node && choose(t.then), t.ms);
+  }
   root.replaceChildren(box);
   root.hidden = false;
   current = node;
@@ -106,6 +118,7 @@ const closeDialog = () => {
   root.hidden = true;
   current = undefined;
   hush();
+  clearTimeout(timer);
   const done = onClose;
   onClose = undefined;
   done?.();
