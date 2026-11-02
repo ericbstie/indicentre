@@ -14,7 +14,8 @@
     "new:scam": "bun scripts/new.ts scam",
     "new:system": "bun scripts/new.ts system",
     "fmt": "bun fmt --no-script",
-    "test": "bun test --pass-with-no-tests"
+    "test": "bun test --pass-with-no-tests",
+    "smoke": "bun scripts/smoke.ts"
   },
   "dependencies": {
     "effect": "4.1.2",
