@@ -47,7 +47,7 @@ export const VICTIM_QUOTES = [
   "It was 1.99. Who checks a link for 1.99?",
   "It was our plumbing supplier's name. Their logo. One extra dash in the address.",
   "It had my old password in the subject. I paid for a video that never existed.",
-  "The portrait was of our dog. Mostly. I paid half up front, then the other half for the fixed one.",
+  "The portrait was of our dog, more or less. I paid half up front, then the other half for the fixed one.",
   "It was my second week. When the CEO writes to you by name, you don't ask questions.",
 ];
 
@@ -113,7 +113,7 @@ export const AMBIENT: ReadonlyArray<NewsItem> = (
       "",
     ],
     [
-      "Bergen illustrator finds her pet portraits on a stranger's commission page",
+      "Bergen illustrator finds own pet portraits on a stranger's commission page",
       `"Twelve people paid him for my work. None of them got it," she said.`,
     ],
     [

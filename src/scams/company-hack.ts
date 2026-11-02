@@ -11,7 +11,7 @@ export default {
   heat: { success: 6, fail: 15 },
   fitTags: ["fear", "tech-help"],
   successLines: [
-    "Bought the gift cards on my lunch break and sent the codes. Halvard didn't even say thanks. I suppose that's what CEOs are like.",
+    "Bought the gift cards on my lunch break and sent the codes. That was 4,000 kr of my own money, and Halvard never asked for them.",
     "Typed my password in twice because the page froze. IT says they never sent a reset, but they'll look into the freezing.",
     "Opened the bonus list. It asked me to log in again and then it was empty. Maybe they haven't finished it yet.",
   ],

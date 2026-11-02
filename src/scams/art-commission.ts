@@ -12,7 +12,7 @@ export default {
   successLines: [
     "It came already! Biscuit has five legs in it, but the eyes are exactly his. Framing it anyway.",
     "Logo arrived. The sign says BKAERY in letters that aren't quite letters. Paid the rest, the artist seemed so busy.",
-    "Paid the deposit. The sketch comes Friday, she says. She said that last Friday too, but artists are like that.",
+    "Paid the deposit. The artist's page is gone now, and so is the photo of our dog I sent.",
   ],
   templates: [
     {
