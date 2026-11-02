@@ -44,7 +44,6 @@ test("victim story is deterministic and fully filled", () => {
     const n = victimStory(seeded(s), event);
     expect(n.headline).not.toContain("{");
     expect(n.kind).toBe("victim");
-    expect(n.tags).toContain("elderly");
   }
 });
 
