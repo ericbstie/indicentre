@@ -13,6 +13,14 @@ import type { GameSystem } from "./system.ts";
 export default {
   id: "coworkers",
   start({ game, world }) {
+    const idled = new Map<string, number>();
+    /** Their next idle line, in turn, so it doesn't repeat back to back. */
+    const idle = (c: Coworker) => {
+      const n = idled.get(c.id) ?? 0;
+      idled.set(c.id, n + 1);
+      return idleLine(c, game.state(), n);
+    };
+
     const give = (c: Coworker, i: number) => {
       game.dispatch({ type: "heardHint", coworker: c.id });
       game.emit({
@@ -26,7 +34,7 @@ export default {
     // Hints `from`..`to`-1 as a chain of "Anything else?" replies.
     const chain = (c: Coworker, from: number, to: number): DialogNode => ({
       speaker: c.name,
-      line: c.hints[from] ?? idleLine(c, game.state()),
+      line: c.hints[from] ?? idle(c),
       ...(from + 1 < to && {
         choices: [
           {
@@ -42,8 +50,7 @@ export default {
       world.player.controls.unlock();
       const heard = hintsHeard(game.state(), c.id);
       const open = unlockedHints(c, game.state()).length;
-      if (heard >= open)
-        return openDialog({ speaker: c.name, line: idleLine(c, game.state()) });
+      if (heard >= open) return openDialog({ speaker: c.name, line: idle(c) });
       give(c, heard);
       openDialog(chain(c, heard, open));
     };
