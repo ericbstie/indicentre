@@ -415,6 +415,17 @@ export const DEFENSES: ReadonlyArray<
     ],
   },
   {
+    w: 1,
+    id: "rings-the-friend",
+    counters: ["family"],
+    behavior:
+      "Rang the friend on the phone instead of answering. The friend hadn't sent anything.",
+    lines: [
+      "I just rang Kim. Kim is at the dentist and very confused.",
+      "Funny, my sister's sitting right here. Hasn't sent me a thing all day.",
+    ],
+  },
+  {
     w: 2,
     id: "looks-up-number",
     counters: ["authority", "fear"],

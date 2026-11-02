@@ -44,6 +44,7 @@ export const VICTIM_QUOTES = [
   "The police said I'm the third one on this street this month.",
   "I was on the bus. I just wanted it sorted before my stop.",
   "The screen said Fjellstad Bank. I checked. That was the whole problem.",
+  "My aunt lent 3,000 kr to me. To me! I was at work the whole time.",
 ];
 
 /**
