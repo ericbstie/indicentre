@@ -391,6 +391,24 @@ export const beats: ReadonlyArray<Beat> = [
     learn:
       "A supplier who changes bank details by email is the oldest trick in accounts. Call them on the number you already have.",
   },
+  {
+    id: "d9-pc",
+    day: 9,
+    on: "pc",
+    introduces: "company-hack",
+    lines: [
+      {
+        speaker: "Rohan",
+        line: "While you're in the accounts, try the staff. New hires post the job on day one. Badge photo, team photo, the boss's name in the caption.",
+      },
+      {
+        speaker: "Rohan",
+        line: 'Company hack is in the Shop. One mail from "the CEO" or "IT". Gift cards, or a password typed into your fake website. Nobody new questions the CEO.',
+      },
+    ],
+    learn:
+      "A CEO who wants gift cards by mail is not your CEO. Check strange requests on a channel you already use, and log in from your own bookmark.",
+  },
   // Day 10: the finale plays at the run's end (see `endings`).
   {
     id: "d10-start",
