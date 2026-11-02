@@ -49,6 +49,8 @@ Long branches go stale fast (wave 5: two PRs needed 4+ rebases each), so
 rebase whenever `bun run doctor` says you're behind. Rebasing your own
 `claude/project-thread-*` branch and pushing with `git push
 --force-with-lease` is expected; never force-push a branch you didn't open.
+Commits reach `main` only through a PR merge, never a direct push: PR #34's
+commits were pushed straight to main and left the PR open with nothing to merge.
 If you remove a field or export, doctor lists the open branches that still
 use it: tell them before you merge. A new scam brings its own `introduces`
 beat; don't reserve schedule slots for scams that don't exist yet.
