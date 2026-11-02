@@ -121,6 +121,9 @@ const option = (
 const minutesFor = (s: ScamDef) => s.minutes * (1 + (s.warmups?.length ?? 0));
 
 /** One attempt on a fresh batch of leads, as the Leads app plays it. */
+/** Pitches per scam in the current run, for the roster line. */
+let pitched: Record<string, number> = {};
+
 const play = (rng: Rng, s: GameState, pl: Player): GameState => {
   const m = modifiersFor(s.ownedTools);
   const open = workable(s, pl);
@@ -131,6 +134,7 @@ const play = (rng: Rng, s: GameState, pl: Player): GameState => {
     rng() < pl.skill + (pl.skill && m.reveal >= 2 ? READ_ODDS : 0)
       ? opts.reduce((a, b) => (b.score > a.score ? b : a))
       : opts[Math.floor(rng() * opts.length)]!;
+  pitched[o.scam.id] = (pitched[o.scam.id] ?? 0) + 1;
   let next = s;
   let landed = 0;
   for (const w of o.scam.warmups ?? []) {
@@ -206,12 +210,14 @@ const freeScams = (s: GameState) =>
 interface Run {
   readonly s: GameState;
   readonly bought: ReadonlyArray<[string, number]>;
+  readonly pitched: Readonly<Record<string, number>>;
 }
 
 const run = (seed: number, pl: Player): Run => {
   const rng = seeded(seed);
   let s = freeScams(initialState());
   const bought: Array<[string, number]> = [];
+  pitched = {};
   while (s.status === "playing") {
     const day = s.day;
     const cap =
@@ -226,7 +232,7 @@ const run = (seed: number, pl: Player): Run => {
       if (!before.has(id)) bought.push([id, day]);
     s = freeScams(reduce(s, { type: "endDay" }));
   }
-  return { s, bought };
+  return { s, bought, pitched };
 };
 
 const N = Number(process.argv[2] ?? 400);
@@ -252,11 +258,14 @@ for (const pl of PLAYERS) {
   const heatDay: number[] = [];
   const alive: number[] = [];
   const buyDay: Record<string, number[]> = {};
+  const roster: Record<string, number> = {};
   let days = 0;
   let warned = 0;
   let raidedDay1 = 0;
   for (let seed = 1; seed <= N; seed++) {
-    const { s, bought } = run(seed, pl);
+    const { s, bought, pitched } = run(seed, pl);
+    for (const [id, n] of Object.entries(pitched))
+      roster[id] = (roster[id] ?? 0) + n;
     end[s.status] = (end[s.status] ?? 0) + 1;
     days += s.days.length;
     if (s.status === "shutdown" && s.day === 1) raidedDay1++;
@@ -283,6 +292,13 @@ for (const pl of PLAYERS) {
       `${id} d${(ds.reduce((a, b) => a + b, 0) / ds.length).toFixed(1)} (${pctOf(ds.length).trim()})`,
   );
   if (buys.length) console.log(`  buys: ${buys.join(", ")}`);
+  const total = Object.values(roster).reduce((a, b) => a + b, 0);
+  console.log(
+    `  pitches: ${Object.entries(roster)
+      .sort((a, b) => b[1] - a[1])
+      .map(([id, n]) => `${id} ${Math.round((100 * n) / total)}%`)
+      .join(", ")}`,
+  );
   if (pl.only && (end["won"] ?? 0) / N > PHISHING_ONLY_MAX) {
     console.log(
       `FAIL: ${pl.name} wins more than ${PHISHING_ONLY_MAX * 100}% of runs. One scam shouldn't carry a run.`,

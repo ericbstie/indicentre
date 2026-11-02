@@ -7,7 +7,7 @@ export default {
   price: 0,
   minutes: 20,
   payout: 40,
-  heat: { success: 2, fail: 8 },
+  heat: { success: 2, fail: 6 },
   fitTags: ["parcel", "bank"],
   successLines: [
     "Done, I put in everything it asked for. It said my code was wrong the first time so I typed it again. Is that all now?",

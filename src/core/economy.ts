@@ -14,7 +14,7 @@ const QUOTA_STEP = 24;
 export const quotaFor = (day: number) => QUOTA_BASE + QUOTA_STEP * (day - 1);
 /** A good day raises the bar: today's quota is at least this share of
  * yesterday's take. */
-const QUOTA_RATCHET = 0.6;
+const QUOTA_RATCHET = 0.7;
 
 /** Today's quota: the day's base, or more after a big day. Fixed all day. */
 export const quotaToday = (s: GameState) =>
