@@ -111,6 +111,18 @@
   margin: 0;
 }
 
+.leads h3 small,
+.leads h4 small,
 .dossier small {
+  font-weight: normal;
   color: var(--muted);
+}
+
+.leads h3 .link {
+  margin-right: 8px;
+  font-weight: normal;
+}
+
+.leads h3:first-child {
+  margin-top: 0;
 }
