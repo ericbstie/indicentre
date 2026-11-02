@@ -6,7 +6,6 @@ import {
   type Beat,
   chose,
   dueBeats,
-  fill,
   sawBeat,
   addPaid,
   shopSells,
@@ -32,12 +31,6 @@ describe("dueBeats", () => {
     const s = reduce(initialState(), sawBeat("a"));
     expect(dueBeats(beats, s, 1, "pc").map((b) => b.id)).toEqual(["b"]);
   });
-});
-
-test("fill replaces known keys only", () => {
-  expect(
-    fill("Hi {nick}, {quota} to go {x}", { nick: "Tiger", quota: "60" }),
-  ).toBe("Hi Tiger, 60 to go {x}");
 });
 
 test("seen beats are recorded once; choices are remembered", () => {

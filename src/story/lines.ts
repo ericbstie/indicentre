@@ -1,5 +1,6 @@
 import type { DialogChoice, DialogNode } from "../dialog/dialog.ts";
-import { fill, type Line } from "./story.ts";
+import { fill } from "../core/text.ts";
+import type { Line } from "./story.ts";
 
 export interface LinesContext {
   /** Values for `{key}` placeholders, read when each line is shown. */
