@@ -3,7 +3,14 @@
 // one concrete detail, never about anyone's ethnicity or accent.
 
 export type BossReaction =
-  "failStreak" | "bigWin" | "quotaMissed" | "quotaMet" | "quotaSmashed";
+  | "failStreak"
+  | "bigWin"
+  | "quotaMissed"
+  | "quotaMet"
+  | "quotaSmashed"
+  | "watchStart"
+  | "watchSuccess"
+  | "watchFail";
 
 export interface MoodLines {
   readonly low: ReadonlyArray<string>;
@@ -50,5 +57,23 @@ export const bossLines: Readonly<Record<BossReaction, MoodLines>> = {
     high: [
       "Double quota! I'm printing this and pinning it next to the eagle poster.",
     ],
+  },
+  watchStart: {
+    low: [
+      "Show me your technique. I'll just stand here. Breathing.",
+      "Next one, I watch. Do it exactly how you'd do it if I wasn't here.",
+    ],
+    high: ["Let's see your technique. Pretend I'm not here."],
+  },
+  watchSuccess: {
+    low: ["Okay. Okay. Now do that forty more times."],
+    high: ["See? Technique. I taught you that. Spiritually."],
+  },
+  watchFail: {
+    low: [
+      "That's not a technique, that's a hobby.",
+      "They spotted it before you finished the subject line.",
+    ],
+    high: ["They noticed. Read your own message once before you send it."],
   },
 };
