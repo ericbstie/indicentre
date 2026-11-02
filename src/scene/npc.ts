@@ -67,5 +67,3 @@ export const createNpc = (look: NpcLook, desk: THREE.Vector3) => {
     },
   };
 };
-
-export type Npc = ReturnType<typeof createNpc>;

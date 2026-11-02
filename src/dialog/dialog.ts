@@ -82,7 +82,7 @@ export const openDialog = (node: DialogNode, closed?: () => void) => {
   render(node);
 };
 
-export const closeDialog = () => {
+const closeDialog = () => {
   if (!root || !current) return;
   root.hidden = true;
   current = undefined;
@@ -90,5 +90,3 @@ export const closeDialog = () => {
   onClose = undefined;
   done?.();
 };
-
-export const isDialogOpen = () => current !== undefined;
