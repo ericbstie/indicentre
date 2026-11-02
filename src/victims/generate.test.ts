@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { seeded } from "../core/rng.ts";
-import { generateVictims, namesUsedOn } from "./generate.ts";
+import { daily, generateVictims } from "./generate.ts";
 import {
   DEFENSES,
   DETAILS,
@@ -57,7 +57,7 @@ describe("generateVictims", () => {
   });
 
   test("a day's batches never reuse a first name until they run out", () => {
-    const today = namesUsedOn();
+    const today = daily();
     const rng = seeded(9);
     const day1 = Array.from({ length: 10 }, () =>
       generateVictims(rng, 3, today(1)),
@@ -70,7 +70,18 @@ describe("generateVictims", () => {
     ).flat();
     const full = [...day1, ...long].map((v) => v.name);
     expect(new Set(full).size).toBe(full.length);
-    expect(today(2).size).toBe(0);
+    expect(today(2).names.size).toBe(0);
+  });
+
+  test("within a day, a defense never says the same line twice in a row", () => {
+    const today = daily();
+    const rng = seeded(11);
+    const last = new Map<string, string>();
+    for (let i = 0; i < 40; i++)
+      for (const v of generateVictims(rng, 3, today(1))) {
+        expect(v.defense.line).not.toBe(last.get(v.defense.id) ?? "");
+        last.set(v.defense.id, v.defense.line);
+      }
   });
 
   test("profiles are distinct and internally consistent", () => {
