@@ -10,28 +10,28 @@ export default {
   heat: { success: 4, fail: 12 },
   fitTags: ["tech-help", "fear"],
   successLines: [
-    "He was so patient with me. Forty minutes! You don't get service like that anymore.",
-    "I let him into the computer and he found all the viruses. Hundreds of them. I had no idea.",
-    "Paid for the licence. The computer is slower now, and the bank has stopped my card.",
+    "Thank you for being so patient on the phone, forty minutes! The computer is slower now but you said that's normal at first.",
+    "I bought the cards like you said and read you the numbers. I hope you keep your job.",
+    "I paid for the licence. Now the bank has stopped my card and wants to know who I let into the computer. What do I tell them?",
   ],
   templates: [
     {
       id: "error-reports",
       label: "Your computer is sending errors",
       subject:
-        '"Hello, Datavakt Help Desk. We are calling about your computer."',
-      body: `We have received 312 error reports from your computer this week, {name}.
-I just need you to open one program so I can look at it with you. Free of charge.
-The repair licence afterwards is 1,499. Most customers take the lifetime one.`,
+        '"Hello, Datavakt technical department. Am I speaking with the main user of the computer?"',
+      body: `We are getting error reports from your computer, {name}, more than three hundred this week. It is not safe right now.
+Please go to the computer and switch it on. I will show you the errors myself, in your own system log, all the red ones. Then I connect and clean it, free of charge.
+After that the protection licence is 1,499. Most customers take the lifetime one.`,
       lures: { authority: 0.9, urgency: 0.7 },
     },
     {
       id: "refund",
       label: "Refund, typed in wrong",
-      subject: '"Hi, Nettvakt Security here, about your refund."',
-      body: `Your antivirus subscription ended, {name}, and we owe you 2,000 back.
-I'll connect to your computer to send it. Oh. Oh no. I typed 20,000.
-You'll have to send the difference back today or my manager fires me.`,
+      subject: '"Hi, Datavakt billing here. It is about your refund."',
+      body: `Your antivirus subscription was cancelled, {name}, so we owe you 2,000 back.
+I'll connect to your computer to send it, just open your bank so you can see it arrive. Oh. Oh no. I typed 20,000.
+Please, you have to send the difference back today. Gift cards are fastest. Otherwise my manager fires me.`,
       lures: { greed: 0.6, authority: 0.6, urgency: 0.5 },
     },
   ],
