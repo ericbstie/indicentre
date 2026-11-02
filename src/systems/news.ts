@@ -1,7 +1,7 @@
 import { AMBIENT } from "../content/news.ts";
 import { seeded } from "../core/rng.ts";
 import { createFeed } from "../news/feed.ts";
-import { type NewsItem, victimStory } from "../news/news.ts";
+import { type NewsItem, storyFor } from "../news/news.ts";
 import { ROOM } from "../scene/office.ts";
 import { buildTv } from "../scene/tv.ts";
 import type { GameSystem } from "./system.ts";
@@ -19,7 +19,10 @@ const BANNERS: Record<NewsItem["kind"], { text: string; color: string }> = {
   ambient: { text: "OFFICE NEWS 24/7", color: "#2a4f7a" },
 };
 
-/** The wall TV: cycles world news, runs the player's victims as breaking news. */
+/**
+ * The wall TV: cycles world news, runs the player's victims as breaking
+ * news, and runs targets who caught the scam as good news.
+ */
 export default {
   id: "news",
   start({ game, world }) {
@@ -67,9 +70,8 @@ That one yours? The boss says if it makes the news it counts double. It doesn't.
     };
 
     const off = game.on("ScamResolved", (e) => {
-      if (!e.success) return;
       const { day, minute } = game.state();
-      const story = victimStory(seeded(day * 10_000 + minute + 101), e);
+      const story = storyFor(seeded(day * 10_000 + minute + 101), e);
       feed.push(story);
       timer = Math.min(timer, BREAKING_DELAY);
     });
