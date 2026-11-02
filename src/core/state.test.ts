@@ -1,0 +1,52 @@
+import { describe, expect, test } from "bun:test";
+import {
+  clock,
+  initialState,
+  OVERNIGHT_COOLDOWN,
+  reduce,
+  SHUTDOWN_MAX,
+  WORKDAY_MINUTES,
+} from "./state.ts";
+
+const s0 = initialState(["phishing"]);
+
+describe("reduce", () => {
+  test("earn adds bucks, ignores non-positive amounts", () => {
+    expect(reduce(s0, { type: "earn", amount: 50 }).scamBucks).toBe(50);
+    expect(reduce(s0, { type: "earn", amount: -5 })).toBe(s0);
+  });
+
+  test("spend only succeeds when affordable", () => {
+    const rich = reduce(s0, { type: "earn", amount: 30 });
+    expect(reduce(rich, { type: "spend", amount: 20 }).scamBucks).toBe(10);
+    expect(reduce(rich, { type: "spend", amount: 40 })).toBe(rich);
+  });
+
+  test("heat is clamped and maxing it shuts the center down", () => {
+    expect(reduce(s0, { type: "heat", amount: -10 }).shutdownMeter).toBe(0);
+    const raided = reduce(s0, { type: "heat", amount: 250 });
+    expect(raided.shutdownMeter).toBe(SHUTDOWN_MAX);
+    expect(raided.status).toBe("shutdown");
+    expect(reduce(raided, { type: "earn", amount: 10 })).toBe(raided);
+  });
+
+  test("tick rolls over to the next day and cools heat overnight", () => {
+    const hot = reduce(s0, { type: "heat", amount: 20 });
+    const next = reduce(hot, { type: "tick", minutes: WORKDAY_MINUTES + 30 });
+    expect(next.day).toBe(2);
+    expect(next.minute).toBe(30);
+    expect(next.shutdownMeter).toBe(20 - OVERNIGHT_COOLDOWN);
+  });
+
+  test("unlock is idempotent", () => {
+    expect(reduce(s0, { type: "unlock", scam: "phishing" })).toBe(s0);
+    expect(
+      reduce(s0, { type: "unlock", scam: "tech-support" }).unlockedScams,
+    ).toEqual(["phishing", "tech-support"]);
+  });
+});
+
+test("clock formats minutes since 09:00", () => {
+  expect(clock(s0)).toBe("09:00");
+  expect(clock(reduce(s0, { type: "tick", minutes: 95 }))).toBe("10:35");
+});
