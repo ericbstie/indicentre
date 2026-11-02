@@ -26,9 +26,11 @@ are about to touch. Nothing else is required.
   and game-like: no real operational instructions, no real brands (use
   BankCo-style fakes).
 - **The game teaches by showing, not by debrief.** No generic feedback after
-  a pitch (no red-flag lists, no odds reveal): the result card shows the
-  outcome and the victim's own line, and the TV news tells what a victim
-  who caught you did right.
+  a pitch (no red-flag lists, no odds reveal, no "what they did right"):
+  the result card shows the outcome, bucks and heat, plus the reply of a
+  victim who fell for it. The TV news tells what a victim who caught you
+  did right. A story beat's "What to spot" line plays with the scam's
+  intro, never after a pitch.
 
 ## Before you open (and before you merge) a PR
 

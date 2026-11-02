@@ -23,14 +23,10 @@ export interface Call {
   readonly heat: { readonly success: number; readonly fail: number };
 }
 
-/**
- * The call as a dialog chain. `done` gets the result when the last line is
- * shown; `after` (the debrief) follows the last line.
- */
+/** The call as a dialog chain. `done` gets the result when the last line is shown. */
 export const callDialog = (
   call: Call,
   done: (won: boolean) => void,
-  after?: () => DialogNode,
 ): DialogNode => {
   let hits = 0;
   const end = (): DialogNode => {
@@ -40,7 +36,7 @@ export const callDialog = (
     return {
       speaker,
       line,
-      choices: [{ label: "Go on", ...(after && { next: after }) }],
+      choices: [{ label: "Go on" }],
     };
   };
   const step = (i: number): DialogNode => {

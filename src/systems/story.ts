@@ -62,24 +62,25 @@ export default {
 
     /** Queues `b` behind any open dialog or card (dialog.ts queueDialog). */
     const play = (b: Beat) => {
-      const learn = b.learn;
-      const debrief = learn
-        ? () => linesDialog(ctx, [{ speaker: "What to spot", line: learn }])
-        : undefined;
-      const { call } = b;
+      const { call, learn } = b;
       let started = false;
       let won = false;
-      const tail = call
+      const dial = call
         ? () => {
             started = true;
-            return callDialog(call, (w) => (won = w), debrief);
+            return callDialog(call, (w) => (won = w));
           }
-        : debrief;
+        : undefined;
+      // The lesson comes with the intro, never after a pitch (CONTRIBUTING.md).
+      const tail = learn
+        ? () =>
+            linesDialog(ctx, [{ speaker: "What to spot", line: learn }], dial)
+        : dial;
       let stand: (() => void) | undefined;
       void queueDialog(linesDialog(ctx, b.lines, tail), () => {
         stand?.();
         // Settled once the player is done reading, so the boss's verdict
-        // doesn't talk over the debrief. Leaving mid-call is a hang-up.
+        // doesn't talk over the call's last line. Leaving mid-call is a hang-up.
         if (call && started) settle(call, won);
         if (b.watch && dueBeats(beats, game.state(), b.day, "watching")[0]) {
           watchRequested = true;

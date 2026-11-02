@@ -2,6 +2,7 @@
 // job; this checks the rules a type can't express (docs/consistency.md,
 // CONTRIBUTING.md "Content tone").
 import { describe, expect, test } from "bun:test";
+import { readFileSync } from "node:fs";
 import { scams } from "../scams/registry.ts";
 import { tools } from "../shop/tools.ts";
 import { ANGLES } from "../victims/angles.ts";
@@ -114,6 +115,18 @@ describe("content contract", () => {
     expect(Object.keys(voices).filter((n) => !speakers.includes(n))).toEqual(
       [],
     );
+  });
+
+  // Eric 2026-11-02: no generic feedback after a pitch. Seen: a result card
+  // with the victim's defense line on a loss, and a beat promising that
+  // "after every send it shows what they should have spotted". The
+  // catfisher File's red flags are a separate EXTRA, not a pitch result.
+  test("no post-pitch debrief text", () => {
+    const debrief =
+      /red flags?|should have spotted|could have spotted|did right|odds were|after every (send|pitch)/i;
+    const resultCard = readFileSync("src/apps/leads.ts", "utf8");
+    const all = [...Object.values(CONTENT).flatMap(strings), resultCard];
+    expect(all.filter((s) => debrief.test(s))).toEqual([]);
   });
 
   test("no stray whitespace around text", () => {

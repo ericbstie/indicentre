@@ -232,7 +232,7 @@ export default {
         ${
           o.success
             ? `<blockquote>"${esc(personalize(r.scam.successLine, r.target))}"</blockquote>`
-            : `<blockquote>"${esc(o.defense.line)}"</blockquote>`
+            : ""
         }
         <button class="btn" data-next>Next leads</button>
       </div>`;
