@@ -1,0 +1,44 @@
+{
+  "models": {
+    "desk": {
+      "url": "https://raw.githubusercontent.com/RetroDECK/RetroQUEST/dfa19a5602a31f64bd890d15279a61f43b127328/assets/kenney_furniture-kit/Models/GLTF%20format/desk.glb",
+      "sha256": "0164fe828f028b321730fb8c74502e353583f751be74da1682d42fff7d3c5a42",
+      "license": "CC0-1.0",
+      "author": "Kenney",
+      "origin": "https://kenney.nl/assets/furniture-kit",
+      "licenseUrl": "https://raw.githubusercontent.com/RetroDECK/RetroQUEST/dfa19a5602a31f64bd890d15279a61f43b127328/assets/kenney_furniture-kit/License.txt"
+    },
+    "monitor": {
+      "url": "https://raw.githubusercontent.com/RetroDECK/RetroQUEST/dfa19a5602a31f64bd890d15279a61f43b127328/assets/kenney_furniture-kit/Models/GLTF%20format/computerScreen.glb",
+      "sha256": "5942cbad29a2d2b956619569926e81d50a4174403d592fece6556e57632dc643",
+      "license": "CC0-1.0",
+      "author": "Kenney",
+      "origin": "https://kenney.nl/assets/furniture-kit",
+      "licenseUrl": "https://raw.githubusercontent.com/RetroDECK/RetroQUEST/dfa19a5602a31f64bd890d15279a61f43b127328/assets/kenney_furniture-kit/License.txt"
+    },
+    "keyboard": {
+      "url": "https://raw.githubusercontent.com/RetroDECK/RetroQUEST/dfa19a5602a31f64bd890d15279a61f43b127328/assets/kenney_furniture-kit/Models/GLTF%20format/computerKeyboard.glb",
+      "sha256": "9d9135789de2120e9f41ce3f0a56dd1b15f40adcc7888739bb842a2d820da322",
+      "license": "CC0-1.0",
+      "author": "Kenney",
+      "origin": "https://kenney.nl/assets/furniture-kit",
+      "licenseUrl": "https://raw.githubusercontent.com/RetroDECK/RetroQUEST/dfa19a5602a31f64bd890d15279a61f43b127328/assets/kenney_furniture-kit/License.txt"
+    },
+    "mouse": {
+      "url": "https://raw.githubusercontent.com/RetroDECK/RetroQUEST/dfa19a5602a31f64bd890d15279a61f43b127328/assets/kenney_furniture-kit/Models/GLTF%20format/computerMouse.glb",
+      "sha256": "d3ad1a923f0f7707ef367bb969eb94c9076e211c98c830ba52e133fadc5cdfc0",
+      "license": "CC0-1.0",
+      "author": "Kenney",
+      "origin": "https://kenney.nl/assets/furniture-kit",
+      "licenseUrl": "https://raw.githubusercontent.com/RetroDECK/RetroQUEST/dfa19a5602a31f64bd890d15279a61f43b127328/assets/kenney_furniture-kit/License.txt"
+    },
+    "chair": {
+      "url": "https://raw.githubusercontent.com/RetroDECK/RetroQUEST/dfa19a5602a31f64bd890d15279a61f43b127328/assets/kenney_furniture-kit/Models/GLTF%20format/chairDesk.glb",
+      "sha256": "46406619186034cbe92b19b79a5f1a8e3f442a17a70a7524ef2c0ad0f35095c6",
+      "license": "CC0-1.0",
+      "author": "Kenney",
+      "origin": "https://kenney.nl/assets/furniture-kit",
+      "licenseUrl": "https://raw.githubusercontent.com/RetroDECK/RetroQUEST/dfa19a5602a31f64bd890d15279a61f43b127328/assets/kenney_furniture-kit/License.txt"
+    }
+  }
+}
