@@ -47,7 +47,7 @@ export type Attempt =
   | { readonly success: true }
   | {
       readonly success: false;
-      /** What the victim did right. The lesson of a failed scam. */
+      /** The habit that beat the scam. The TV news tells it, never the result card. */
       readonly defense: Defense;
     };
 

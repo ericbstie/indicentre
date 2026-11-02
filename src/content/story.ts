@@ -68,7 +68,7 @@ export const beats: ReadonlyArray<Beat> = [
       },
       {
         speaker: "Priya",
-        line: 'After every send it shows what they should have spotted. Read it. The boss calls that "quality". I call it knowing which mails to stop sending.',
+        line: 'If they bite, they write back. If they don\'t, the TV usually tells you why. The boss calls that "quality". I call it knowing which mails to stop sending.',
       },
     ],
     learn:
