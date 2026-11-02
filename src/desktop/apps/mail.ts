@@ -1,11 +1,6 @@
 import { unreadCount } from "../../core/state.ts";
 import type { DesktopApp } from "../desktop.ts";
-
-const esc = (s: string) =>
-  s.replace(
-    /[&<>"]/g,
-    (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!,
-  );
+import { esc, escLines } from "../html.ts";
 
 export const mailApp: DesktopApp = {
   id: "mail",
@@ -34,7 +29,7 @@ export const mailApp: DesktopApp = {
         : `<li class="empty">No mail.</li>`;
       const m = inbox.find((x) => x.id === selected);
       reader.innerHTML = m
-        ? `<h3>${esc(m.subject)}</h3><p class="from">From: ${esc(m.from)}</p><p>${esc(m.body).replace(/\n/g, "<br>")}</p>`
+        ? `<h3>${esc(m.subject)}</h3><p class="from">From: ${esc(m.from)}</p><p>${escLines(m.body)}</p>`
         : `<p class="empty">Select a message.</p>`;
     };
 

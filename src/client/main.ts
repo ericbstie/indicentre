@@ -5,6 +5,7 @@ import { initialState } from "../core/state.ts";
 import { makeGameStore } from "../core/store.ts";
 import { apps } from "../desktop/apps/index.ts";
 import { createDesktop } from "../desktop/desktop.ts";
+import { starterScams } from "../scams/registry.ts";
 import { createHud } from "../hud/hud.ts";
 import { createInteractions } from "../scene/interact.ts";
 import { buildOffice } from "../scene/office.ts";
@@ -14,7 +15,9 @@ import { gameFromStore } from "./game.ts";
 /** Real seconds per in-game minute. */
 const SECONDS_PER_GAME_MINUTE = 1;
 
-const game = gameFromStore(Effect.runSync(makeGameStore(initialState())));
+const game = gameFromStore(
+  Effect.runSync(makeGameStore(initialState(starterScams))),
+);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
