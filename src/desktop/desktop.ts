@@ -17,16 +17,12 @@ export const createDesktop = (
   root.hidden = true;
   root.innerHTML = `
     <nav class="taskbar"></nav>
-    <section class="window" hidden>
-      <header><span data-title></span><button data-close title="Close">×</button></header>
-      <div class="window-body"></div>
-    </section>
+    <section class="window" hidden></section>
     <footer class="hint">[Esc] Stand up</footer>`;
   const taskbar = root.querySelector<HTMLElement>(".taskbar")!;
   const win = root.querySelector<HTMLElement>(".window")!;
-  const title = root.querySelector<HTMLElement>("[data-title]")!;
-  const body = root.querySelector<HTMLElement>(".window-body")!;
   let cleanup: (() => void) | void;
+  let current: string | undefined;
 
   const icons = apps.map((app) => {
     const b = document.createElement("button");
@@ -38,6 +34,7 @@ export const createDesktop = (
   const renderIcons = () => {
     for (const { app, b } of icons) {
       const badge = app.badge?.(ctx) ?? "";
+      b.classList.toggle("active", app.id === current);
       b.innerHTML = `<span>${app.icon}</span>${app.title}${badge ? `<b>${badge}</b>` : ""}`;
     }
   };
@@ -47,20 +44,24 @@ export const createDesktop = (
   const closeApp = () => {
     cleanup?.();
     cleanup = undefined;
-    body.replaceChildren();
+    win.replaceChildren();
     win.hidden = true;
+    current = undefined;
+    renderIcons();
   };
 
   const launch = (id: string) => {
     const app = apps.find((a) => a.id === id);
     if (!app) return;
     closeApp();
-    title.textContent = app.title;
+    current = id;
+    renderIcons();
     win.hidden = false;
+    // A fresh element per app, so no handler outlives its app.
+    const body = document.createElement("div");
+    win.replaceChildren(body);
     cleanup = app.mount(body, ctx);
   };
-
-  root.querySelector<HTMLElement>("[data-close]")!.onclick = closeApp;
 
   return {
     get isOpen() {

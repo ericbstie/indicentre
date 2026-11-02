@@ -36,8 +36,13 @@
   cursor: pointer;
 }
 
-.app-icon:hover {
+.app-icon:hover,
+.app-icon.active {
   background: #ffffff2a;
+}
+
+.app-icon.active {
+  box-shadow: inset 0 -2px var(--accent);
 }
 
 .app-icon b {
@@ -56,30 +61,11 @@
   color: var(--ink);
   background: var(--paper);
   border-radius: 6px;
-  overflow: hidden;
-}
-
-.window header {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 10px;
-  color: #eee;
-  background: #333;
-}
-
-.window header button {
-  color: inherit;
-  font-size: 18px;
-  line-height: 1;
-  background: none;
-  border: 0;
-  cursor: pointer;
-}
-
-.window-body {
-  flex: 1;
-  min-height: 0;
   overflow: auto;
+}
+
+.window > div {
+  flex: 1 0 auto;
 }
 
 .hint {
