@@ -88,11 +88,10 @@ export const coworkers: ReadonlyArray<Coworker> = [
       outfit: "casual3-female",
     },
     hints: [
-      "Cheap listing, nice photos, and you're 'away for work'. That's why it's a parcel, never a pickup.",
-      "Get them off the app with curiosity: 'more photos on my phone'. The app has a report button. A text message doesn't.",
-      "Price it under market and let greed do the rest. Someone who's paid a deposit will pay the rest.",
-      "A buyer who says 'I'll pick it up and pay cash' is not your buyer. Shipping only, the parcel goes out once they've paid.",
-      "Never give them time. Urgency stops the image search: nobody checks the photos of a bike that's 'gone by tonight'.",
+      "Pose as the buyer. Sellers want the thing gone, so nobody asks why a buyer's courier pays by link. The ones who post a parcel every week ask least.",
+      "Offer the full asking price and don't haggle. A seller who got their price is too busy with the greed to look at how you're paying.",
+      "The courier page says RECEIVE in big letters. Curiosity gets the click, the card form does the rest.",
+      "Overpay on purpose and ask for the difference back for your mover. Add urgency: he collects Thursday, so it has to go today.",
       "Invoices? Write as the supplier, a week before payday, with all the authority of a letterhead. Bookkeepers who ring the old number to check, you just lost.",
     ],
     idle: [
