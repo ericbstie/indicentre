@@ -1,6 +1,11 @@
 import { expect, test } from "bun:test";
 import { Effect } from "effect";
-import { createBus, diffEvents, type GameEvent } from "./events.ts";
+import {
+  createBus,
+  defineEvent,
+  diffEvents,
+  type GameEvent,
+} from "./events.ts";
 import { SHIFT_MINUTES } from "./economy.ts";
 import { initialState, reduce } from "./state.ts";
 import { makeGameStore } from "./store.ts";
@@ -33,6 +38,17 @@ test("bus delivers only the subscribed type and unsubscribes", () => {
   off();
   bus.emit({ type: "DayAdvanced", day: 3 });
   expect(seen).toEqual([2]);
+});
+
+test("feature events are keyed by their def, not their name", () => {
+  const bus = createBus();
+  const Ping = defineEvent<{ readonly n: number }>("Ping");
+  const OtherPing = defineEvent<{ readonly n: number }>("Ping");
+  const seen: number[] = [];
+  bus.on(Ping, ({ n }) => seen.push(n));
+  bus.emit(Ping, { n: 1 });
+  bus.emit(OtherPing, { n: 2 });
+  expect(seen).toEqual([1]);
 });
 
 test("store emits derived events after dispatch", () => {
