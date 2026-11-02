@@ -5,6 +5,7 @@ import { queueDialog } from "../dialog/dialog.ts";
 import { type Call, callDialog } from "../story/call.ts";
 import { type LinesContext, linesDialog } from "../story/lines.ts";
 import {
+  addPaid,
   type Beat,
   chose,
   dueBeats,
@@ -113,7 +114,11 @@ export default {
         watchRequested = false;
       }),
       game.on(PcOpened, () => enqueue(game.state().day, "pc")),
-      game.on("ScamResolved", () => enqueue(game.state().day, "scam")),
+      game.on("ScamResolved", ({ success, bucks, victim }) => {
+        if (success && bucks > 0)
+          game.dispatch(addPaid({ name: victim.name, age: victim.age, bucks }));
+        enqueue(game.state().day, "scam");
+      }),
       // DayEnded comes with the rollover, so the next day's start queues here
       // too, after the day that just ended.
       game.on("DayEnded", ({ summary }) => {

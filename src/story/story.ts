@@ -90,12 +90,38 @@ export const dueBeats = (
   );
 };
 
-/** Placeholder values for story lines. */
-export const storyVars = (s: GameState) => ({
-  nick: story.get(s).choices["nick"] ?? "you",
-  quota: String(quotaToday(s)),
-  earned: String(s.earnedToday),
-});
+export interface Paid {
+  readonly name: string;
+  readonly age: number;
+  readonly bucks: number;
+}
+
+/** Everyone who paid the player this run, oldest first. The ending reads it. */
+export const paid = defineSlice(
+  "paid",
+  [] as ReadonlyArray<Paid>,
+  (list, a: { readonly type: "paid/add"; readonly who: Paid }) => [
+    ...list,
+    a.who,
+  ],
+);
+export const addPaid = (who: Paid) => ({ type: "paid/add", who }) as const;
+
+/** Placeholder values for story lines. `{last}` is the last person who
+ * paid, `{victims}` the last three with their ages, newest first. */
+export const storyVars = (s: GameState) => {
+  const recent = paid.get(s).toReversed();
+  return {
+    nick: story.get(s).choices["nick"] ?? "you",
+    quota: String(quotaToday(s)),
+    earned: String(s.earnedToday),
+    last: recent[0]?.name ?? "Tommy",
+    victims: recent
+      .slice(0, 3)
+      .map((p) => `${p.name}, ${p.age}.`)
+      .join(" "),
+  };
+};
 
 /** Replaces `{key}` with `vars[key]`; unknown keys stay as they are. */
 export const fill = (text: string, vars: Readonly<Record<string, string>>) =>
