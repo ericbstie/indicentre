@@ -48,6 +48,8 @@ export interface GameState {
   /** DayEnded log, oldest first. */
   readonly days: ReadonlyArray<DaySummary>;
   readonly ownedTools: ReadonlyArray<ToolId>;
+  /** Catfisher file clues found, oldest first (content/catfisher.ts ids). */
+  readonly clues: ReadonlyArray<string>;
 }
 
 export type Action =
@@ -61,7 +63,8 @@ export type Action =
   | { readonly type: "bossMood"; readonly amount: number }
   /** Clock out: ends the shift now. */
   | { readonly type: "endDay" }
-  | { readonly type: "buy"; readonly item: Purchase };
+  | { readonly type: "buy"; readonly item: Purchase }
+  | { readonly type: "findClue"; readonly id: string };
 
 export const initialState = (
   unlockedScams: ReadonlyArray<ScamId> = [],
@@ -80,6 +83,7 @@ export const initialState = (
   heatAtDayStart: 0,
   days: [],
   ownedTools: [],
+  clues: [],
 });
 
 const clamp = (n: number, lo: number, hi: number) =>
@@ -92,6 +96,8 @@ export const failsAt = (s: GameState, scam: ScamId) => s.scamFails[scam] ?? 0;
 
 export const hintsHeard = (s: GameState, coworker: string) =>
   s.talkedTo[coworker] ?? 0;
+
+export const clueCount = (s: GameState) => s.clues.length;
 
 export const isUnlocked = (s: GameState, scam: ScamId) =>
   s.unlockedScams.includes(scam);
@@ -160,5 +166,7 @@ export const reduce = (s: GameState, a: Action): GameState => {
       return endDay(s);
     case "buy":
       return buy(s, a.item);
+    case "findClue":
+      return s.clues.includes(a.id) ? s : { ...s, clues: [...s.clues, a.id] };
   }
 };
