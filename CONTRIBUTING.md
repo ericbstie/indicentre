@@ -45,6 +45,14 @@ merging, rebase on `origin/main` and wait for green: CI's `fresh` job fails
 a PR that doesn't contain the latest main, because two PRs that were each
 green alone have broken main together.
 
+Long branches go stale fast (wave 5: two PRs needed 4+ rebases each), so
+rebase whenever `bun run doctor` says you're behind. Rebasing your own
+`claude/project-thread-*` branch and pushing with `git push
+--force-with-lease` is expected; never force-push a branch you didn't open.
+If you remove a field or export, doctor lists the open branches that still
+use it: tell them before you merge. A new scam brings its own `introduces`
+beat; don't reserve schedule slots for scams that don't exist yet.
+
 ## Commit plans
 
 Every feature branch lands an explicit, pre-agreed list of commits, systems
