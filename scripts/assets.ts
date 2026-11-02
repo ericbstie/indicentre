@@ -3,8 +3,11 @@
 // and an allowed license; nothing gets committed unverified.
 //   bun run assets          download missing/mismatched files, verify hashes
 //   bun run assets --check  verify only, no network (used by `bun run check`)
+// An entry with `pack` downloads a .gltf (checked against pack.sha256) and
+// packs it into a .glb with only `pack.clips` (scripts/glb.ts, deterministic).
 import { mkdirSync, readdirSync } from "node:fs";
 import manifest from "../assets/manifest.json";
+import { gltfToGlb } from "./glb.ts";
 
 /** CC-BY would need an in-game credits screen; add it here when one exists. */
 const LICENSES: ReadonlySet<string> = new Set(["CC0-1.0"]);
@@ -17,6 +20,10 @@ interface Entry {
   readonly author: string;
   readonly origin: string;
   readonly licenseUrl: string;
+  readonly pack?: {
+    readonly sha256: string;
+    readonly clips: ReadonlyArray<string>;
+  };
 }
 
 const models: Readonly<Record<string, Entry>> = manifest.models;
@@ -44,10 +51,19 @@ for (const [id, e] of Object.entries(models)) {
     problems.push(`${id}: HTTP ${res.status} from ${e.url}`);
     continue;
   }
-  const bytes = await res.arrayBuffer();
-  const got = sha256(bytes);
-  if (got !== e.sha256) {
-    problems.push(`${id}: downloaded sha256 ${got}, manifest ${e.sha256}`);
+  const download = await res.arrayBuffer();
+  const want = e.pack?.sha256 ?? e.sha256;
+  const got = sha256(download);
+  if (got !== want) {
+    problems.push(`${id}: downloaded sha256 ${got}, manifest ${want}`);
+    continue;
+  }
+  const bytes = e.pack
+    ? gltfToGlb(new TextDecoder().decode(download), e.pack.clips)
+    : download;
+  const packed = sha256(bytes);
+  if (packed !== e.sha256) {
+    problems.push(`${id}: packed sha256 ${packed}, manifest ${e.sha256}`);
     continue;
   }
   await Bun.write(path, bytes);

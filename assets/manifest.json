@@ -71,6 +71,54 @@
       "author": "Kenney",
       "origin": "https://kenney.nl/assets/furniture-kit",
       "licenseUrl": "https://raw.githubusercontent.com/RetroDECK/RetroQUEST/dfa19a5602a31f64bd890d15279a61f43b127328/assets/kenney_furniture-kit/License.txt"
+    },
+    "suit-male": {
+      "url": "https://media.githubusercontent.com/media/BMOxOMB/Proyecto_ProgramacionConPatrones/42b426d49ae229289f8499a1bb7f18ec1619a02f/Assets/Characters/Ultimate%20Animated%20Character%20Pack%20-%20Nov%202019/glTF/Suit_Male.gltf",
+      "sha256": "648d89085559d865e4ccd89f9da3bd2119955383d89730504ae4b75d14cd64c0",
+      "license": "CC0-1.0",
+      "author": "Quaternius",
+      "origin": "https://quaternius.com/packs/ultimatedanimatedcharacter.html",
+      "licenseUrl": "https://raw.githubusercontent.com/BMOxOMB/Proyecto_ProgramacionConPatrones/42b426d49ae229289f8499a1bb7f18ec1619a02f/Assets/Characters/Ultimate%20Animated%20Character%20Pack%20-%20Nov%202019/License.txt",
+      "pack": {
+        "sha256": "d89d245d10c81ee637116b3400657dad2873ec1bbfb7f90579b2f77a8779fa5b",
+        "clips": ["Idle", "Walk", "SitDown", "StandUp"]
+      }
+    },
+    "casual-female": {
+      "url": "https://media.githubusercontent.com/media/BMOxOMB/Proyecto_ProgramacionConPatrones/42b426d49ae229289f8499a1bb7f18ec1619a02f/Assets/Characters/Ultimate%20Animated%20Character%20Pack%20-%20Nov%202019/glTF/Casual_Female.gltf",
+      "sha256": "0c89d87207137f0983685c15fe79393444e2e467a536e5d08c8a9f5d98466a6b",
+      "license": "CC0-1.0",
+      "author": "Quaternius",
+      "origin": "https://quaternius.com/packs/ultimatedanimatedcharacter.html",
+      "licenseUrl": "https://raw.githubusercontent.com/BMOxOMB/Proyecto_ProgramacionConPatrones/42b426d49ae229289f8499a1bb7f18ec1619a02f/Assets/Characters/Ultimate%20Animated%20Character%20Pack%20-%20Nov%202019/License.txt",
+      "pack": {
+        "sha256": "87327963ab0f37d004c7340d130808727f3d67b724c3d41aad01fd63c7d6fc8a",
+        "clips": ["Idle", "Walk", "SitDown", "StandUp"]
+      }
+    },
+    "casual2-male": {
+      "url": "https://media.githubusercontent.com/media/BMOxOMB/Proyecto_ProgramacionConPatrones/42b426d49ae229289f8499a1bb7f18ec1619a02f/Assets/Characters/Ultimate%20Animated%20Character%20Pack%20-%20Nov%202019/glTF/Casual2_Male.gltf",
+      "sha256": "b17131aea50b56d3a03194f0b1d8401b35c7394974479140a47db7d053cbdba7",
+      "license": "CC0-1.0",
+      "author": "Quaternius",
+      "origin": "https://quaternius.com/packs/ultimatedanimatedcharacter.html",
+      "licenseUrl": "https://raw.githubusercontent.com/BMOxOMB/Proyecto_ProgramacionConPatrones/42b426d49ae229289f8499a1bb7f18ec1619a02f/Assets/Characters/Ultimate%20Animated%20Character%20Pack%20-%20Nov%202019/License.txt",
+      "pack": {
+        "sha256": "9e8f23af968979cc6945d11015d9fd3cb1e94d53c3b91c39cac39a80e7490a79",
+        "clips": ["Idle", "Walk", "SitDown", "StandUp"]
+      }
+    },
+    "casual3-female": {
+      "url": "https://media.githubusercontent.com/media/BMOxOMB/Proyecto_ProgramacionConPatrones/42b426d49ae229289f8499a1bb7f18ec1619a02f/Assets/Characters/Ultimate%20Animated%20Character%20Pack%20-%20Nov%202019/glTF/Casual3_Female.gltf",
+      "sha256": "5f3031d46778234945b3fe85c7e4ce7cc1fee7c5357ad368c1d215d7f155cba7",
+      "license": "CC0-1.0",
+      "author": "Quaternius",
+      "origin": "https://quaternius.com/packs/ultimatedanimatedcharacter.html",
+      "licenseUrl": "https://raw.githubusercontent.com/BMOxOMB/Proyecto_ProgramacionConPatrones/42b426d49ae229289f8499a1bb7f18ec1619a02f/Assets/Characters/Ultimate%20Animated%20Character%20Pack%20-%20Nov%202019/License.txt",
+      "pack": {
+        "sha256": "75cb6d7fa20674cb6b1dc3ad4e3c6d0d1de03f0128817ba60dcc4fad4ca008a2",
+        "clips": ["Idle", "Walk", "SitDown", "StandUp"]
+      }
     }
   }
 }
