@@ -79,6 +79,8 @@ export interface Purchase {
   readonly price: number;
   /** Upgrades only: the desk tier this buys (workplace/slice.ts). */
   readonly tier?: DeskTier;
+  /** A tool you must own before this is for sale. */
+  readonly requires?: ToolId;
 }
 
 export const owns = (s: GameState, p: Omit<Purchase, "price">) =>
@@ -86,10 +88,17 @@ export const owns = (s: GameState, p: Omit<Purchase, "price">) =>
     ? hasUpgrade(s.workplace, p)
     : (p.kind === "scam" ? s.unlockedScams : s.ownedTools).includes(p.id);
 
-/** Pay and unlock. No-op if already owned or unaffordable. Spending never
- * counts against the quota, which only looks at what was earned. */
+/** Not owned yet, affordable, and its required tool is owned. */
+export const canBuy = (s: GameState, p: Purchase) =>
+  !owns(s, p) &&
+  p.price >= 0 &&
+  s.scamBucks >= p.price &&
+  (p.requires === undefined || s.ownedTools.includes(p.requires));
+
+/** Pay and unlock. No-op unless `canBuy`. Spending never counts against the
+ * quota, which only looks at what was earned. */
 export const buy = (s: GameState, p: Purchase): GameState => {
-  if (owns(s, p) || p.price < 0 || s.scamBucks < p.price) return s;
+  if (!canBuy(s, p)) return s;
   const paid = { ...s, scamBucks: s.scamBucks - p.price };
   switch (p.kind) {
     case "scam":

@@ -1,5 +1,5 @@
 import "./shop.css";
-import { owns } from "../core/economy.ts";
+import { canBuy, owns } from "../core/economy.ts";
 import type { GameState } from "../core/state.ts";
 import { esc } from "../desktop/html.ts";
 import { type CatalogItem, catalog, lessonFor } from "../shop/catalog.ts";
@@ -17,7 +17,7 @@ const row = (s: GameState, item: CatalogItem) => {
       have
         ? `<span class="empty">Owned</span>`
         : `<button class="btn" data-buy="${esc(item.id)}" ${
-            s.scamBucks < item.price ? "disabled" : ""
+            canBuy(s, item) ? "" : "disabled"
           }>${esc(item.price)} bucks</button>`
     }
   </div>`;
