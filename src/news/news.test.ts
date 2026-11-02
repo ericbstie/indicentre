@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import type { EventOf } from "../core/events.ts";
 import { seeded } from "../core/rng.ts";
-import { fill, kroner, profileLine, victimStory } from "./news.ts";
+import { fill, kroner, profileLine, storyFor, victimStory } from "./news.ts";
 
 const event: EventOf<"ScamResolved"> = {
   type: "ScamResolved",
@@ -46,4 +46,14 @@ test("victim story is deterministic and fully filled", () => {
     expect(n.kind).toBe("victim");
     expect(n.tags).toContain("elderly");
   }
+});
+
+test("a failed scam becomes good news told with the victim's own defense", () => {
+  const n = storyFor(seeded(4), { ...event, success: false, bucks: 0 });
+  expect(n.kind).toBe("spotted");
+  expect(n.profile).toBe(
+    "Gunnar, 74. Called the bank on the number printed on the card instead.",
+  );
+  expect(n.quote).toBe(`"${event.victim.defense.line}"`);
+  expect(n.headline).not.toContain("{");
 });

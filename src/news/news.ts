@@ -1,7 +1,12 @@
 // News items for the office TV. Pure: everything takes an Rng so the same
 // scam produces the same story in tests.
 
-import { PLACES, VICTIM_HEADLINES, VICTIM_QUOTES } from "../content/news.ts";
+import {
+  PLACES,
+  SPOTTED_HEADLINES,
+  VICTIM_HEADLINES,
+  VICTIM_QUOTES,
+} from "../content/news.ts";
 import type { EventOf, VictimProfile } from "../core/events.ts";
 import { pick, type Rng } from "../core/rng.ts";
 import { scams } from "../scams/registry.ts";
@@ -82,3 +87,22 @@ export const victimStory = (rng: Rng, e: EventOf<"ScamResolved">): NewsItem => {
     tags: tagsFor(e),
   };
 };
+
+/** The story the TV runs when the target caught the scam: the lesson, told by them. */
+export const spottedStory = (
+  rng: Rng,
+  e: EventOf<"ScamResolved">,
+): NewsItem => {
+  const slots = slotsFor(rng, e);
+  return {
+    headline: fill(pick(rng, SPOTTED_HEADLINES), slots),
+    profile: `${firstName(e.victim)}, ${e.victim.age}. ${sentence(e.victim.defense.behavior)}`,
+    quote: `"${e.victim.defense.line}"`,
+    kind: "spotted",
+    tags: tagsFor(e),
+  };
+};
+
+/** Whatever the TV should run for a resolved scam, win or lose. */
+export const storyFor = (rng: Rng, e: EventOf<"ScamResolved">) =>
+  e.success ? victimStory(rng, e) : spottedStory(rng, e);

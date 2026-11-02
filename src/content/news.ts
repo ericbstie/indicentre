@@ -45,6 +45,17 @@ export const VICTIM_QUOTES = [
   "I was on the bus. I just wanted it sorted before my stop.",
 ];
 
+/**
+ * A target who did not fall for it. The profile and quote come from the
+ * victim's own defense (src/victims/tables.ts), so the lesson is theirs.
+ */
+export const SPOTTED_HEADLINES = [
+  "{place} {role} spots {scam}, deletes it",
+  "Not today: {place} {role} reports {scam} to police",
+  "{role} in {place} sees through {scam}",
+  "{place} {role} forwards {scam} to police, goes back to lunch",
+];
+
 /** World news the TV cycles when nothing has happened. Tagged for later. */
 export const AMBIENT: ReadonlyArray<NewsItem> = (
   [
