@@ -43,6 +43,7 @@ export const VICTIM_QUOTES = [
   "They thanked me at the end. They actually thanked me.",
   "The police said I'm the third one on this street this month.",
   "I was on the bus. I just wanted it sorted before my stop.",
+  "The screen said Fjellstad Bank. I checked. That was the whole problem.",
 ];
 
 /**

@@ -59,6 +59,7 @@ export const coworkers: ReadonlyArray<Coworker> = [
       "If they say they'll call back on the official number, it's over. Hang up before they do.",
       "New tablet, grandkids set it up, nobody showed them anything. That's the call.",
       "Keep them on the line. The second they ask someone else in the house, you've lost them.",
+      "Bank calls? Say 'fraud department' and they thank you for stealing from them. Just don't let them hang up to ring the card number.",
     ],
     idle: "My chair lost a wheel on Tuesday. Facilities said Q3. It's November.",
     newDesk:
