@@ -22,7 +22,7 @@ export const beats: ReadonlyArray<Beat> = [
       },
       {
         speaker: "Phone",
-        line: "Eight days of good-morning texts. She laughs at your jokes. Her dog is called Biscuit. Every time you try to video call, her camera is broken.",
+        line: "Eight days of good-morning texts. Her photo: a beach, a big grin, a chipped green mug. Every time you try to video call, her camera is broken.",
       },
       {
         speaker: "Angel ♥",
@@ -292,20 +292,20 @@ export const beats: ReadonlyArray<Beat> = [
     free: true,
     lines: [
       {
+        speaker: "Tommy",
+        line: "Lunch, {nick}? 12:30 sharp, same as always.",
+      },
+      {
         speaker: "Tommy's screen",
-        line: 'Tommy\'s at lunch. His screen is unlocked. A chat window: "hiii sorry I think a friend gave me the wrong number??" Same photo. Same dog, still called Biscuit.',
+        line: 'He leaves it unlocked. A chat window: "hiii sorry I think a friend gave me the wrong number??" A beach photo. A chipped green mug.',
       },
       {
         speaker: "Tommy",
-        line: "Oh. You saw. Don't take it personal, {nick}. Half this floor got hired off that chat.",
+        line: "Oh. Don't take it personal. Half this floor got hired off that chat.",
       },
       {
         speaker: "Boss",
-        line: "Aww, did you just get- sorry. Habit. It's page one of the script.",
-      },
-      {
-        speaker: "Boss",
-        line: "Romance desk is yours. Go easy today: feelings take time.",
+        line: "Aww, did you just get- sorry. Habit. Page one of the script. Romance desk is yours today.",
       },
     ],
     learn:
