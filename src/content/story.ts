@@ -269,6 +269,24 @@ export const beats: ReadonlyArray<Beat> = [
     learn:
       'Your bank will never ask you to move money to a "safe account" or read out a code. Hang up and call the number on your card.',
   },
+  {
+    id: "d5-pc",
+    day: 5,
+    on: "pc",
+    introduces: "art-commission",
+    lines: [
+      {
+        speaker: "Priya",
+        line: "Slow call day? Do art. People post their dead dog and ask for a painting. You answer with somebody else's portfolio.",
+      },
+      {
+        speaker: "Priya",
+        line: "Half up front. The picture machine does the rest in nine seconds. It can't count legs, but grief can't either.",
+      },
+    ],
+    learn:
+      "Ask an artist for a quick sketch made just for you, and pay through a site that holds the money until the work arrives.",
+  },
   // Day 6: the twist. The intro chat was the center's recruitment funnel.
   {
     id: "d6-start",
