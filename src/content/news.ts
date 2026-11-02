@@ -47,6 +47,7 @@ export const VICTIM_QUOTES = [
   "It was 1.99. Who checks a link for 1.99?",
   "It was our plumbing supplier's name. Their logo. One extra dash in the address.",
   "It had my old password in the subject. I paid for a video that never existed.",
+  "The portrait was of our dog. Mostly. I paid half up front, then the other half for the fixed one.",
 ];
 
 /**
@@ -104,6 +105,10 @@ export const AMBIENT: ReadonlyArray<NewsItem> = (
       `"Bring the letter. Or the phone. Or your grandson."`,
     ],
     ["Study: most scam victims aren't old. Most are in a hurry", ""],
+    [
+      "Bergen illustrator finds her pet portraits on a stranger's commission page",
+      `"Twelve people paid him for my work. None of them got it," she said.`,
+    ],
     [
       "Police: 'I saw you through your camera' mails are a bluff",
       `"The password comes from an old leak. There is no video. Don't pay, report it," an officer said.`,
