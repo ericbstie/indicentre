@@ -12,6 +12,8 @@ export interface Office {
     readonly lookAt: THREE.Vector3;
   };
   readonly spawn: THREE.Vector3;
+  /** Coworker desk centers (not the player's), for NPCs and props. */
+  readonly desks: ReadonlyArray<THREE.Vector3>;
 }
 
 const mat = (color: number) => new THREE.MeshLambertMaterial({ color });
@@ -81,10 +83,12 @@ export const buildOffice = (): Office => {
   }
 
   // Rows of coworker desks; the player's desk is front-left.
+  const desks: THREE.Vector3[] = [];
   for (const x of [-4, 0, 4]) {
     for (const z of [-2.5, 0.5]) {
       if (x === -4 && z === 0.5) continue;
       scene.add(desk(x, z).group);
+      desks.push(new THREE.Vector3(x, 0, z));
     }
   }
   const mine = desk(-4, 0.5, 0x2a5a8a);
@@ -98,5 +102,6 @@ export const buildOffice = (): Office => {
       lookAt: new THREE.Vector3(-4, 1.08, 0.25),
     },
     spawn: new THREE.Vector3(0, 1.6, 3.5),
+    desks,
   };
 };
