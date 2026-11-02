@@ -46,11 +46,6 @@ export default {
   payout: 60,
   heat: { success: 3, fail: 10 },
   fitTags: ["urgency"],
-  whatToSpot: [
-    "TODO: what to spot, from the victim's side.",
-    "TODO: second line.",
-    "TODO: the right thing to do instead.",
-  ],
   successLine: "TODO: what a victim says after falling for it.",
   templates: [
     {
@@ -59,7 +54,6 @@ export default {
       subject: "TODO subject",
       body: "Hi {name},\\n\\nTODO body.",
       lures: { urgency: 0.5 },
-      redFlags: ["TODO: what a careful recipient would notice"],
     },
   ],
 } satisfies ScamDef;

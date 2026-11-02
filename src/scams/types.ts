@@ -21,11 +21,6 @@ export interface ScamTemplate {
   readonly body: string;
   /** Which levers this template pulls, 0..1. */
   readonly lures: Partial<LureWeights>;
-  /**
-   * The learning payload: what a careful recipient would notice.
-   * Shown to the player after every attempt.
-   */
-  readonly redFlags: ReadonlyArray<string>;
 }
 
 /**
@@ -55,8 +50,6 @@ export interface ScamDef {
   readonly warmups?: ReadonlyArray<ScamTemplate>;
   /** Victim weaknesses this scam is built for, on top of its templates' lures. */
   readonly fitTags: ReadonlyArray<Tag>;
-  /** The debrief card, from the victim's side. Exactly 3 lines. */
-  readonly whatToSpot: readonly [string, string, string];
   /** What a victim says after falling for it. `{name}` allowed. */
   readonly successLine: string;
 }

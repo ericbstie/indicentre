@@ -44,10 +44,9 @@ export const successChance = (
 };
 
 export type Attempt =
-  | { readonly success: true; readonly chance: number }
+  | { readonly success: true }
   | {
       readonly success: false;
-      readonly chance: number;
       /** What the victim did right. The lesson of a failed scam. */
       readonly defense: Defense;
     };
@@ -63,15 +62,13 @@ export const attempt = (
   bonus = 0,
 ): Attempt => {
   const chance = successChance(v, fitTags, bonus);
-  if (rng() < chance) return { success: true, chance };
-  if (isCountered(v, fitTags))
-    return { success: false, chance, defense: v.defense };
+  if (rng() < chance) return { success: true };
+  if (isCountered(v, fitTags)) return { success: false, defense: v.defense };
   const fitting = DEFENSES.filter((d) =>
     d.counters.some((t) => fitTags.includes(t)),
   );
   return {
     success: false,
-    chance,
     defense: fitting.length
       ? voiced(rng, pick(rng, fitting), pickLine)
       : v.defense,
