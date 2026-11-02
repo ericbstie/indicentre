@@ -1,0 +1,27 @@
+# `mise install` then `mise run dev`. Bun version must match package.json "packageManager".
+[tools]
+bun = "1.4.4"
+
+[tasks.install]
+description = "Install dependencies from the lockfile"
+run = "bun install --frozen-lockfile --ignore-scripts"
+
+[tasks.dev]
+description = "Dev server with hot reload on http://localhost:3000"
+depends = ["install"]
+run = "bun run dev"
+
+[tasks.check]
+description = "Typecheck and format check"
+depends = ["install"]
+run = "bun run check"
+
+[tasks.test]
+description = "Unit tests"
+depends = ["install"]
+run = "bun run test"
+
+[tasks.build]
+description = "Static production bundle in dist/"
+depends = ["install"]
+run = "bun run build"
