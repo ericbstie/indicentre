@@ -38,7 +38,7 @@ export const beats: ReadonlyArray<Beat> = [
       },
     ],
     learn:
-      "Never met, camera always broken, then a crisis that needs money: stop there. Here you learn each scam by running it, so it doesn't happen to you again.",
+      "Never met, camera always broken, then a crisis that needs money: stop there.",
   },
   // Day 1: phishing. Priya shows you the ropes; the boss counts.
   {
@@ -427,7 +427,7 @@ export interface Ending {
   readonly title: string;
 }
 
-/** How a run ends. The win mirrors day 0: you catfish the catfisher. */
+/** How a run ends. The win mirrors day 0: you become the catfisher. */
 export const endings: Readonly<Record<"won" | "shutdown" | "fired", Ending>> = {
   won: {
     title: "Top seller",
