@@ -185,7 +185,7 @@ export const beats: ReadonlyArray<Beat> = [
       },
       {
         speaker: "Mags",
-        line: "Marketplace ads are in the Shop now. Cheap price, nice photos, and you're \"away for work\", so it has to be shipped. Tools too. Buy one. You can't do this on charm.",
+        line: "Marketplace is in the Shop now. You're the buyer: full price, no haggling, and your courier pays by link. Or pay too much and ask for the difference back.",
       },
     ],
   },
@@ -196,12 +196,12 @@ export const beats: ReadonlyArray<Beat> = [
     lines: [
       {
         speaker: "Mail",
-        line: 'Re: your listing. "My son says I only pay inside the app. So. Bye."',
+        line: 'Re: your listing. "My son says the app has a pay button for a reason. I\'ll use that."',
       },
       { speaker: "Mags", line: "Happens. Sons are bad for business." },
     ],
     learn:
-      "Stay on the platform and pay through it. Never send a deposit to hold something you haven't seen.",
+      "Buyers pay you, never the other way. A link that wants your card so you can receive money is taking it.",
   },
   // Day 4: volume. Parcel texts, heat climbs, the first news report.
   {
