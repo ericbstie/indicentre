@@ -58,10 +58,31 @@ describe("scam schedule", () => {
     expect(shopSells(sched, "lottery", 9)).toBe(false);
   });
 
-  test("the arc introduces every registered scam exactly once", () => {
-    const ids = arc.flatMap((b) => (b.introduces ? [b.introduces] : []));
-    for (const s of scams) expect(ids).toContain(s.id);
-    expect(new Set(ids).size).toBe(ids.length);
+  const intros = arc.flatMap((b) => (b.introduces ? [b] : []));
+
+  // A scam with no intro beat never reaches the Shop. Reserved slot names
+  // ("parcel", "bank") once silently pointed at no scam at all.
+  test("every registered scam has a day in the arc", () => {
+    const days = intros.map((b) => `day ${b.day}: ${b.introduces}`);
+    const missing = scams
+      .filter((s) => !intros.some((b) => b.introduces === s.id))
+      .map(
+        (s) =>
+          `${s.id}: add \`introduces: "${s.id}"\` to a dayStart beat in src/content/story.ts (taken: ${days.join(", ")})`,
+      );
+    expect(missing).toEqual([]);
+  });
+
+  test("the arc introduces only registered scams, once each", () => {
+    // Day 8's scam is in PR #27; delete this entry when it lands.
+    const pending = ["account-takeover"];
+    const ids = new Set([...scams.map((s) => s.id), ...pending]);
+    const unknown = intros
+      .filter((b) => !ids.has(b.introduces!))
+      .map((b) => `${b.id} introduces unknown scam "${b.introduces}"`);
+    expect(unknown).toEqual([]);
+    const named = intros.map((b) => b.introduces);
+    expect(new Set(named).size).toBe(named.length);
   });
 
   test("beat ids are unique", () => {
