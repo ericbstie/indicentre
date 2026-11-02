@@ -76,11 +76,10 @@ src/
   client/              composition root: wiring only, no features
     index.html         entry page (links tokens.css)
     tokens.css         color tokens + base/.btn/.link/.empty/.lesson
-    main.ts            boots game, world, HUD, desktop; starts systems
-    boot.ts            fresh-run game + ?debug hook
+    main.ts            boots game (save or fresh), world, HUD, desktop;
+                       starts systems; ?debug hook
     scene.ts           renderer, camera, player, interactions, onFrame loop
     desktop.ts         mounts the PC overlay, sit down / stand up
-    hud.ts             mounts the HUD
     game.ts            Game: sync facade over the Effect store (+ event bus)
   core/                pure logic, no DOM, no three
     state.ts           economy GameState, CoreAction, reduce(), selectors
