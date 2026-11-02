@@ -48,6 +48,7 @@ export const VICTIM_QUOTES = [
   "It was our plumbing supplier's name. Their logo. One extra dash in the address.",
   "It had my old password in the subject. I paid for a video that never existed.",
   "The portrait was of our dog. Mostly. I paid half up front, then the other half for the fixed one.",
+  "It was my second week. When the CEO writes to you by name, you don't ask questions.",
 ];
 
 /**
@@ -112,6 +113,10 @@ export const AMBIENT: ReadonlyArray<NewsItem> = (
     [
       "Police: 'I saw you through your camera' mails are a bluff",
       `"The password comes from an old leak. There is no video. Don't pay, report it," an officer said.`,
+    ],
+    [
+      "Skien firm loses a week of mail after one fake IT login page",
+      `"The real IT desk never asks for a password by mail. Ring them on the number on the wall," the company said.`,
     ],
     [
       "Skien plumbing firm pays 34,600 kr to a supplier's 'new account'",
