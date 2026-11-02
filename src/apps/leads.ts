@@ -16,7 +16,7 @@ import type { Channel, ScamDef, ScamTemplate } from "../scams/types.ts";
 import { generateVictims } from "../victims/generate.ts";
 import { successChance } from "../victims/resistance.ts";
 import { writeHints } from "../victims/hints.ts";
-import type { Victim } from "../victims/types.ts";
+import { firstName, type Victim } from "../victims/types.ts";
 import { type RevealLevel, reveal, type VictimView } from "../victims/view.ts";
 import { esc, escLines } from "../desktop/html.ts";
 import type { DesktopApp } from "./app.ts";
@@ -154,7 +154,7 @@ export default {
         .join("")}`;
 
     const viewResult = (r: Result) => {
-      const first = personalize("{name}", r.target);
+      const first = firstName(r.target);
       const o = r.outcome;
       return `
       <div class="result ${o.success ? "win" : "loss"}">
@@ -192,6 +192,23 @@ export default {
       }</div>`;
     };
 
+    const resolved = (target: Victim, scam: ScamDef, o: Outcome) =>
+      game.emit({
+        type: "ScamResolved",
+        scam: scam.id,
+        target: target.id,
+        success: o.success,
+        bucks: o.bucks,
+        heat: o.heat,
+        victim: {
+          name: target.name,
+          age: target.age,
+          occupation: target.occupation,
+          detail: target.detail.text,
+          defense: target.defense,
+        },
+      });
+
     const send = (scamId: string, templateId: string) => {
       const scam = available().find((s) => s.id === scamId);
       const template = scam?.templates.find((t) => t.id === templateId);
@@ -205,21 +222,7 @@ export default {
       );
       result = { target, scam, template, outcome };
       outcome.actions.forEach(game.dispatch);
-      game.emit({
-        type: "ScamResolved",
-        scam: scam.id,
-        target: target.id,
-        success: outcome.success,
-        bucks: outcome.bucks,
-        heat: outcome.heat,
-        victim: {
-          name: target.name,
-          age: target.age,
-          occupation: target.occupation,
-          detail: target.detail.text,
-          defense: target.defense,
-        },
-      });
+      resolved(target, scam, outcome);
       if (outcome.success) {
         game.dispatch({
           type: "mail",
@@ -252,14 +255,7 @@ export default {
         return;
       }
       result = { target, scam, template, outcome };
-      game.emit({
-        type: "ScamResolved",
-        scam: scam.id,
-        target: target.id,
-        success: false,
-        bucks: 0,
-        heat: outcome.heat,
-      });
+      resolved(target, scam, outcome);
     };
 
     el.onclick = (e) => {

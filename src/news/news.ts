@@ -10,6 +10,7 @@ import {
 import type { EventOf, VictimProfile } from "../core/events.ts";
 import { pick, type Rng } from "../core/rng.ts";
 import { scams } from "../scams/registry.ts";
+import { firstName } from "../victims/types.ts";
 
 /** Tags let later features relate a story to a victim ("bank", "elderly"...). */
 export type NewsTag =
@@ -44,8 +45,6 @@ export const fill = (text: string, slots: Readonly<Record<string, string>>) => {
   const out = text.replace(/\{(\w+)\}/g, (m, k: string) => slots[k] ?? m);
   return out.charAt(0).toUpperCase() + out.slice(1);
 };
-
-const firstName = (v: VictimProfile) => v.name.split(" ")[0] ?? v.name;
 
 const sentence = (s: string) => {
   const t = s.trim();

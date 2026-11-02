@@ -16,7 +16,7 @@ export const catalog: ReadonlyArray<CatalogItem> = [
       id: s.id,
       price: s.price,
       name: s.name,
-      blurb: `New scam. Pays ${s.payout}, +${s.heat.fail} heat if reported.`,
+      blurb: `New scam. +${s.payout} bucks · heat +${s.heat.fail} if reported.`,
     })),
   ...tools.map((t): CatalogItem => ({
     kind: "tool",
