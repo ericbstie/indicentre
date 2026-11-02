@@ -1,15 +1,16 @@
 import type { Purchase } from "../core/economy.ts";
 import { scams } from "../scams/registry.ts";
-import { pulls } from "../scams/resolve.ts";
+import { failHeat, pulls } from "../scams/resolve.ts";
 import type { Tag } from "../victims/types.ts";
 import { upgrades } from "../workplace/upgrades.ts";
-import { tools } from "./tools.ts";
+import { type Modifiers, tools } from "./tools.ts";
 
 const toolName = (id: string) => tools.find((t) => t.id === id)?.name ?? id;
 
 export interface CatalogItem extends Purchase {
   readonly name: string;
-  readonly blurb: string;
+  /** Shop line. Scam stakes use the owned tools, like the Leads stakes line. */
+  readonly blurb: (mods: Modifiers) => string;
   /** Scams: every weakness its templates pull, as shown on Leads pitches. */
   readonly tags?: ReadonlyArray<Tag>;
 }
@@ -23,9 +24,10 @@ export const catalog: ReadonlyArray<CatalogItem> = [
       id: s.id,
       price: s.price,
       name: s.name,
-      blurb: `New scam. +${s.payout} bucks · heat +${s.heat.fail} if reported.${
-        s.requires ? ` Needs ${toolName(s.requires)}.` : ""
-      }`,
+      blurb: (mods) =>
+        `New scam. +${s.payout} bucks · heat +${s.heat.success}, +${failHeat(s, mods)} if reported.${
+          s.requires ? ` Needs ${toolName(s.requires)}.` : ""
+        }`,
       ...(s.requires !== undefined && { requires: s.requires }),
       tags: [...new Set(s.templates.flatMap((t) => pulls(s, t)))],
     })),
@@ -34,14 +36,14 @@ export const catalog: ReadonlyArray<CatalogItem> = [
     id: t.id,
     price: t.price,
     name: t.name,
-    blurb: t.blurb,
+    blurb: () => t.blurb,
   })),
   ...upgrades.map((u): CatalogItem => ({
     kind: "upgrade",
     id: u.id,
     price: u.price,
     name: u.name,
-    blurb: u.blurb,
+    blurb: () => u.blurb,
     ...(u.tier !== undefined && { tier: u.tier }),
   })),
 ];
