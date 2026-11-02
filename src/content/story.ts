@@ -221,6 +221,22 @@ export const beats: ReadonlyArray<Beat> = [
     ],
   },
   {
+    id: "d4-pc",
+    day: 4,
+    on: "pc",
+    introduces: "pyramid",
+    lines: [
+      {
+        speaker: "Mags",
+        line: "Side gig in the Shop. Sell people a starter kit, they sell it to their friends. Nobody sells it to a customer.",
+      },
+      {
+        speaker: "Mags",
+        line: "Find the ones posting about rent. Call them hun. Say spots are filling up.",
+      },
+    ],
+  },
+  {
     id: "d4-end",
     day: 4,
     on: "dayEnd",
