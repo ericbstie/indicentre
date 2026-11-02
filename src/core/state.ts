@@ -6,6 +6,9 @@ export const SHUTDOWN_MAX = 100;
 /** Heat that cools off overnight, so one bad day is not game over. */
 export const OVERNIGHT_COOLDOWN = 5;
 
+export const BOSS_MOOD_MAX = 100;
+export const BOSS_MOOD_START = 50;
+
 export type ScamId = string;
 
 export interface Mail {
@@ -31,6 +34,8 @@ export interface GameState {
   readonly scamFails: Readonly<Record<ScamId, number>>;
   /** Hints heard so far, per coworker id. */
   readonly talkedTo: Readonly<Record<string, number>>;
+  /** 0..BOSS_MOOD_MAX. How the boss feels about you; see core/boss.ts. */
+  readonly bossMood: number;
 }
 
 export type Action =
@@ -42,7 +47,8 @@ export type Action =
   | { readonly type: "mail"; readonly mail: Omit<Mail, "read"> }
   | { readonly type: "readMail"; readonly id: string }
   | { readonly type: "scamFailed"; readonly scam: ScamId }
-  | { readonly type: "heardHint"; readonly coworker: string };
+  | { readonly type: "heardHint"; readonly coworker: string }
+  | { readonly type: "bossMood"; readonly amount: number };
 
 export const initialState = (
   unlockedScams: ReadonlyArray<ScamId> = [],
@@ -56,6 +62,7 @@ export const initialState = (
   status: "playing",
   scamFails: {},
   talkedTo: {},
+  bossMood: BOSS_MOOD_START,
 });
 
 const clamp = (n: number, lo: number, hi: number) =>
@@ -140,6 +147,11 @@ export const reduce = (s: GameState, a: Action): GameState => {
           ...s.talkedTo,
           [a.coworker]: hintsHeard(s, a.coworker) + 1,
         },
+      };
+    case "bossMood":
+      return {
+        ...s,
+        bossMood: clamp(s.bossMood + a.amount, 0, BOSS_MOOD_MAX),
       };
   }
 };

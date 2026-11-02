@@ -38,3 +38,11 @@ test("store emits derived events after dispatch", () => {
   Effect.runSync(store.dispatch({ type: "earn", amount: -1 }));
   expect(seen).toEqual([{ type: "BucksChanged", from: 0, to: 7 }]);
 });
+
+test("diffEvents reports boss mood changes", () => {
+  const s0 = initialState();
+  const s1 = reduce(s0, { type: "bossMood", amount: -10 });
+  expect(diffEvents(s0, s1)).toEqual([
+    { type: "BossMoodChanged", from: s0.bossMood, to: s0.bossMood - 10 },
+  ]);
+});
