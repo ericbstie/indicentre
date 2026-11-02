@@ -77,7 +77,8 @@ src/
     <id>.ts            clock.ts, welcome.ts, NPCs, news TV, boss...
   content/             static text and data (mails, coworkers, later news)
   dialog/              openDialog({ speaker, line, choices }) overlay
-  audio/               speak(line) babble hook (no-op until sound lands)
+  audio/               Web Audio, browser-only: engine (buses, mute),
+                       babble (gibberish voices), speak, music, sfx
   desktop/             PC overlay shell (desktop.ts/.css), html.ts esc()
   scene/               three.js: office, player, npc, interact registry
   hud/                 HUD overlay (hud.ts/.css), modal.ts one-button blocking card
@@ -102,7 +103,7 @@ or another feature. Outcome logic stays pure and returns `Action`s.
 
 **Effect boundary:** Effect services live in `core/`. UI code gets the
 synchronous `Game` facade and stays Effect-free. New long-lived services
-(save/load, audio) go in `core/` as `Context.Service` classes with a `Layer`.
+(save/load) go in `core/` as `Context.Service` classes with a `Layer`.
 
 ## Which file do I touch for X?
 
@@ -118,6 +119,8 @@ synchronous `Game` facade and stays Effect-free. New long-lived services
 | a shop tool                            | `src/shop/tools.ts` (+ `Modifiers` field if a new effect)    |
 | a new lure                             | `LURES` in `scams/types.ts` + `TAGS` in `victims/types.ts`   |
 | shared colors                          | `client/tokens.css` (rarely; prefer your own `.css`)         |
+| a voice for a new speaker              | nothing (derived from the name); tune in `content/voices.ts` |
+| a sound effect                         | `audio/sfx.ts`, played from a system on a `game.on(...)`     |
 
 A system gets `{ game, world }`: add meshes with
 `world.office.scene.add(...)`, make them usable with
