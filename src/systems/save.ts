@@ -29,14 +29,11 @@ export default {
       );
     }
     const save = () => saveRun(localStorage, game.state());
-    const offs = [
-      game.on("DayEnded", save),
-      game.on("ScamResolved", save),
-      game.subscribe((_, a) => {
-        if (a.type === "buy") save();
-      }),
-      game.on("RunEnded", () => clearRun(localStorage)),
-    ];
-    return () => offs.forEach((off) => off());
+    game.on("DayEnded", save);
+    game.on("ScamResolved", save);
+    game.subscribe((_, a) => {
+      if (a.type === "buy") save();
+    });
+    game.on("RunEnded", () => clearRun(localStorage));
   },
 } satisfies GameSystem;

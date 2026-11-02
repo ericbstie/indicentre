@@ -31,7 +31,7 @@ const reportHtml = (d: DaySummary, mood: number, next: number) => `
 export default {
   id: "day-report",
   start({ game }) {
-    return game.on("DayEnded", ({ summary }) =>
+    game.on("DayEnded", ({ summary }) =>
       // After every DayEnded handler, so his mood already counts the quota
       // and the card goes ahead of the lines they queued.
       queueMicrotask(() => {

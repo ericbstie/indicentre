@@ -85,10 +85,10 @@ const bar = (ctx: AudioContext, out: AudioNode, i: number, t: number) => {
   for (let b = 0; b < 4; b++) shaker(ctx, out, t + (b + 0.5) * BEAT);
 };
 
-/** Loops the background music on the music bus. Returns a stop. */
+/** Loops the background music on the music bus. */
 export const startMusic = (ctx: AudioContext) => {
   const out = audio.bus("music");
-  if (!out) return () => {};
+  if (!out) return;
   let i = 0;
   let next = ctx.currentTime + 0.1;
   const tick = () => {
@@ -100,6 +100,5 @@ export const startMusic = (ctx: AudioContext) => {
     }
   };
   tick();
-  const timer = setInterval(tick, 400);
-  return () => clearInterval(timer);
+  setInterval(tick, 400);
 };

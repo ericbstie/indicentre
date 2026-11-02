@@ -78,6 +78,6 @@ export default {
       }
     };
     sync();
-    return game.subscribe(sync);
+    game.subscribe(sync);
   },
 } satisfies GameSystem;

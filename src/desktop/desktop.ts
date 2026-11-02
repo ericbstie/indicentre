@@ -77,5 +77,3 @@ export const createDesktop = (
     launch,
   };
 };
-
-export type Desktop = ReturnType<typeof createDesktop>;

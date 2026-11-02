@@ -1,4 +1,4 @@
-import { Context, Effect, Layer, Ref } from "effect";
+import { Context, Effect, Ref } from "effect";
 import { createBus, diffEvents, type EventBus } from "./events.ts";
 import { type Action, type GameState, initialState, reduce } from "./state.ts";
 
@@ -40,6 +40,3 @@ export const makeGameStore = (initial: GameState = initialState()) =>
       },
     });
   });
-
-export const GameStoreLive = (initial?: GameState) =>
-  Layer.effect(GameStore, makeGameStore(initial));

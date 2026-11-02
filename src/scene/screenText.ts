@@ -10,7 +10,6 @@ export interface TextLine {
 }
 
 export interface ScreenStyle {
-  readonly background?: string;
   /** Optional colored strip across the top, e.g. "OFFICE NEWS". */
   readonly banner?: { readonly text: string; readonly color: string };
 }
@@ -43,7 +42,8 @@ const FONT = "system-ui, sans-serif";
  * monitors, whiteboards. `width`/`height` are world units; the canvas
  * resolution follows the aspect ratio.
  */
-export const createTextScreen = (width: number, height: number, px = 1024) => {
+export const createTextScreen = (width: number, height: number) => {
+  const px = 1024;
   const k = px / 512;
   const canvas = document.createElement("canvas");
   canvas.width = px;
@@ -60,7 +60,7 @@ export const createTextScreen = (width: number, height: number, px = 1024) => {
   /** Clears the screen and prints `lines` top to bottom; overflow is cut. */
   const show = (lines: ReadonlyArray<TextLine>, style: ScreenStyle = {}) => {
     const { width: W, height: H } = canvas;
-    ctx.fillStyle = style.background ?? "#10141c";
+    ctx.fillStyle = "#10141c";
     ctx.fillRect(0, 0, W, H);
     const pad = PAD * k;
     let y = pad;

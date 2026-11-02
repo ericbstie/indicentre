@@ -118,7 +118,7 @@ export default {
     let warnedOn = 0;
     /** He cheers the day's first big win only; after that they're the job. */
     let cheeredOn = 0;
-    const offScam = game.on("ScamResolved", (e) => {
+    game.on("ScamResolved", (e) => {
       failStreak = e.success ? 0 : failStreak + 1;
       game.dispatch(changeMood(scamMood(e.success, e.bucks, failStreak)));
       const s = game.state();
@@ -136,7 +136,7 @@ export default {
         void react("bigWin");
       }
     });
-    const offDay = game.on("DayEnded", ({ summary }) => {
+    game.on("DayEnded", ({ summary }) => {
       const result = quotaResult(summary);
       game.dispatch(changeMood(quotaMood[result]));
       // Fired or won: the run-end card has the last word.
@@ -148,17 +148,10 @@ export default {
         result === "missed" || bossMood.get(game.state()) < WATCH_BELOW;
       if (techniqueUnlocked && unhappy) void watchNextScam();
     });
-    const offDesk = game.on("DeskUpgraded", () => {
+    game.on("DeskUpgraded", () => {
       if (!busy) void react("newDesk");
     });
-    const offWatch = game.on(WatchRequested, () => void watchNextScam());
-    const offFrame = world.onFrame((dt) => walker.update(dt));
-    return () => {
-      offFrame();
-      offScam();
-      offDay();
-      offDesk();
-      offWatch();
-    };
+    game.on(WatchRequested, () => void watchNextScam());
+    world.onFrame((dt) => walker.update(dt));
   },
 } satisfies GameSystem;

@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
-import { Effect } from "effect";
-import { GameStore, GameStoreLive } from "./store.ts";
+import { Effect, Layer } from "effect";
+import { GameStore, makeGameStore } from "./store.ts";
 
 test("GameStore dispatches through the reducer and notifies listeners", () => {
   const seen: number[] = [];
@@ -12,7 +12,9 @@ test("GameStore dispatches through the reducer and notifies listeners", () => {
     yield* store.dispatch({ type: "earn", amount: 5 });
     return yield* store.get;
   });
-  const final = Effect.runSync(program.pipe(Effect.provide(GameStoreLive())));
+  const final = Effect.runSync(
+    program.pipe(Effect.provide(Layer.effect(GameStore, makeGameStore()))),
+  );
   expect(final.scamBucks).toBe(15);
   expect(seen).toEqual([10]);
 });

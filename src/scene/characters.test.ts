@@ -54,12 +54,4 @@ test("plays Walk while its root moves and Idle when it stops", async () => {
   expect(anim.playing).toBe("Walk");
   tickCharacters(1 / 60);
   expect(anim.playing).toBe("Idle");
-  anim.play("SitDown");
-  root.position.x += 0.05;
-  tickCharacters(1 / 60);
-  expect(anim.playing).toBe("SitDown");
-  anim.auto();
-  tickCharacters(1 / 60);
-  expect(anim.playing).toBe("Idle");
-  anim.stop();
 });

@@ -10,7 +10,7 @@ export default {
   id: "shift-light",
   start({ game, world }) {
     const want = new THREE.Color();
-    return world.onFrame((dt) => {
+    world.onFrame((dt) => {
       const t = Math.min(1, game.state().minute / SHIFT_MINUTES);
       want.lerpColors(MORNING, EVENING, t * t);
       // Ease toward it, so a long scam or a new day fades instead of snapping.

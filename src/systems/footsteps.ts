@@ -13,7 +13,7 @@ export default {
     const { camera, player } = world;
     const last = camera.position.clone();
     let walked = 0;
-    return world.onFrame(() => {
+    world.onFrame(() => {
       const p = camera.position;
       const d = Math.hypot(p.x - last.x, p.z - last.z);
       last.copy(p);

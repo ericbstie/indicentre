@@ -8,7 +8,7 @@ export type CharacterId = Extract<
   ModelId,
   "suit-male" | "casual-female" | "casual2-male" | "casual3-female"
 >;
-export type Clip = "Idle" | "Walk" | "SitDown" | "StandUp";
+type Clip = "Idle" | "Walk";
 
 /** Quaternius characters are ~3.1 units tall; this makes them ~1.75 m. */
 const SCALE = 0.56;
@@ -34,7 +34,7 @@ const load = (id: CharacterId) => {
 export interface Character {
   /** Feet at the origin, facing +z. */
   readonly object: THREE.Object3D;
-  readonly clips: ReadonlyMap<Clip, THREE.AnimationClip>;
+  readonly clips: ReadonlyMap<string, THREE.AnimationClip>;
 }
 
 /**
@@ -53,8 +53,8 @@ export const loadCharacter = async (id: CharacterId): Promise<Character> => {
       ? o.material.map((m: THREE.Material) => m.clone())
       : o.material.clone();
   });
-  const clips = new Map<Clip, THREE.AnimationClip>();
-  for (const c of gltf.animations) clips.set(c.name as Clip, c);
+  const clips = new Map<string, THREE.AnimationClip>();
+  for (const c of gltf.animations) clips.set(c.name, c);
   return { object, clips };
 };
 
@@ -80,26 +80,20 @@ const FADE = 0.25;
 const live = new Set<(dt: number) => void>();
 
 /**
- * Starts animating a character placed under `root` (the object that moves).
- * By default it plays Idle and switches to Walk while `root` moves, so code
- * that only moves `root` gets locomotion for free. `play` runs a one-shot
- * clip (SitDown, StandUp) and holds its last frame; `auto` returns to
- * Idle/Walk. Driven by tickCharacters() in the world's frame loop.
+ * Starts animating a character placed under `root` (the object that moves):
+ * Idle, or Walk while `root` moves, so code that only moves `root` gets
+ * locomotion for free. Driven by tickCharacters() in the world's frame loop.
  */
 export const animate = (c: Character, root: THREE.Object3D) => {
   const mixer = new THREE.AnimationMixer(c.object);
   let current: THREE.AnimationAction | undefined;
   let playing: Clip | undefined;
-  let auto = true;
-  const to = (clip: Clip, once = false) => {
+  const to = (clip: Clip) => {
     const source = c.clips.get(clip);
     if (!source) return;
     const next = mixer.clipAction(source);
     if (next === current) return;
-    next.reset();
-    next.setLoop(once ? THREE.LoopOnce : THREE.LoopRepeat, Infinity);
-    next.clampWhenFinished = once;
-    next.play();
+    next.reset().play();
     if (current) next.crossFadeFrom(current, FADE, false);
     current = next;
     playing = clip;
@@ -108,28 +102,17 @@ export const animate = (c: Character, root: THREE.Object3D) => {
 
   const last = root.getWorldPosition(new THREE.Vector3());
   const now = new THREE.Vector3();
-  const step = (dt: number) => {
+  live.add((dt) => {
     root.getWorldPosition(now);
     const speed = dt > 0 ? Math.hypot(now.x - last.x, now.z - last.z) / dt : 0;
     last.copy(now);
-    if (auto) to(speed > WALKING ? "Walk" : "Idle");
+    to(speed > WALKING ? "Walk" : "Idle");
     mixer.update(dt);
-  };
-  live.add(step);
+  });
 
   return {
     get playing() {
       return playing;
-    },
-    play(clip: Clip) {
-      auto = false;
-      to(clip, true);
-    },
-    auto() {
-      auto = true;
-    },
-    stop() {
-      live.delete(step);
     },
   };
 };

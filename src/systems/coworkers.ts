@@ -57,24 +57,20 @@ export default {
       openDialog(chain(c, heard, open));
     };
 
-    const stops = [
-      game.on("ScamResolved", (e) => {
-        if (!e.success) game.dispatch(scamFailed(e.scam));
-      }),
-    ];
+    game.on("ScamResolved", (e) => {
+      if (!e.success) game.dispatch(scamFailed(e.scam));
+    });
     for (const c of coworkers) {
       const desk = world.office.desks[c.desk];
       if (!desk) continue;
       const npc = createNpc(c.look, desk);
       world.office.scene.add(npc.group);
-      stops.push(world.onFrame((dt) => npc.update(dt, world.camera.position)));
+      world.onFrame((dt) => npc.update(dt, world.camera.position));
       world.interactions.add({
         object: npc.group,
         label: `Talk to ${c.name}`,
         use: () => talk(c),
       });
     }
-
-    return () => stops.forEach((stop) => stop());
   },
 } satisfies GameSystem;

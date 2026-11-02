@@ -14,7 +14,7 @@ export default {
   start({ world }) {
     const desks = coworkers.flatMap((c) => world.office.desks[c.desk] ?? []);
     const waits = desks.map(() => Math.random() * EVERY);
-    return world.onFrame((dt) => {
+    world.onFrame((dt) => {
       desks.forEach((desk, i) => {
         const w = (waits[i] ?? 0) - dt;
         waits[i] = w > 0 ? w : EVERY * (0.5 + Math.random());
