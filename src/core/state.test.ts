@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import {
+  clueCount,
   failsAt,
   hintsHeard,
   initialState,
@@ -49,4 +50,12 @@ describe("talkedTo", () => {
     expect(hintsHeard(s1, "priya")).toBe(1);
     expect(hintsHeard(s1, "rohan")).toBe(0);
   });
+});
+
+test("findClue records each clue once, in the order found", () => {
+  const s1 = reduce(s0, { type: "findClue", id: "a" });
+  expect(reduce(s1, { type: "findClue", id: "a" })).toBe(s1);
+  const s2 = reduce(s1, { type: "findClue", id: "b" });
+  expect(s2.clues).toEqual(["a", "b"]);
+  expect(clueCount(s2)).toBe(2);
 });
