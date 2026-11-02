@@ -35,7 +35,8 @@ are about to touch. Nothing else is required.
 bun run check && bun run test && bun run smoke
 ```
 
-`smoke` boots the server and plays one phishing scam in headless Chrome
+`smoke` boots the server, plays one phishing scam in headless Chrome and
+reloads to check Continue and New run
 (`Bun.WebView`); set `BUN_CHROME_PATH` if Chrome isn't found. Right before
 merging, rebase on `origin/main` and wait for green: CI's `fresh` job fails
 a PR that doesn't contain the latest main, because two PRs that were each
