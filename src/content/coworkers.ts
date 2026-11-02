@@ -14,8 +14,8 @@ export interface Coworker {
    * specialty unlocks one more. Each hint is a red flag seen from our side.
    */
   readonly hints: ReadonlyArray<string>;
-  /** When they have nothing new for you. */
-  readonly idle: string;
+  /** When they have nothing new for you; said in turn. */
+  readonly idle: ReadonlyArray<string>;
   /** Replaces `idle` once you've moved to a better desk. */
   readonly newDesk?: string;
 }
@@ -40,7 +40,11 @@ export const coworkers: ReadonlyArray<Coworker> = [
       "The ones who hover over the link before clicking? Let them go. They're already gone.",
       "If one writes back angry, don't answer. Answering is how the bank finds us.",
     ],
-    idle: "That's my fourteenth mail today and it's not even lunch. Don't stand there, it shows up on my numbers.",
+    idle: [
+      "That's my fourteenth mail today and it's not even lunch. Don't stand there, it shows up on my numbers.",
+      "The printer jammed on my quota sheet. I'm taking it as a sign.",
+      "Can't talk. The boss walks past every eleven minutes. I timed it.",
+    ],
   },
   {
     id: "rohan",
@@ -61,7 +65,11 @@ export const coworkers: ReadonlyArray<Coworker> = [
       "Keep them on the line. The second they ask someone else in the house, you've lost them.",
       "Bank calls? Say 'fraud department' and they thank you for stealing from them. Just don't let them hang up to ring the card number.",
     ],
-    idle: "My chair lost a wheel on Tuesday. Facilities said Q3. It's November.",
+    idle: [
+      "My chair lost a wheel on Tuesday. Facilities said Q3. It's November.",
+      "I've been on hold with our own IT for twenty minutes. Professionally, I respect it.",
+      "Bring coffee next time. Talking costs coffee.",
+    ],
     newDesk:
       "You got a partition? I've asked for one since March. Enjoy hearing yourself think, I guess.",
   },
@@ -83,7 +91,11 @@ export const coworkers: ReadonlyArray<Coworker> = [
       "A buyer who says 'I'll pick it up and pay cash' is not your buyer. Move on.",
       "Never use the same photos twice in one city. Somebody always does an image search.",
     ],
-    idle: "Someone ate my yoghurt. It had my name on it. In marker. I'm sending a mail to all.",
+    idle: [
+      "Someone ate my yoghurt. It had my name on it. In marker. I'm sending a mail to all.",
+      "The fridge has a rota now. I made the rota. Nobody reads the rota.",
+      "Don't touch the plant. It's the only thing in here that's growing.",
+    ],
   },
 ];
 
@@ -91,6 +103,6 @@ export const coworkers: ReadonlyArray<Coworker> = [
 export const unlockedHints = (c: Coworker, s: GameState) =>
   c.hints.slice(0, 1 + failsAt(s, c.specialty));
 
-/** What they say when they have no new hint for you. */
-export const idleLine = (c: Coworker, s: GameState) =>
-  (s.workplace.deskTier > 0 && c.newDesk) || c.idle;
+/** What they say the `n`th time they have no new hint for you. */
+export const idleLine = (c: Coworker, s: GameState, n: number) =>
+  (s.workplace.deskTier > 0 && c.newDesk) || c.idle[n % c.idle.length]!;

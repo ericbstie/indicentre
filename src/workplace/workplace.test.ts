@@ -129,7 +129,7 @@ describe("desk reactions", () => {
 
   test("Rohan's idle line changes once you have a better desk", () => {
     const rohan = coworkers.find((c) => c.newDesk)!;
-    expect(idleLine(rohan, rich)).toBe(rohan.idle);
-    expect(idleLine(rohan, wall)).toBe(rohan.newDesk!);
+    expect(idleLine(rohan, rich, 1)).toBe(rohan.idle[1]!);
+    expect(idleLine(rohan, wall, 1)).toBe(rohan.newDesk!);
   });
 });

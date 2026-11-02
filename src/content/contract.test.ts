@@ -96,10 +96,11 @@ describe("content contract", () => {
     ).toEqual([]);
   });
 
-  test("every boss reaction has lines for both moods", () => {
+  // Lines are said in turn, so a one-line pool repeats every time.
+  test("every boss reaction has 2+ lines for both moods", () => {
     for (const lines of Object.values(bossLines)) {
-      expect(lines.low.length).toBeGreaterThan(0);
-      expect(lines.high.length).toBeGreaterThan(0);
+      expect(lines.low.length).toBeGreaterThan(1);
+      expect(lines.high.length).toBeGreaterThan(1);
     }
   });
 
