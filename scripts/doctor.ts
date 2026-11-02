@@ -1,5 +1,6 @@
-// Lists files this branch changes that other unmerged branches change too,
-// so name clashes and shared-file edits show up before the PR does.
+// Before you push: how far behind main you are, files this branch changes
+// that other unmerged branches change too, and names you removed that open
+// branches still use (PR #30 dropped ScamDef fields under three scam PRs).
 //   bun run doctor
 import { $ } from "bun";
 
@@ -8,9 +9,29 @@ const git = async (...args: string[]) =>
   lines(await $`git ${args}`.quiet().nothrow().text());
 
 await $`git fetch -q origin`.quiet().nothrow();
+const [behind = "0"] = await git("rev-list", "--count", "HEAD..origin/main");
+if (behind !== "0")
+  console.log(`Behind origin/main by ${behind} commit(s): rebase now.\n`);
+
 const [base] = await git("merge-base", "HEAD", "origin/main");
 const mine = new Set(await git("diff", "--name-only", base ?? "origin/main"));
 const self = (await git("rev-parse", "--abbrev-ref", "@{u}"))[0];
+
+// Field and export names on removed lines that no added line brings back.
+const named = (diff: string[], sign: string) =>
+  new Set(
+    diff.flatMap((l) => {
+      const m =
+        l[0] === sign &&
+        /^.\s*(?:export\s+(?:const|function|type|interface)\s+|readonly\s+)(\w+)/.exec(
+          l,
+        );
+      return m ? [m[1]!] : [];
+    }),
+  );
+const myDiff = await git("diff", base ?? "origin/main", "--", "src");
+const added = named(myDiff, "+");
+const removed = [...named(myDiff, "-")].filter((n) => !added.has(n));
 
 let clashes = 0;
 const refs = "--format=%(refname:short)";
@@ -24,8 +45,17 @@ for (const ref of await git("for-each-ref", refs, "refs/remotes/origin")) {
   const shared = (await git("diff", "--name-only", mb, ref)).filter((f) =>
     mine.has(f),
   );
-  if (!shared.length) continue;
+  const theirs = removed.length
+    ? (await git("diff", mb, ref, "--", "src")).filter((l) => l[0] === "+")
+    : [];
+  const uses = removed.filter((n) =>
+    theirs.some((l) => new RegExp(`\\b${n}\\b`).test(l)),
+  );
+  if (!shared.length && !uses.length) continue;
   clashes++;
-  console.log(`${ref}\n${shared.map((f) => `  ${f}`).join("\n")}`);
+  console.log(ref);
+  for (const f of shared) console.log(`  ${f}`);
+  for (const n of uses)
+    console.log(`  uses ${n}, which you removed: tell that branch`);
 }
 if (!clashes) console.log("No files shared with other open branches.");
