@@ -1,6 +1,7 @@
 // What the floor manager says. Each reaction has a pool for when he is in a
 // bad mood (below WATCH_BELOW) and one for a good mood. Voice: KPI culture,
-// one concrete detail, never about anyone's ethnicity or accent.
+// one real detail from docs/call-center-culture.md (fines list, end-of-day
+// form, drum, small weekly prizes), never about anyone's ethnicity or accent.
 
 import { moodPool, type QuotaResult, quotaResult } from "../core/boss.ts";
 import type { DaySummary } from "../core/economy.ts";
@@ -24,12 +25,12 @@ export interface MoodLines {
 export const bossLines: Readonly<Record<BossReaction, MoodLines>> = {
   failStreak: {
     low: [
-      "Three in a row. I've started a spreadsheet just for you.",
-      "IT checked your phone. Your phone is fine.",
+      "Three in a row. That's a fine. It's on the list by the printer, between sleeping at the desk and eating at the desk.",
+      "Three misses. Sign the fine form. If you don't sign it, it doubles, and that's not me, that's the form.",
       "Your call log looks like a weather report. All of it bad.",
     ],
     high: [
-      "Three misses. Happens. Don't let it happen a fourth time.",
+      "Three misses. Rohan's Tuesday call is on the training tape. Listen to it on your break.",
       "Bad patch. Have some water, the water is free until Friday.",
       "Rough hour. Shake it off. Quietly, people are working.",
     ],
@@ -41,19 +42,19 @@ export const bossLines: Readonly<Record<BossReaction, MoodLines>> = {
       "Fine. That's the number I wanted on Tuesday.",
     ],
     high: [
-      "Somebody ring the bell! We don't have a bell. Somebody expense a bell.",
-      "Look at that number. That's going in the Monday huddle.",
+      "Somebody hit the drum. We don't have a drum. Somebody expense a drum.",
+      "I'm posting that in the group chat. I expect twenty-six thumbs up by lunch.",
       "That's a whiteboard number. Someone find the good marker.",
     ],
   },
   quotaMissed: {
     low: [
-      "Quota is a number, junior, not a suggestion.",
+      "Short. Fill in the end-of-day form and read me the box that says 'successes'.",
       "I put your total in the shared drive. The shared drive is embarrassed.",
       "Short again. HR has a template for this. I've never had to use it twice.",
     ],
     high: [
-      "I believed in you this morning. Look what you did to my morning.",
+      "Missed. Don't fear the fine, let it fuel your fire. That's off the poster, I didn't make it up.",
       "Missed it. Tomorrow you surprise me. The good kind of surprise.",
       "Missed. I'll write 'learning day' in the report. I get two of those a year.",
     ],
@@ -62,10 +63,10 @@ export const bossLines: Readonly<Record<BossReaction, MoodLines>> = {
     low: [
       "Quota met. Exactly met. Ambition is free, you know.",
       "Exactly on the line. I've seen pensioners with more ambition.",
-      "Met. Tomorrow I want met-plus.",
+      "Met. This week's prize is the desk fan, and the fan is not for people who just meet.",
     ],
     high: [
-      "Quota hit. Go home, come back hungrier.",
+      "Quota met. You're on the board, bottom half, but on it.",
       "Quota met. Nobody will write a song about it, but it's met.",
       "That's the number. Same again tomorrow, then a bit more.",
     ],
@@ -85,7 +86,7 @@ export const bossLines: Readonly<Record<BossReaction, MoodLines>> = {
     low: [
       "Show me your technique. I'll just stand here and breathe.",
       "Next one, I watch. Do it exactly how you'd do it if I wasn't here.",
-      "Don't mind me. I'm just here with my clipboard.",
+      "Don't mind me. I'm filling in your form as we go.",
     ],
     high: [
       "Let's see your technique. Pretend I'm not here.",
@@ -99,7 +100,7 @@ export const bossLines: Readonly<Record<BossReaction, MoodLines>> = {
     ],
     high: [
       "See? Technique. I taught you that, in spirit.",
-      "Clean. That one's going in the training deck.",
+      "Clean. I'm keeping the recording for the new hires.",
     ],
   },
   watchFail: {
