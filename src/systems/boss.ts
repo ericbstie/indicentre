@@ -7,14 +7,12 @@ import {
   FAIL_STREAK,
   moodPool,
   WATCH_BELOW,
-  type QuotaResult,
   quotaMood,
   quotaResult,
   scamMood,
 } from "../core/boss.ts";
 import type { EventOf } from "../core/events.ts";
 import { queueDialog } from "../dialog/dialog.ts";
-import { modalOpen } from "../hud/modal.ts";
 import { createNpc } from "../scene/npc.ts";
 import type { GameSystem } from "./system.ts";
 
@@ -36,13 +34,8 @@ const BEHIND_DESK = new THREE.Vector3(-3.3, 0, 1.8);
 /** Longest a line holds up a scene if the player never dismisses it. */
 const LINE_MS = 6000;
 
-const QUOTA_REACTION: Readonly<Record<QuotaResult, BossReaction>> = {
-  missed: "quotaMissed",
-  met: "quotaMet",
-  smashed: "quotaSmashed",
-};
-
-/** The floor manager: moves his mood on scams and DayEnded, walks over with the verdict. */
+/** The floor manager: moves his mood on scams and DayEnded, reacts to big
+ * moments, and walks over to watch you after a bad day. */
 export default {
   id: "boss",
   start({ game, world }) {
@@ -75,33 +68,6 @@ export default {
       return say(pool[n % pool.length] ?? "");
     };
 
-    /** Resolves on the first frame where `ok()` holds. */
-    const until = (ok: () => boolean) =>
-      new Promise<void>((resolve) => {
-        if (ok()) return resolve();
-        const off = world.onFrame(() => {
-          if (!ok()) return;
-          off();
-          resolve();
-        });
-      });
-
-    /** Walk to stand behind the player's chair, run `scene`, walk back. */
-    let busy = false;
-    const visitDesk = async (scene: () => Promise<void>) => {
-      if (busy) return;
-      busy = true;
-      await walker.walkTo(AISLE);
-      await walker.walkTo(BEHIND_DESK);
-      walker.face(office.seat.lookAt);
-      await until(() => !modalOpen()); // let the day report go first
-      await scene();
-      await walker.walkTo(AISLE);
-      await walker.walkTo(HOME);
-      walker.face(office.seat.position);
-      busy = false;
-    };
-
     const nextScam = () =>
       new Promise<EventOf<"ScamResolved">>((resolve) => {
         const off = game.on("ScamResolved", (e) => {
@@ -109,12 +75,24 @@ export default {
           resolve(e);
         });
       });
-    /** "Show me your technique": he waits behind you for one scam and grades it. */
+
+    /** "Show me your technique": his line waits behind the day report, then
+     * he stands behind your chair for one scam, grades it and walks back. */
+    let busy = false;
     const watchNextScam = async () => {
+      if (busy) return;
+      busy = true;
       const scam = nextScam();
       void react("watchStart");
+      await walker.walkTo(AISLE);
+      await walker.walkTo(BEHIND_DESK);
+      walker.face(office.seat.lookAt);
       const e = await scam;
       await react(e.success ? "watchSuccess" : "watchFail");
+      await walker.walkTo(AISLE);
+      await walker.walkTo(HOME);
+      walker.face(office.seat.position);
+      busy = false;
     };
     // Unlocked by the first missed quota. From then on he watches after any
     // missed quota, and on days that end with his mood low.
@@ -136,15 +114,12 @@ export default {
       game.dispatch({ type: "bossMood", amount: quotaMood[result] });
       // Fired or won: the run-end card has the last word.
       if (game.state().status !== "playing") return;
-      void visitDesk(async () => {
-        const line = react(QUOTA_REACTION[result]);
-        if (result === "missed") await slap();
-        await line;
-        techniqueUnlocked ||= result === "missed";
-        const unhappy =
-          result === "missed" || game.state().bossMood < WATCH_BELOW;
-        if (techniqueUnlocked && unhappy) await watchNextScam();
-      });
+      // His verdict is on the day report; the slap lands with it.
+      if (result === "missed") void slap();
+      techniqueUnlocked ||= result === "missed";
+      const unhappy =
+        result === "missed" || game.state().bossMood < WATCH_BELOW;
+      if (techniqueUnlocked && unhappy) void watchNextScam();
     });
     const offDesk = game.on("DeskUpgraded", () => {
       if (!busy) void react("newDesk");

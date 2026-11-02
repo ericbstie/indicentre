@@ -121,6 +121,7 @@ const drain = () => {
 /**
  * Shows `node` once nothing else is up (another dialog or a modal card),
  * in the order queued, instead of talking over it. Resolves when shown.
+ * Waits one tick first, so a card opened by the same event goes up first.
  */
 export const queueDialog = (node: DialogNode, closed?: () => void) =>
   new Promise<void>((shown) => {
@@ -128,5 +129,5 @@ export const queueDialog = (node: DialogNode, closed?: () => void) =>
       openDialog(node, closed);
       shown();
     });
-    drain();
+    retry ??= setTimeout(drain);
   });
