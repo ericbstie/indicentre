@@ -6,18 +6,32 @@ import {
   LAST_NAMES,
   OCCUPATIONS,
 } from "./tables.ts";
-import type { Victim } from "./types.ts";
+import { firstName, type Victim } from "./types.ts";
 
 const MAX_NAME_TRIES = 50;
 
 const fits = (age: number, d: { minAge?: number; maxAge?: number }) =>
   age >= (d.minAge ?? 0) && age <= (d.maxAge ?? Infinity);
 
-/** One victim. `taken` names are avoided so a batch never repeats a person. */
+/**
+ * A first and last name; neither the full name nor the first name is in
+ * `used`. Once every first name is used, only the full name stays unique.
+ */
+const drawName = (rng: Rng, used: ReadonlySet<string>) => {
+  let name = "";
+  for (let i = 0; i < 2 * MAX_NAME_TRIES; i++) {
+    const first = pick(rng, FIRST_NAMES);
+    name = `${first} ${pick(rng, LAST_NAMES)}`;
+    if (!used.has(name) && (i >= MAX_NAME_TRIES || !used.has(first))) break;
+  }
+  return name;
+};
+
+/** One victim whose first and full name are not in `used`. */
 export const generateVictim = (
   rng: Rng,
   id: string,
-  taken: ReadonlySet<string> = new Set(),
+  used: ReadonlySet<string> = new Set(),
 ): Victim => {
   const job = weighted(rng, OCCUPATIONS, (o) => o.w);
   const age = int(rng, job.age[0], job.age[1]);
@@ -29,9 +43,7 @@ export const generateVictim = (
   const defense = weighted(rng, DEFENSES, (d) =>
     d.counters.includes(detail.tag) ? 0 : d.w,
   );
-  let name = "";
-  for (let i = 0; i < MAX_NAME_TRIES && (!name || taken.has(name)); i++)
-    name = `${pick(rng, FIRST_NAMES)} ${pick(rng, LAST_NAMES)}`;
+  const name = drawName(rng, used);
   return {
     id,
     name,
@@ -51,12 +63,32 @@ export const generateVictim = (
   };
 };
 
-/** n victims with distinct names. */
-export const generateVictims = (rng: Rng, n: number, prefix = "v") => {
-  const taken = new Set<string>();
-  return Array.from({ length: n }, (_, i) => {
-    const v = generateVictim(rng, `${prefix}${i}`, taken);
-    taken.add(v.name);
+/**
+ * n victims, none sharing a first or full name with each other or with
+ * `used`. Their names are added to `used`.
+ */
+export const generateVictims = (
+  rng: Rng,
+  n: number,
+  used = new Set<string>(),
+  prefix = "v",
+) =>
+  Array.from({ length: n }, (_, i) => {
+    const v = generateVictim(rng, `${prefix}${i}`, used);
+    used.add(v.name).add(firstName(v));
     return v;
   });
+
+/**
+ * The names used so far on a day, for `generateVictims`. Asking for a new
+ * day starts an empty set, so nobody comes back the same day.
+ */
+export const namesUsedOn = () => {
+  let day = -1;
+  const used = new Set<string>();
+  return (d: number) => {
+    if (d !== day) used.clear();
+    day = d;
+    return used;
+  };
 };

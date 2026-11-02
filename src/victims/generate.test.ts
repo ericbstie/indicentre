@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { seeded } from "../core/rng.ts";
-import { generateVictims } from "./generate.ts";
+import { generateVictims, namesUsedOn } from "./generate.ts";
 import {
   DEFENSES,
   DETAILS,
@@ -8,7 +8,7 @@ import {
   LAST_NAMES,
   OCCUPATIONS,
 } from "./tables.ts";
-import { TAGS } from "./types.ts";
+import { firstName, TAGS } from "./types.ts";
 
 const batch = generateVictims(seeded(2026), 100);
 
@@ -54,6 +54,23 @@ describe("generateVictims", () => {
 
   test("no duplicate names in 100 draws", () => {
     expect(new Set(batch.map((v) => v.name)).size).toBe(100);
+  });
+
+  test("a day's batches never reuse a first name until they run out", () => {
+    const today = namesUsedOn();
+    const rng = seeded(9);
+    const day1 = Array.from({ length: 10 }, () =>
+      generateVictims(rng, 3, today(1)),
+    ).flat();
+    const firsts = day1.map(firstName);
+    expect(new Set(firsts).size).toBe(firsts.length);
+    // Once the first names run out, only full names stay unique.
+    const long = Array.from({ length: 30 }, () =>
+      generateVictims(rng, 3, today(1)),
+    ).flat();
+    const full = [...day1, ...long].map((v) => v.name);
+    expect(new Set(full).size).toBe(full.length);
+    expect(today(2).size).toBe(0);
   });
 
   test("profiles are distinct and internally consistent", () => {
