@@ -10,6 +10,9 @@ export interface SpokenLine {
  * Plays neutral gibberish babble for a line while its subtitle is shown
  * (design doc: people talk gibberish with text underneath; no accents).
  * Called by the dialog overlay every time a line appears. A new call
- * should cut off the previous line. No-op until the sound system lands.
+ * should cut off the previous line; `hush` runs when the dialog closes.
+ * No-op until the sound system lands.
  */
 export const speak = (_line: SpokenLine): void => {};
+
+export { hush } from "./babble.ts";
