@@ -14,7 +14,6 @@ export const TAGS = [
   "lonely",
   "parcel",
   "bank",
-  "romance",
   "job",
   "tech-help",
   "family",

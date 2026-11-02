@@ -107,7 +107,7 @@ describe("resolution", () => {
 });
 
 describe("warm-ups", () => {
-  const lonely = victim({ weaknesses: ["lonely", "romance"], trust: 0.4 });
+  const lonely = victim({ weaknesses: ["lonely"], trust: 0.4 });
   const hello = catfish.warmups![0]!;
   const ask = catfish.templates[0]!;
   const apply = (o: { actions: ReadonlyArray<Action> }) =>
@@ -143,7 +143,7 @@ describe("fit tags", () => {
 
   test("victims weak to a scam's fitTags fit it better", () => {
     const anxious = victim({ weaknesses: ["tech-help", "fear"] });
-    const romantic = victim({ weaknesses: ["romance", "lonely"] });
+    const romantic = victim({ weaknesses: ["lonely"] });
     expect(fit(anxious, pulls(techSupport, call))).toBeGreaterThan(
       fit(romantic, pulls(techSupport, call)),
     );

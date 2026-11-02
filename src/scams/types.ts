@@ -55,7 +55,7 @@ export interface ScamDef {
    */
   readonly warmups?: ReadonlyArray<ScamTemplate>;
   /**
-   * Victim situations this scam is built for (bank, parcel, romance...), on
+   * Victim situations this scam is built for (bank, parcel, lonely...), on
    * top of its templates' lures. Never a lure itself: those are per template.
    */
   readonly fitTags: ReadonlyArray<Tag>;

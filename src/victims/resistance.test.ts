@@ -27,7 +27,7 @@ const victim = (over: Partial<Victim> = {}): Victim => ({
     id: "video-call",
     behavior: "Asked for a video call.",
     line: "Camera broken again?",
-    counters: ["romance"],
+    counters: ["lonely"],
   },
   ...over,
 });
@@ -50,7 +50,7 @@ describe("successChance", () => {
   });
 
   test("the tell cuts the odds", () => {
-    const tags = ["bank", "romance"] as const;
+    const tags = ["bank", "lonely"] as const;
     const plain = successChance(
       victim({ defense: { ...victim().defense, counters: ["job"] } }),
       tags,
@@ -77,7 +77,7 @@ describe("attempt", () => {
   });
 
   test("a loss shows the tell when the scam ran into it", () => {
-    const r = attempt(() => 0.99, victim(), ["romance"]);
+    const r = attempt(() => 0.99, victim(), ["lonely"]);
     expect(r.success || r.defense.id).toBe("video-call");
   });
 

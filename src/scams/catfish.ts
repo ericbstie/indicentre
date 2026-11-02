@@ -8,7 +8,7 @@ export default {
   minutes: 40,
   payout: 220,
   heat: { success: 6, fail: 15 },
-  fitTags: ["romance", "lonely"],
+  fitTags: ["lonely"],
   successLines: [
     "Sent it this morning. He says the satellite on the platform is down this week, so no calls. I'm counting days.",
     "My friends stopped asking about him. I stopped telling them.",
