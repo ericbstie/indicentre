@@ -37,7 +37,7 @@ export const tools: ReadonlyArray<ToolDef> = [
     name: "Persondata package",
     price: 80,
     blurb:
-      "Profiles scraped from public posts. Shows your odds on every pitch.",
+      "Profiles scraped from public posts. Shows what each lead falls for and the exact odds on every pitch.",
     lesson: "Everything you post publicly is research material for someone.",
     effect: { reveal: 2 },
   },
