@@ -36,7 +36,7 @@ export const coworkers: ReadonlyArray<Coworker> = [
       "The subject line does all the work. If it doesn't sound like a deadline, nobody opens it.",
       "Pensioners read every word. Students read nothing. Write for the one you've got.",
       "People check the sender name. Almost nobody checks what comes after the @.",
-      "Ask for 2.99, not 200. A small fee doesn't feel like money until it's their card number.",
+      "Text them about a parcel and ask for 1.99, not 200. A small fee doesn't feel like money until it's their card number.",
       "The ones who hover over the link before clicking? Let them go. They're already gone.",
       "If one writes back angry, don't answer. Answering is how the bank finds us.",
     ],
