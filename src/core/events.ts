@@ -20,7 +20,13 @@ export type GameEvent =
       readonly to: number;
     }
   | { readonly type: "HeatChanged"; readonly from: number; readonly to: number }
-  | { readonly type: "DayAdvanced"; readonly day: number };
+  | { readonly type: "DayAdvanced"; readonly day: number }
+  | {
+      readonly type: "HintGiven";
+      readonly coworker: string;
+      readonly scam: ScamId;
+      readonly hint: string;
+    };
 
 export type EventType = GameEvent["type"];
 export type EventOf<T extends EventType> = Extract<GameEvent, { type: T }>;

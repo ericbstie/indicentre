@@ -29,6 +29,8 @@ export interface GameState {
   readonly status: "playing" | "shutdown";
   /** Failed attempts per scam type; coworkers open up as this grows. */
   readonly scamFails: Readonly<Record<ScamId, number>>;
+  /** Hints heard so far, per coworker id. */
+  readonly talkedTo: Readonly<Record<string, number>>;
 }
 
 export type Action =
@@ -39,7 +41,8 @@ export type Action =
   | { readonly type: "unlock"; readonly scam: ScamId }
   | { readonly type: "mail"; readonly mail: Omit<Mail, "read"> }
   | { readonly type: "readMail"; readonly id: string }
-  | { readonly type: "scamFailed"; readonly scam: ScamId };
+  | { readonly type: "scamFailed"; readonly scam: ScamId }
+  | { readonly type: "heardHint"; readonly coworker: string };
 
 export const initialState = (
   unlockedScams: ReadonlyArray<ScamId> = [],
@@ -52,6 +55,7 @@ export const initialState = (
   inbox: [],
   status: "playing",
   scamFails: {},
+  talkedTo: {},
 });
 
 const clamp = (n: number, lo: number, hi: number) =>
@@ -64,6 +68,9 @@ export const unreadCount = (s: GameState) =>
   s.inbox.filter((m) => !m.read).length;
 
 export const failsAt = (s: GameState, scam: ScamId) => s.scamFails[scam] ?? 0;
+
+export const hintsHeard = (s: GameState, coworker: string) =>
+  s.talkedTo[coworker] ?? 0;
 
 export const isUnlocked = (s: GameState, scam: ScamId) =>
   s.unlockedScams.includes(scam);
@@ -125,6 +132,14 @@ export const reduce = (s: GameState, a: Action): GameState => {
       return {
         ...s,
         scamFails: { ...s.scamFails, [a.scam]: failsAt(s, a.scam) + 1 },
+      };
+    case "heardHint":
+      return {
+        ...s,
+        talkedTo: {
+          ...s.talkedTo,
+          [a.coworker]: hintsHeard(s, a.coworker) + 1,
+        },
       };
   }
 };
