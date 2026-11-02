@@ -11,8 +11,7 @@ import {
 import { inbox, receiveMail } from "../content/mail.ts";
 import { WIN_DAY } from "../core/economy.ts";
 import { coworkers } from "../content/coworkers.ts";
-import { dialogOpen, openDialog } from "../dialog/dialog.ts";
-import { modalOpen } from "../hud/modal.ts";
+import { queueDialog } from "../dialog/dialog.ts";
 import type { GameSystem } from "./system.ts";
 
 /** Seconds after a scam resolves before a coworker leans over with a clue. */
@@ -20,8 +19,8 @@ const LEAN_OVER_DELAY = 4;
 
 /**
  * EXTRA: drops the day's catfisher clue. Mail clues land in the inbox and
- * count once read; coworker clues are said after a scam, when nothing else
- * is on screen. The File app lists what was found;
+ * count once read; coworker clues are said after a scam, queued behind
+ * whatever is on screen (dialog.ts queueDialog). The File app lists what was found;
  * a complete file gets a mail from the Boss on the last day.
  */
 export default {
@@ -46,8 +45,9 @@ export default {
       const id = c.via.coworker;
       const name = coworkers.find((w) => w.id === id)?.name ?? id;
       game.dispatch(findClue(c.id));
-      world.player.controls.unlock();
-      openDialog({ speaker: name, line: c.text });
+      void queueDialog({ speaker: name, line: c.text }).then(() =>
+        world.player.controls.unlock(),
+      );
     };
 
     let wait: number | undefined;
@@ -71,7 +71,7 @@ export default {
       world.onFrame((dt) => {
         if (wait === undefined) return;
         wait -= dt;
-        if (wait > 0 || dialogOpen() || modalOpen()) return;
+        if (wait > 0) return;
         wait = undefined;
         leanOver();
       }),
