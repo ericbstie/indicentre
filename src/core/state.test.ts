@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 import {
   clock,
   failsAt,
+  hintsHeard,
   initialState,
   OVERNIGHT_COOLDOWN,
   reduce,
@@ -68,5 +69,13 @@ describe("scamFails", () => {
     const twice = reduce(once, { type: "scamFailed", scam: "phishing" });
     expect(failsAt(twice, "phishing")).toBe(2);
     expect(failsAt(twice, "tech-support")).toBe(0);
+  });
+});
+
+describe("talkedTo", () => {
+  test("counts hints heard per coworker", () => {
+    const s1 = reduce(s0, { type: "heardHint", coworker: "priya" });
+    expect(hintsHeard(s1, "priya")).toBe(1);
+    expect(hintsHeard(s1, "rohan")).toBe(0);
   });
 });
