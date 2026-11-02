@@ -1,6 +1,6 @@
 // Economy slice: shift clock, day rollover and the DayEnded log.
 // Pure functions over GameState; state.ts delegates its cases here.
-import type { GameState } from "./state.ts";
+import type { GameState, ScamId } from "./state.ts";
 
 /** Shift length (09:00 -> 17:00). Time only moves when a scam runs. */
 export const SHIFT_MINUTES = 8 * 60;
@@ -55,4 +55,26 @@ export const missStreak = (s: GameState) => {
   let n = 0;
   for (let i = s.days.length - 1; i >= 0 && !s.days[i]!.met; i--) n++;
   return n;
+};
+
+export type ToolId = string;
+
+/** Something the Shop sells. Catalog data lives in src/shop/. */
+export interface Purchase {
+  readonly kind: "scam" | "tool";
+  readonly id: ScamId | ToolId;
+  readonly price: number;
+}
+
+export const owns = (s: GameState, p: Omit<Purchase, "price">) =>
+  (p.kind === "scam" ? s.unlockedScams : s.ownedTools).includes(p.id);
+
+/** Pay and unlock. No-op if already owned or unaffordable. Spending never
+ * counts against the quota, which only looks at what was earned. */
+export const buy = (s: GameState, p: Purchase): GameState => {
+  if (owns(s, p) || p.price < 0 || s.scamBucks < p.price) return s;
+  const paid = { ...s, scamBucks: s.scamBucks - p.price };
+  return p.kind === "scam"
+    ? { ...paid, unlockedScams: [...s.unlockedScams, p.id] }
+    : { ...paid, ownedTools: [...s.ownedTools, p.id] };
 };

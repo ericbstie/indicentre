@@ -1,5 +1,6 @@
 import type { Rng } from "../core/rng.ts";
 import type { Action } from "../core/state.ts";
+import { type Modifiers, NO_MODS } from "../shop/tools.ts";
 import { type Attempt, attempt } from "../victims/resistance.ts";
 import { firstName, type Tag, type Victim } from "../victims/types.ts";
 import { LURES, type ScamDef, type ScamTemplate } from "./types.ts";
@@ -19,15 +20,20 @@ export type Outcome = Attempt & {
 export const payout = (scam: ScamDef, victim: Victim) =>
   Math.round(scam.payout * victim.wealth);
 
+/** Heat when the victim reports you, after tools. */
+export const failHeat = (scam: ScamDef, mods: Modifiers = NO_MODS) =>
+  Math.round(scam.heat.fail * mods.failHeatMult);
+
 export const resolveScam = (
   rng: Rng,
   scam: ScamDef,
   victim: Victim,
   template: ScamTemplate,
+  mods: Modifiers = NO_MODS,
 ): Outcome => {
-  const a = attempt(rng, victim, fitTags(template));
+  const a = attempt(rng, victim, fitTags(template), mods.chanceBonus);
   const bucks = a.success ? payout(scam, victim) : 0;
-  const heat = a.success ? scam.heat.success : scam.heat.fail;
+  const heat = a.success ? scam.heat.success : failHeat(scam, mods);
   return {
     ...a,
     bucks,
