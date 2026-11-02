@@ -316,6 +316,25 @@ export const beats: ReadonlyArray<Beat> = [
     learn:
       "You can't win a draw you never entered. If the money comes from recruiting people, not selling something, it's a pyramid.",
   },
+  // Day 7, second desk: blackmail mails bluffing with leaked passwords.
+  {
+    id: "d7-blackmail",
+    day: 7,
+    on: "dayStart",
+    introduces: "blackmail",
+    lines: [
+      {
+        speaker: "Boss",
+        line: "The data package has a back shelf. Old passwords from old leaks. We don't throw food away here.",
+      },
+      {
+        speaker: "Priya",
+        line: "Mail them their own password from 2019. Say you saw everything through the camera. You saw nothing. Ask for crypto, give them a deadline.",
+      },
+    ],
+    learn:
+      "A threat mail that quotes an old password got it from a leak, not your camera. There is no video. Change the password, report it, never pay.",
+  },
   // Day 8: Tommy fights back. Account takeover.
   {
     id: "d8-start",
