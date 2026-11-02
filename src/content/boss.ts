@@ -2,6 +2,9 @@
 // bad mood (below WATCH_BELOW) and one for a good mood. Voice: KPI culture,
 // one concrete detail, never about anyone's ethnicity or accent.
 
+import { moodPool, type QuotaResult, quotaResult } from "../core/boss.ts";
+import type { DaySummary } from "../core/economy.ts";
+
 export type BossReaction =
   | "failStreak"
   | "bigWin"
@@ -82,3 +85,26 @@ export const bossLines: Readonly<Record<BossReaction, MoodLines>> = {
     high: ["Nice desk. I had that desk in 2019. Look where I am now."],
   },
 };
+
+const VERDICT: Readonly<Record<QuotaResult, BossReaction>> = {
+  missed: "quotaMissed",
+  met: "quotaMet",
+  smashed: "quotaSmashed",
+};
+
+/** His end-of-day verdict for the day report. Rotates through the pool by day. */
+export const verdictLine = (d: DaySummary, mood: number) => {
+  const pool = bossLines[VERDICT[quotaResult(d)]][moodPool(mood)];
+  return pool[d.day % pool.length] ?? "";
+};
+
+/** The run's first missed quota: HR's form letter, signed by nobody in HR. */
+export const writtenWarning = (d: DaySummary) => ({
+  title: "Formal written warning",
+  lines: [
+    `Re: Day ${d.day}. Quota ${d.quota} bucks, delivered ${d.earned}.`,
+    "This letter goes in your file. Your file was empty until today, which HR also found suspicious.",
+    "Miss two days in a row from here and someone else gets your chair. The chair has been told.",
+    "No need to sign. We know where you sit.",
+  ],
+});
