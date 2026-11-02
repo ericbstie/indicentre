@@ -15,7 +15,7 @@ import {
 import { type Modifiers, modifiersFor } from "../shop/tools.ts";
 import type { Channel, ScamDef, ScamTemplate } from "../scams/types.ts";
 import { generateVictims } from "../victims/generate.ts";
-import { successChance } from "../victims/resistance.ts";
+import { fitLabel, successChance } from "../victims/resistance.ts";
 import { writeHints } from "../victims/hints.ts";
 import { firstName, type Victim } from "../victims/types.ts";
 import { type RevealLevel, reveal, type VictimView } from "../victims/view.ts";
@@ -97,14 +97,12 @@ export default {
 
     const available = () => availableScams(game.state());
 
-    // Payout and heat are always shown before sending; odds need persondata.
+    // Payout, heat and a coarse fit are always shown; exact odds need persondata.
     const stakes = (s: ScamDef, tpl: ScamTemplate, t: Victim) => {
       const m = mods();
-      const odds =
-        m.reveal >= 2
-          ? ` · ${pct(successChance(t, pulls(s, tpl), bonusFor(s, m)))} odds`
-          : "";
-      return `${CHANNEL[s.channel]} · +${payout(s, t)} bucks · heat +${s.heat.success}, +${failHeat(s, m)} if reported · ${s.minutes} min${odds}`;
+      const p = successChance(t, pulls(s, tpl), bonusFor(s, m));
+      const odds = m.reveal >= 2 ? `, ${pct(p)} odds` : "";
+      return `${CHANNEL[s.channel]} · +${payout(s, t)} bucks · heat +${s.heat.success}, +${failHeat(s, m)} if reported · ${s.minutes} min · ${fitLabel(p)}${odds}`;
     };
 
     const viewTargets = () => `
