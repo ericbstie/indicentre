@@ -45,7 +45,7 @@ export default {
   minutes: 30,
   payout: 60,
   heat: { success: 3, fail: 10 },
-  fitTags: ["urgency"],
+  fitTags: ["bank"],
   successLine: "TODO: what a victim says after falling for it.",
   templates: [
     {

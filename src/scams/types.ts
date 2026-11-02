@@ -54,7 +54,10 @@ export interface ScamDef {
    * `minutes`; one the victim sees through ends the scam.
    */
   readonly warmups?: ReadonlyArray<ScamTemplate>;
-  /** Victim weaknesses this scam is built for, on top of its templates' lures. */
+  /**
+   * Victim situations this scam is built for (bank, parcel, romance...), on
+   * top of its templates' lures. Never a lure itself: those are per template.
+   */
   readonly fitTags: ReadonlyArray<Tag>;
   /** What a victim says after falling for it. `{name}` allowed. */
   readonly successLine: string;

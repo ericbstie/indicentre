@@ -9,7 +9,7 @@ export default {
   minutes: 30,
   payout: 110,
   heat: { success: 5, fail: 13 },
-  fitTags: ["bank", "authority", "urgency", "fear"],
+  fitTags: ["bank", "fear"],
   successLine:
     "She had my account number already, so I knew she was real. The money's safe now. She said not to ring the branch, they're part of the problem.",
   templates: [

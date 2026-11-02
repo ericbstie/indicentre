@@ -13,7 +13,7 @@ import {
   resolveWarmup,
   warmed,
 } from "./resolve.ts";
-import { CHANNELS } from "./types.ts";
+import { CHANNELS, LURES } from "./types.ts";
 
 const victim = (over: Partial<Victim> = {}): Victim => ({
   id: "x",
@@ -44,8 +44,12 @@ describe("scam data", () => {
       expect(s.minutes).toBeGreaterThan(0);
       expect(s.payout).toBeGreaterThan(0);
       expect(s.heat.fail).toBeGreaterThan(s.heat.success);
-      expect(s.fitTags.length).toBeGreaterThan(0);
       for (const tag of s.fitTags) expect(TAGS).toContain(tag);
+      // Lures come from the templates, so each pitch shows its own chips.
+      // Seen: urgency/curiosity/authority/greed repeated in five fitTags.
+      expect(
+        s.fitTags.filter((t) => (LURES as ReadonlyArray<string>).includes(t)),
+      ).toEqual([]);
       expect(s.successLine.trim().length).toBeGreaterThan(0);
       expect(s.templates.length).toBeGreaterThan(0);
       const steps = [...(s.warmups ?? []), ...s.templates];

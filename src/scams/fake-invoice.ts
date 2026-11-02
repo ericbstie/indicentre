@@ -9,7 +9,7 @@ export default {
   minutes: 35,
   payout: 160,
   heat: { success: 6, fail: 14 },
-  fitTags: ["authority", "urgency", "bank"],
+  fitTags: ["bank"],
   successLine:
     "Paid it before lunch. Trine from Haldorsen even rang to say thanks, so that's sorted. Strange that Trine doesn't remember ringing.",
   templates: [

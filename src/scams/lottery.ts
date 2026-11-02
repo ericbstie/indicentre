@@ -8,7 +8,7 @@ export default {
   minutes: 15,
   payout: 50,
   heat: { success: 2, fail: 7 },
-  fitTags: ["greed", "curiosity"],
+  fitTags: [],
   successLine:
     "Paid the fee! The money clears in 6 to 8 weeks. I've already told my sister about the boat.",
   templates: [
