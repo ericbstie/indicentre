@@ -1,4 +1,11 @@
-import { type AgeBand, ageBand, type Tag, type Victim } from "./types.ts";
+import {
+  type AgeBand,
+  ageBand,
+  type Leak,
+  type RecentEvent,
+  type Tag,
+  type Victim,
+} from "./types.ts";
 
 /**
  * How much of a victim the player can see. 0 = the lead list; buying
@@ -19,6 +26,9 @@ export interface VictimView {
   readonly trust?: number;
   readonly wealth?: number;
   readonly defense?: string;
+  /** Level 2: the dossier's leaked facts. */
+  readonly hobby?: Leak;
+  readonly recent?: RecentEvent;
 }
 
 export const reveal = (
@@ -36,5 +46,7 @@ export const reveal = (
     trust: v.trust,
     wealth: v.wealth,
     defense: v.defense.behavior,
+    hobby: v.hobby,
+    recent: v.recent,
   }),
 });

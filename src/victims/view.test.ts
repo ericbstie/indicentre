@@ -20,6 +20,8 @@ describe("reveal", () => {
     expect(reveal(v, [], 1).defense).toBeUndefined();
     expect(reveal(v, [], 2).defense).toBe(v.defense.behavior);
     expect(reveal(v, [], 2).wealth).toBe(v.wealth);
+    expect(reveal(v, [], 1).recent).toBeUndefined();
+    expect(reveal(v, [], 2).recent).toEqual(v.recent);
   });
 
   test("age bands", () => {
