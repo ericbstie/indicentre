@@ -46,4 +46,6 @@ export const sfx = {
     ),
   /** `delay` lets it follow a stinger instead of muddying it. */
   heat: (delay = 0) => play("square", [[150, 0, 0.07]], 0.3, delay),
+  /** A soft footfall; the pitch wanders so steps don't sound looped. */
+  step: () => play("triangle", [[75 + Math.random() * 30, 0, 0.09]], 0.3),
 };
