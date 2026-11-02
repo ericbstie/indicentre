@@ -9,7 +9,7 @@ export default {
   minutes: 15,
   payout: 45,
   heat: { success: 2, fail: 7 },
-  fitTags: ["parcel", "urgency", "curiosity"],
+  fitTags: ["parcel"],
   successLine:
     "Paid it. It was only 1.99. It asked for my card number twice, which was odd, but the page was very yellow.",
   templates: [

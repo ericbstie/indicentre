@@ -8,7 +8,7 @@ export default {
   minutes: 25,
   payout: 60,
   heat: { success: 3, fail: 8 },
-  fitTags: ["parcel", "greed"],
+  fitTags: ["parcel"],
   successLine:
     "Sent the difference to his mover. Nice man. Shame nobody ever came for the bike.",
   templates: [
