@@ -27,3 +27,7 @@
   background: var(--muted);
   cursor: default;
 }
+
+.shop h3 {
+  margin: 20px 0 8px;
+}

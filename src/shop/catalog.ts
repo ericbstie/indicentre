@@ -1,5 +1,6 @@
 import type { Purchase } from "../core/economy.ts";
 import { scams } from "../scams/registry.ts";
+import { upgrades } from "../workplace/upgrades.ts";
 import { tools } from "./tools.ts";
 
 export interface CatalogItem extends Purchase {
@@ -7,7 +8,7 @@ export interface CatalogItem extends Purchase {
   readonly blurb: string;
 }
 
-/** Everything the Shop sells: paid scams first, then tools. */
+/** Everything the Shop sells: paid scams, tools, then workplace upgrades. */
 export const catalog: ReadonlyArray<CatalogItem> = [
   ...scams
     .filter((s) => s.price > 0)
@@ -25,4 +26,16 @@ export const catalog: ReadonlyArray<CatalogItem> = [
     name: t.name,
     blurb: t.blurb,
   })),
+  ...upgrades.map((u): CatalogItem => ({
+    kind: "upgrade",
+    id: u.id,
+    price: u.price,
+    name: u.name,
+    blurb: u.blurb,
+    ...(u.tier !== undefined && { tier: u.tier }),
+  })),
 ];
+
+/** The Shop's lesson box for an owned item, if it teaches one. */
+export const lessonFor = (id: string) =>
+  [...tools, ...upgrades].find((t) => t.id === id)?.lesson;

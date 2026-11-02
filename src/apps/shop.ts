@@ -1,13 +1,32 @@
 import "./shop.css";
 import { owns } from "../core/economy.ts";
+import type { GameState } from "../core/state.ts";
 import { esc } from "../desktop/html.ts";
-import { catalog } from "../shop/catalog.ts";
-import { tools } from "../shop/tools.ts";
+import { type CatalogItem, catalog, lessonFor } from "../shop/catalog.ts";
 import type { DesktopApp } from "./app.ts";
 
-const lessonFor = (id: string) => tools.find((t) => t.id === id)?.lesson;
+const row = (s: GameState, item: CatalogItem) => {
+  const have = owns(s, item);
+  const lesson = have ? lessonFor(item.id) : undefined;
+  return `
+  <div class="item">
+    <div><b>${esc(item.name)}</b><p>${esc(item.blurb)}</p>${
+      lesson ? `<p class="lesson">${esc(lesson)}</p>` : ""
+    }</div>
+    ${
+      have
+        ? `<span class="empty">Owned</span>`
+        : `<button class="btn" data-buy="${esc(item.id)}" ${
+            s.scamBucks < item.price ? "disabled" : ""
+          }>${esc(item.price)} bucks</button>`
+    }
+  </div>`;
+};
 
-/** Buy scams and tools with scam bucks. */
+const rows = (s: GameState, items: ReadonlyArray<CatalogItem>) =>
+  items.map((item) => row(s, item)).join("");
+
+/** Buy scams, tools and things for your desk with scam bucks. */
 export default {
   id: "shop",
   title: "Shop",
@@ -16,25 +35,13 @@ export default {
   mount(el, { game }) {
     const render = () => {
       const s = game.state();
-      el.innerHTML = `<div class="shop">${catalog
-        .map((item) => {
-          const have = owns(s, item);
-          const lesson = have ? lessonFor(item.id) : undefined;
-          return `
-          <div class="item">
-            <div><b>${esc(item.name)}</b><p>${esc(item.blurb)}</p>${
-              lesson ? `<p class="lesson">${esc(lesson)}</p>` : ""
-            }</div>
-            ${
-              have
-                ? `<span class="empty">Owned</span>`
-                : `<button class="btn" data-buy="${esc(item.id)}" ${
-                    s.scamBucks < item.price ? "disabled" : ""
-                  }>${esc(item.price)} bucks</button>`
-            }
-          </div>`;
-        })
-        .join("")}</div>`;
+      el.innerHTML = `<div class="shop">${rows(
+        s,
+        catalog.filter((c) => c.kind !== "upgrade"),
+      )}<h3>Your desk</h3>${rows(
+        s,
+        catalog.filter((c) => c.kind === "upgrade"),
+      )}</div>`;
     };
     el.onclick = (e) => {
       const id = (e.target as HTMLElement).closest<HTMLElement>("[data-buy]")
