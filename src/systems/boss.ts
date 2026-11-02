@@ -1,7 +1,6 @@
 import * as THREE from "three";
-import { buildBoss, createWalker } from "../boss/model.ts";
 import { slap } from "../boss/slap.ts";
-import { createSpeech } from "../boss/speech.ts";
+import { createWalker } from "../boss/walker.ts";
 import { type BossReaction, bossLines } from "../content/boss.ts";
 import {
   BIG_WIN,
@@ -14,7 +13,26 @@ import {
   scamMood,
 } from "../core/boss.ts";
 import type { EventOf } from "../core/events.ts";
+import { openDialog } from "../dialog/dialog.ts";
+import { createNpc } from "../scene/npc.ts";
 import type { GameSystem } from "./system.ts";
+
+const LOOK = { shirt: 0xe8e4d8, skin: 0xb07850, hair: 0x2a2a2a };
+
+const mesh = (geo: THREE.BufferGeometry, color: number) =>
+  new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ color }));
+/** Red tie and a clipboard, so you can tell him from the coworkers. */
+const tie = () => {
+  const m = mesh(new THREE.BoxGeometry(0.07, 0.38, 0.02), 0xb02020);
+  m.position.set(0, 1.2, 0.21);
+  return m;
+};
+const clipboard = () => {
+  const m = mesh(new THREE.BoxGeometry(0.24, 0.32, 0.02), 0x8a6a48);
+  m.position.set(0.32, 1.05, 0.2);
+  m.rotation.x = -0.5;
+  return m;
+};
 
 /** His spot by the front-right wall, overseeing the floor. */
 const HOME = new THREE.Vector3(5.6, 0, 3.8);
@@ -22,6 +40,9 @@ const HOME = new THREE.Vector3(5.6, 0, 3.8);
 const AISLE = new THREE.Vector3(4.6, 0, 1.8);
 /** Just behind and right of the player's chair. */
 const BEHIND_DESK = new THREE.Vector3(-3.3, 0, 1.8);
+
+/** Longest a line holds up a scene if the player never dismisses it. */
+const LINE_MS = 6000;
 
 const QUOTA_REACTION: Readonly<Record<QuotaResult, BossReaction>> = {
   missed: "quotaMissed",
@@ -34,8 +55,9 @@ export default {
   id: "boss",
   start({ game, world }) {
     const { office, interactions } = world;
-    const body = buildBoss();
+    const body = createNpc(LOOK, HOME).group;
     body.position.copy(HOME);
+    body.add(tie(), clipboard());
     office.scene.add(body);
     const walker = createWalker(body);
     walker.face(office.seat.position);
@@ -45,14 +67,19 @@ export default {
       use: () => walker.face(world.camera.position),
     });
 
-    const speech = createSpeech();
+    /** Opens his line in the dialog; resolves when dismissed or after LINE_MS. */
+    const say = (line: string) =>
+      new Promise<void>((resolve) => {
+        openDialog({ speaker: "Boss", line }, resolve);
+        setTimeout(resolve, LINE_MS);
+      });
     const said = new Map<BossReaction, number>();
     /** Says the next line for `reaction` from the pool his mood picks. */
     const react = (reaction: BossReaction) => {
       const pool = bossLines[reaction][moodPool(game.state().bossMood)];
       const n = said.get(reaction) ?? 0;
       said.set(reaction, n + 1);
-      return speech.say(pool[n % pool.length] ?? "");
+      return say(pool[n % pool.length] ?? "");
     };
 
     /** Walk to stand behind the player's chair, run `scene`, walk back. */
@@ -79,8 +106,9 @@ export default {
       });
     /** "Show me your technique": he waits behind you for one scam and grades it. */
     const watchNextScam = async () => {
-      await react("watchStart");
-      const e = await nextScam();
+      const scam = nextScam();
+      void react("watchStart");
+      const e = await scam;
       await react(e.success ? "watchSuccess" : "watchFail");
     };
     // Unlocked by the first missed quota. From then on he watches after any
