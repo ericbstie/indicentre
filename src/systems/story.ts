@@ -27,19 +27,6 @@ export default {
       remember: (key, value) => game.dispatch(chose(key, value)),
     };
 
-    /** Puts the camera at the desk; returns a restore. */
-    const sitAtDesk = () => {
-      const { camera, office } = world;
-      const position = camera.position.clone();
-      const quaternion = camera.quaternion.clone();
-      camera.position.copy(office.seat.position);
-      camera.lookAt(office.seat.lookAt);
-      return () => {
-        camera.position.copy(position);
-        camera.quaternion.copy(quaternion);
-      };
-    };
-
     /** The call's result, applied like any other scam attempt. */
     const settle = (call: Call, won: boolean) => {
       const bucks = won ? call.payout : 0;
@@ -95,7 +82,7 @@ export default {
             item: { kind: "scam", id: b.introduces, price: 0 },
           });
         world.player.controls.unlock();
-        if (b.atDesk) stand = sitAtDesk();
+        if (b.atDesk) stand = world.sitAtDesk();
       });
     };
 
