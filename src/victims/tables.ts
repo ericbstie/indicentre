@@ -41,7 +41,7 @@ export const OCCUPATIONS: ReadonlyArray<Occupation> = [
     techComfort: [0.05, 0.25],
     trust: [0.55, 0.9],
     wealth: [1, 1.6],
-    leans: ["lonely", "romance", "authority"],
+    leans: ["lonely", "authority"],
   },
   {
     label: "Nursing student",
@@ -86,7 +86,7 @@ export const OCCUPATIONS: ReadonlyArray<Occupation> = [
     techComfort: [0.4, 0.7],
     trust: [0.3, 0.6],
     wealth: [0.6, 0.9],
-    leans: ["lonely", "romance", "curiosity"],
+    leans: ["lonely", "curiosity"],
   },
   {
     label: "Crypto hobbyist",
@@ -104,7 +104,7 @@ export const OCCUPATIONS: ReadonlyArray<Occupation> = [
     techComfort: [0.35, 0.6],
     trust: [0.4, 0.7],
     wealth: [1.5, 2],
-    leans: ["romance", "lonely", "greed"],
+    leans: ["lonely", "greed"],
   },
   {
     label: "Job seeker",
@@ -231,13 +231,13 @@ export const DETAILS: ReadonlyArray<
   },
   {
     w: 2,
-    tag: "romance",
+    tag: "lonely",
     text: "Updated a dating profile last week. New photo, same fishing hat.",
   },
   {
     w: 1,
     minAge: 40,
-    tag: "romance",
+    tag: "lonely",
     text: "Writes long comments under a widowed sea captain's sailing videos.",
   },
   {
@@ -384,7 +384,7 @@ export const DEFENSES: ReadonlyArray<
   {
     w: 2,
     id: "video-call",
-    counters: ["romance", "lonely"],
+    counters: ["lonely"],
     behavior:
       "Asked for a video call. The other side suddenly had a broken camera.",
     lines: [
@@ -395,7 +395,7 @@ export const DEFENSES: ReadonlyArray<
   {
     w: 2,
     id: "image-search",
-    counters: ["romance"],
+    counters: ["lonely"],
     behavior:
       "Reverse-searched the profile photo. It belonged to a dentist in Trondheim.",
     lines: [

@@ -47,12 +47,14 @@ export const FRAGMENTS: Readonly<Record<Tag, ReadonlyArray<string>>> = {
     "Forwards every chain message about hackers to the whole address book.",
   ],
   lonely: [
-    "Keeps any caller on the line, even the ones selling solar panels.",
     "{name} talked to a wrong number for forty minutes last week.",
     "Nobody has asked about the garden in months.",
     "The cashier at the corner shop is most of the week's conversation.",
     "{name} says 'oh, stay a bit' to the meter reader.",
     "Answers surveys on the phone. All the way to the end.",
+    "{name} replies to every 'hello dear' with a paragraph.",
+    "Has a dating profile on four sites. The photo is from 2011.",
+    "{name} saves every good-morning text and knows how many there are.",
   ],
   parcel: [
     "Has had a parcel 'out for delivery' since Tuesday.",
@@ -71,14 +73,6 @@ export const FRAGMENTS: Readonly<Record<Tag, ReadonlyArray<string>>> = {
     "{name} gave the bank's chat assistant five stars.",
     "Still has the pen from the branch opening in 1998.",
     "Updates a payee's account number without a second look, because it's only paperwork.",
-  ],
-  romance: [
-    "Recently single and very online about it.",
-    "{name} replies to every 'hello dear' with a paragraph.",
-    "Believes in second chances, even for men met online.",
-    "Has a dating profile on four sites. The photo is from 2011.",
-    "{name} saves every good-morning text and knows how many there are.",
-    "Says 'you never know' about strangers online, and means it kindly.",
   ],
   job: [
     "Needs a job yesterday. Will skip the small print.",
