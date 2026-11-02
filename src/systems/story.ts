@@ -64,6 +64,11 @@ export default {
     const play = (b: Beat) =>
       new Promise<void>((resolve) => {
         game.dispatch(sawBeat(b.id));
+        if (b.introduces && b.free)
+          game.dispatch({
+            type: "buy",
+            item: { kind: "scam", id: b.introduces, price: 0 },
+          });
         const lines = b.learn
           ? [...b.lines, { speaker: "What to spot", line: b.learn }]
           : b.lines;

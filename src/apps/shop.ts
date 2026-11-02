@@ -1,8 +1,10 @@
 import "./shop.css";
 import { canBuy, owns } from "../core/economy.ts";
 import type { GameState } from "../core/state.ts";
+import { beats } from "../content/story.ts";
 import { esc, tagList } from "../desktop/html.ts";
 import { type CatalogItem, catalog, lessonFor } from "../shop/catalog.ts";
+import { shopSells } from "../story/story.ts";
 import type { DesktopApp } from "./app.ts";
 
 const row = (s: GameState, item: CatalogItem) => {
@@ -26,7 +28,7 @@ const row = (s: GameState, item: CatalogItem) => {
 const rows = (s: GameState, items: ReadonlyArray<CatalogItem>) =>
   items.map((item) => row(s, item)).join("");
 
-/** Buy scams, tools and things for your desk with scam bucks. */
+/** Buy tools, desk upgrades, and scams once the story has introduced them. */
 export default {
   id: "shop",
   title: "Shop",
@@ -37,7 +39,12 @@ export default {
       const s = game.state();
       el.innerHTML = `<div class="shop">${rows(
         s,
-        catalog.filter((c) => c.kind !== "upgrade"),
+        catalog.filter(
+          (c) =>
+            c.kind === "tool" ||
+            (c.kind === "scam" &&
+              (owns(s, c) || shopSells(beats, c.id, s.day))),
+        ),
       )}<h3>Your desk</h3>${rows(
         s,
         catalog.filter((c) => c.kind === "upgrade"),

@@ -1,7 +1,7 @@
 // Story beats: pure data types and the rules for which beat plays when.
 // The beats themselves live in src/content/story.ts; systems/story.ts plays them.
 import { defineSlice } from "../core/slice.ts";
-import type { GameState } from "../core/state.ts";
+import type { GameState, ScamId } from "../core/state.ts";
 
 /**
  * When a beat plays. Each beat plays once per run.
@@ -32,6 +32,10 @@ export interface Beat {
   readonly lines: ReadonlyArray<Line>;
   /** The real-world defense, shown as a last "What to spot" line. */
   readonly learn?: string;
+  /** The scam this day is about. From this day on the Shop sells it... */
+  readonly introduces?: ScamId;
+  /** ...unless it's handed over for free when the beat plays. */
+  readonly free?: true;
 }
 
 type StoryAction =
@@ -80,3 +84,17 @@ export const dueBeats = (
 /** Replaces `{key}` with `vars[key]`; unknown keys stay as they are. */
 export const fill = (text: string, vars: Readonly<Record<string, string>>) =>
   text.replace(/\{(\w+)\}/g, (m, k: string) => vars[k] ?? m);
+
+/** The beat that brings in `scam`; scams without one never become available. */
+const introOf = (beats: ReadonlyArray<Beat>, scam: ScamId) =>
+  beats.find((b) => b.introduces === scam);
+
+/** Whether the Shop sells `scam` on `day`. Free scams are never sold. */
+export const shopSells = (
+  beats: ReadonlyArray<Beat>,
+  scam: ScamId,
+  day: number,
+) => {
+  const intro = introOf(beats, scam);
+  return intro !== undefined && !intro.free && intro.day <= day;
+};

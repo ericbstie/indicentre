@@ -58,8 +58,31 @@ try {
     fail("page did not boot (window.indicentre missing)");
   const before = await hud();
 
+  // Story beats (day 0 intro, day 1 briefing, Priya at the PC) cover the
+  // screen; Esc through them like an impatient player.
+  const skipStory = async () => {
+    let quiet = 0;
+    for (let i = 0; i < 40 && quiet < 3; i++) {
+      await Bun.sleep(250);
+      const open = await view.evaluate<boolean>(
+        `!!document.querySelector(".dialog-layer:not([hidden])")`,
+      );
+      if (open)
+        await view.evaluate(
+          `document.body.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape", bubbles: true }))`,
+        );
+      quiet = open ? 0 : quiet + 1;
+    }
+  };
+  await skipStory();
   await view.evaluate(`indicentre.sitDown()`);
+  await skipStory();
   await view.evaluate(`indicentre.desktop.launch("leads")`);
+  console.log(
+    await view.evaluate<string>(
+      `JSON.stringify({open: indicentre.desktop.isOpen, s: indicentre.game.state().storySeen, u: indicentre.game.state().unlockedScams, dlg: document.querySelector(".dialog-layer:not([hidden])")?.innerText, modal: !!document.querySelector(".modal")})`,
+    ),
+  );
   await view.click(".leads [data-target]", { timeout: 5000 });
   await view.click(`.leads [data-send^="phishing/"]`, { timeout: 5000 });
 
