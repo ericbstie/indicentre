@@ -1,3 +1,4 @@
+import { CALL_BACK } from "../content/lessons.ts";
 import type { DeskTier } from "./slice.ts";
 
 /** Something for your own desk, sold in the Shop's "Your desk" section. */
@@ -13,8 +14,7 @@ interface UpgradeDef {
   readonly lesson?: string;
 }
 
-const QUIET_LINE =
-  "A quiet line and a calm voice are props. Hang up and call the number on your card.";
+const QUIET_LINE = `A quiet line and a calm voice are props. ${CALL_BACK}`;
 
 /** Shop order: desks first, then cosmetics. */
 export const upgrades: ReadonlyArray<UpgradeDef> = [

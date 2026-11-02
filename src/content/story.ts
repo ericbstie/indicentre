@@ -1,6 +1,7 @@
 // The 10-day arc (research/story-and-engagement.md). One scam type per day.
 // Voice: KPI culture and office life, never anyone's ethnicity or accent.
 import type { Beat, Line } from "../story/story.ts";
+import { CALL_BACK } from "./lessons.ts";
 
 export const beats: ReadonlyArray<Beat> = [
   // Day 0: you get catfished. Day 10 mirrors it.
@@ -262,8 +263,7 @@ export const beats: ReadonlyArray<Beat> = [
         line: "Buy the data package before you call. A pensioner who hears her own dog's name doesn't hang up.",
       },
     ],
-    learn:
-      'Your bank will never ask you to move money to a "safe account" or read out a code. Hang up and call the number on your card.',
+    learn: `Your bank will never ask you to move money to a "safe account" or read out a code. ${CALL_BACK}`,
   },
   {
     id: "d5-pc",
@@ -384,8 +384,7 @@ export const beats: ReadonlyArray<Beat> = [
         line: 'Be polite. Be boring. Then one invoice with new bank details. And the meter is high, so if I hear the word "raid" I start shredding.',
       },
     ],
-    learn:
-      "A supplier who changes bank details by email is the oldest trick in accounts. Call them on the number you already have.",
+    learn: `A supplier who changes bank details by email is the oldest trick in accounts. ${CALL_BACK}`,
   },
   {
     id: "d9-pc",

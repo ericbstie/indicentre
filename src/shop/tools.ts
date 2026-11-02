@@ -1,3 +1,4 @@
+import { CALL_BACK } from "../content/lessons.ts";
 import type { ToolId } from "../core/economy.ts";
 import type { RevealLevel } from "../victims/view.ts";
 
@@ -56,8 +57,7 @@ export const tools: ReadonlyArray<ToolDef> = [
     price: 180,
     blurb:
       "Mail and calls show someone else's name. Failed pitches cost half the heat.",
-    lesson:
-      "Sender names and caller ID can be faked. Call back on a number you already know.",
+    lesson: `Sender names and caller ID can be faked. ${CALL_BACK}`,
     effect: { failHeatMult: 0.5 },
   },
 ];
