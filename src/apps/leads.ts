@@ -173,6 +173,13 @@ export default {
         success: outcome.success,
         bucks: outcome.bucks,
         heat: outcome.heat,
+        victim: {
+          name: target.name,
+          age: target.age,
+          occupation: target.occupation,
+          detail: target.detail.text,
+          defense: target.defense,
+        },
       });
       if (outcome.success) {
         game.dispatch({

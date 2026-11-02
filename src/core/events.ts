@@ -6,6 +6,17 @@
 import type { DaySummary } from "./economy.ts";
 import type { GameState, ScamId } from "./state.ts";
 
+/** Who a scam was run on, as much as the news needs to tell the story. */
+export interface VictimProfile {
+  readonly name: string;
+  readonly age: number;
+  readonly occupation: string;
+  /** One concrete fact, e.g. "Plays bridge on Thursdays." */
+  readonly detail: string;
+  /** The habit that beats scams, shown when they catch one. */
+  readonly defense: { readonly behavior: string; readonly line: string };
+}
+
 export type GameEvent =
   | {
       readonly type: "ScamResolved";
@@ -14,6 +25,7 @@ export type GameEvent =
       readonly success: boolean;
       readonly bucks: number;
       readonly heat: number;
+      readonly victim: VictimProfile;
     }
   | {
       readonly type: "BucksChanged";
