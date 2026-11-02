@@ -21,7 +21,7 @@ export const createDesktop = (
       <header><span data-title></span><button data-close title="Close">×</button></header>
       <div class="window-body"></div>
     </section>
-    <footer class="hint">Esc to stand up</footer>`;
+    <footer class="hint">[Esc] Stand up</footer>`;
   const taskbar = root.querySelector<HTMLElement>(".taskbar")!;
   const win = root.querySelector<HTMLElement>(".window")!;
   const title = root.querySelector<HTMLElement>("[data-title]")!;

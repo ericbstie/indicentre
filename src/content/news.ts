@@ -99,7 +99,7 @@ export const AMBIENT: ReadonlyArray<NewsItem> = (
     ],
     ["Ålesund ferry 40 minutes late, seagull blamed", "", ["local"]],
     [
-      "Report: overseas call centres 'more organised than ever'",
+      "Report: scam call centres 'more organised than ever'",
       `"Some of them have quarterly targets," one investigator said.`,
       ["police", "phone"],
     ],
