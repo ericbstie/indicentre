@@ -18,22 +18,13 @@ import { modalOpen } from "../hud/modal.ts";
 import { createNpc } from "../scene/npc.ts";
 import type { GameSystem } from "./system.ts";
 
-const LOOK = { shirt: 0xe8e4d8, skin: 0xb07850, hair: 0x2a2a2a };
-
-const mesh = (geo: THREE.BufferGeometry, color: number) =>
-  new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ color }));
-/** Red tie and a clipboard, so you can tell him from the coworkers. */
-const tie = () => {
-  const m = mesh(new THREE.BoxGeometry(0.07, 0.38, 0.02), 0xb02020);
-  m.position.set(0, 1.2, 0.21);
-  return m;
-};
-const clipboard = () => {
-  const m = mesh(new THREE.BoxGeometry(0.24, 0.32, 0.02), 0x8a6a48);
-  m.position.set(0.32, 1.05, 0.2);
-  m.rotation.x = -0.5;
-  return m;
-};
+/** The only one in a suit, so you can tell him from the coworkers. */
+const LOOK = {
+  shirt: 0xe8e4d8,
+  skin: 0xb07850,
+  hair: 0x2a2a2a,
+  outfit: "suit-male",
+} as const;
 
 /** His spot by the front-right wall, overseeing the floor. */
 const HOME = new THREE.Vector3(5.6, 0, 3.8);
@@ -58,7 +49,6 @@ export default {
     const { office, interactions } = world;
     const body = createNpc(LOOK, HOME).group;
     body.position.copy(HOME);
-    body.add(tie(), clipboard());
     office.scene.add(body);
     const walker = createWalker(body);
     walker.face(office.seat.position);
