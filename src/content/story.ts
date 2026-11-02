@@ -1,6 +1,6 @@
 // The 10-day arc (research/story-and-engagement.md). One scam type per day.
 // Voice: KPI culture and office life, never anyone's ethnicity or accent.
-import type { Beat } from "../story/story.ts";
+import type { Beat, Line } from "../story/story.ts";
 
 export const beats: ReadonlyArray<Beat> = [
   // Day 0: you get catfished. Day 10 mirrors it.
@@ -172,4 +172,244 @@ export const beats: ReadonlyArray<Beat> = [
     learn:
       "Real companies don't call you about your computer. Gift cards are never a payment. If a caller won't let you hang up or ask someone, hang up.",
   },
+  // Day 3: breather. Marketplace in the Shop; the first lead who says no.
+  {
+    id: "d3-start",
+    day: 3,
+    on: "dayStart",
+    introduces: "marketplace",
+    lines: [
+      {
+        speaker: "Mags",
+        line: "Boss is in a meeting about meetings. Breathe.",
+      },
+      {
+        speaker: "Mags",
+        line: "Marketplace ads are in the Shop now. Cheap price, nice photos, and you're \"away for work\", so it has to be shipped. Tools too. Buy one. You can't do this on charm.",
+      },
+    ],
+  },
+  {
+    id: "d3-pc",
+    day: 3,
+    on: "pc",
+    lines: [
+      {
+        speaker: "Mail",
+        line: 'Re: your listing. "My son says I only pay inside the app. So. Bye."',
+      },
+      { speaker: "Mags", line: "Happens. Sons are bad for business." },
+    ],
+    learn:
+      "Stay on the platform and pay through it. Never send a deposit to hold something you haven't seen.",
+  },
+  // Day 4: volume. Parcel texts, heat climbs, the first news report.
+  {
+    id: "d4-start",
+    day: 4,
+    on: "dayStart",
+    introduces: "parcel-sms",
+    lines: [
+      {
+        speaker: "Boss",
+        line: "Volume day! Parcel texts. Everybody is waiting for a parcel. Even me. It's a chair.",
+      },
+      {
+        speaker: "Boss",
+        line: "Watch the meter. Send a thousand of anything and someone notices.",
+      },
+    ],
+  },
+  {
+    id: "d4-end",
+    day: 4,
+    on: "dayEnd",
+    lines: [
+      {
+        speaker: "TV",
+        line: 'Evening news. A pensioner in Tromsø paid 2.99 to release a parcel she never ordered. Then her card paid 2,990 more. "I just wanted the parcel," she says.',
+      },
+      { speaker: "Priya", line: "Turn it over. It's always the same lady." },
+    ],
+    learn:
+      "Carriers don't text you to pay a fee by link. Check the tracking number on the carrier's own site.",
+  },
+  // Day 5: bank calls. Persondata makes them land.
+  {
+    id: "d5-start",
+    day: 5,
+    on: "dayStart",
+    introduces: "bank-impersonation",
+    lines: [
+      {
+        speaker: "Boss",
+        line: 'Quota goes up today. So does ambition. You are now "the fraud department".',
+      },
+      {
+        speaker: "Rohan",
+        line: "Buy the data package before you call. A pensioner who hears her own dog's name doesn't hang up.",
+      },
+    ],
+    learn:
+      'Your bank will never ask you to move money to a "safe account" or read out a code. Hang up and call the number on your card.',
+  },
+  // Day 6: the twist. The intro chat was the center's recruitment funnel.
+  {
+    id: "d6-start",
+    day: 6,
+    on: "dayStart",
+    introduces: "catfish",
+    free: true,
+    lines: [
+      {
+        speaker: "Tommy's screen",
+        line: 'Tommy\'s at lunch. His screen is unlocked. A chat window: "hiii sorry I think a friend gave me the wrong number??" Same photo. Same dog. Biscuit.',
+      },
+      {
+        speaker: "Tommy",
+        line: "Oh. You saw. Don't take it personal, {nick}. Half this floor got hired off that chat.",
+      },
+      {
+        speaker: "Boss",
+        line: "Aww, did you just get- sorry. Habit. It's page one of the script.",
+      },
+      {
+        speaker: "Boss",
+        line: "Romance desk is yours. Go easy today. Feelings take time.",
+      },
+    ],
+    learn:
+      'Reverse-search the profile photo. Count how often the camera "breaks". Someone real will video call before they ask for anything.',
+  },
+  // Day 7: the boss's bonus scheme, funded by lottery mails.
+  {
+    id: "d7-start",
+    day: 7,
+    on: "dayStart",
+    introduces: "lottery",
+    lines: [
+      {
+        speaker: "Boss",
+        line: "New bonus scheme! Bring in two juniors, get a cut of what they make. They bring in two each. It's called Team Growth. Do not draw it as a triangle.",
+      },
+      {
+        speaker: "Priya",
+        line: "And it's paid for with lottery mails. \"You've won.\" Nobody ever asks what they entered.",
+      },
+    ],
+    learn:
+      "You can't win a draw you never entered. If the money comes from recruiting people, not selling something, it's a pyramid.",
+  },
+  // Day 8: Tommy fights back. Account takeover.
+  {
+    id: "d8-start",
+    day: 8,
+    on: "dayStart",
+    introduces: "account-takeover",
+    lines: [
+      {
+        speaker: "Tommy",
+        line: 'Two of your leads got a text last night from "a friend". Telling them it\'s a scam. Wonder who.',
+      },
+      {
+        speaker: "Mags",
+        line: 'Two can play. Account takeover is in the Shop. You message them as their own friend: "sent you a code by mistake, can you send it back?"',
+      },
+    ],
+    learn:
+      "Never share a login code, even with a friend. A friend who needs your code is someone else.",
+  },
+  // Day 9: the big fish. Slow trust, one fake invoice.
+  {
+    id: "d9-start",
+    day: 9,
+    on: "dayStart",
+    introduces: "fake-invoice",
+    lines: [
+      {
+        speaker: "Boss",
+        line: "Big fish. Fjordvik Rør AS. Twelve vans, one accountant, and she's on holiday next week.",
+      },
+      {
+        speaker: "Boss",
+        line: 'Be polite. Be boring. Then one invoice with new bank details. And the meter is high, so if I hear the word "raid" I start shredding.',
+      },
+    ],
+    learn:
+      "A supplier who changes bank details by email is the oldest trick in accounts. Call them on the number you already have.",
+  },
+  // Day 10: the finale plays at the run's end (see `endings`).
+  {
+    id: "d10-start",
+    day: 10,
+    on: "dayStart",
+    lines: [
+      {
+        speaker: "Boss",
+        line: "Last day. You're level with Tommy. Top seller gets the window desk. And my respect. Mostly the desk.",
+      },
+      {
+        speaker: "Tommy",
+        line: "Lonely at the top, {nick}. Ha. I'm not lonely. I've got eleven chats open.",
+      },
+    ],
+  },
 ];
+
+export interface Ending {
+  readonly lines: ReadonlyArray<Line>;
+  readonly title: string;
+  /** One line above the "What you learned" list. */
+  readonly note?: string;
+}
+
+/** How a run ends. The win mirrors day 0: you catfish the catfisher. */
+export const endings: Readonly<Record<"won" | "shutdown" | "fired", Ending>> = {
+  won: {
+    title: "Top seller",
+    lines: [
+      {
+        speaker: "Phone",
+        line: "Day 10, 15:10. A new profile messages Tommy. A nice photo. A dog. A camera that's always broken.",
+      },
+      { speaker: "Tommy", line: "lol who is this. ok. you seem sweet tho" },
+      {
+        speaker: "Phone",
+        line: "16:40. A crisis. A small ask. Then a bigger one. Tommy pays both.",
+      },
+      {
+        speaker: "Boss",
+        line: "Top seller! I knew it. I said it. Nobody heard me say it, but I said it.",
+      },
+      {
+        speaker: "Boss",
+        line: 'Here. The "hot singles" account. You run the funnel now, {nick}.',
+      },
+      {
+        speaker: "Phone",
+        line: 'A new chat opens. Somewhere a junior is typing: "hi?"',
+      },
+    ],
+    note: "Never met. Camera always broken. A crisis, a small ask, a bigger one. On day 0 you missed every one. Tommy did too.",
+  },
+  shutdown: {
+    title: "Raided",
+    lines: [
+      { speaker: "Boss", line: "Shred everything! Not the coffee machine!" },
+      {
+        speaker: "TV",
+        line: "Police raided a call centre this morning. The servers left in evidence bags, still warm.",
+      },
+    ],
+  },
+  fired: {
+    title: "Fired",
+    lines: [
+      {
+        speaker: "Boss",
+        line: "Two days under quota. Your desk goes to Tommy.",
+      },
+      { speaker: "Tommy", line: "Thanks." },
+    ],
+  },
+};

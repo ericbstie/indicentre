@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { initialState, reduce } from "../core/state.ts";
 import { beats as arc } from "../content/story.ts";
+import { scams } from "../scams/registry.ts";
 import {
   type Beat,
   chose,
@@ -55,6 +56,12 @@ describe("scam schedule", () => {
     expect(shopSells(sched, "marketplace", 3)).toBe(true);
     expect(shopSells(sched, "phishing", 5)).toBe(false);
     expect(shopSells(sched, "lottery", 9)).toBe(false);
+  });
+
+  test("the arc introduces every registered scam exactly once", () => {
+    const ids = arc.flatMap((b) => (b.introduces ? [b.introduces] : []));
+    for (const s of scams) expect(ids).toContain(s.id);
+    expect(new Set(ids).size).toBe(ids.length);
   });
 
   test("beat ids are unique", () => {

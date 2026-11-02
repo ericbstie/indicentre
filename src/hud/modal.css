@@ -9,6 +9,8 @@
 
 .modal-card {
   max-width: 420px;
+  max-height: 90vh;
+  overflow-y: auto;
   padding: 20px 24px;
   color: var(--ink);
   background: var(--paper);

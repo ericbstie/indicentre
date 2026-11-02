@@ -1,5 +1,6 @@
 // Story beats: pure data types and the rules for which beat plays when.
 // The beats themselves live in src/content/story.ts; systems/story.ts plays them.
+import { quotaFor } from "../core/economy.ts";
 import { defineSlice } from "../core/slice.ts";
 import type { GameState, ScamId } from "../core/state.ts";
 import type { Call } from "./call.ts";
@@ -26,7 +27,7 @@ export interface Line {
 }
 
 export interface Beat {
-  /** Unique; recorded in `storySeen` so a beat plays once per run. */
+  /** Unique; recorded in the story slice so a beat plays once per run. */
   readonly id: string;
   /** In-game day. 0 is the prologue, played before day 1 starts. */
   readonly day: number;
@@ -89,6 +90,13 @@ export const dueBeats = (
   );
 };
 
+/** Placeholder values for story lines. */
+export const storyVars = (s: GameState) => ({
+  nick: story.get(s).choices["nick"] ?? "you",
+  quota: String(quotaFor(s.day)),
+  earned: String(s.earnedToday),
+});
+
 /** Replaces `{key}` with `vars[key]`; unknown keys stay as they are. */
 export const fill = (text: string, vars: Readonly<Record<string, string>>) =>
   text.replace(/\{(\w+)\}/g, (m, k: string) => vars[k] ?? m);
@@ -106,3 +114,9 @@ export const shopSells = (
   const intro = introOf(beats, scam);
   return intro !== undefined && !intro.free && intro.day <= day;
 };
+
+/** Every "What to spot" line the player has seen, in arc order. */
+export const learned = (beats: ReadonlyArray<Beat>, s: GameState) =>
+  beats.flatMap((b) =>
+    b.learn && story.get(s).seen.includes(b.id) ? [b.learn] : [],
+  );

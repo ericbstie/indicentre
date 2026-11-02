@@ -1,23 +1,16 @@
 import { PcOpened } from "../client/desktop.ts";
 import { beats } from "../content/story.ts";
 import { BossWatching, WatchRequested } from "../core/boss.ts";
-import { quotaFor } from "../core/economy.ts";
-import {
-  type DialogChoice,
-  type DialogNode,
-  dialogOpen,
-  openDialog,
-} from "../dialog/dialog.ts";
+import { dialogOpen, openDialog } from "../dialog/dialog.ts";
 import { modalOpen } from "../hud/modal.ts";
 import { type Call, callDialog } from "../story/call.ts";
+import { type LinesContext, linesDialog } from "../story/lines.ts";
 import {
   type Beat,
   chose,
   dueBeats,
-  fill,
-  type Line,
   sawBeat,
-  story,
+  storyVars,
   type Trigger,
 } from "../story/story.ts";
 import type { GameSystem } from "./system.ts";
@@ -30,42 +23,9 @@ import type { GameSystem } from "./system.ts";
 export default {
   id: "story",
   start({ game, world }) {
-    const vars = () => {
-      const s = game.state();
-      return {
-        nick: story.get(s).choices["nick"] ?? "you",
-        quota: String(quotaFor(s.day)),
-        earned: String(s.earnedToday),
-      };
-    };
-
-    /** Lines `i`.. as one dialog chain; a line with `choose` remembers the pick. */
-    const chain = (
-      lines: ReadonlyArray<Line>,
-      i: number,
-      after?: () => DialogNode,
-    ): DialogNode => {
-      const l = lines[i]!;
-      const last = i + 1 >= lines.length;
-      const reply = (label: string, pick?: () => void): DialogChoice => ({
-        label,
-        ...(pick && { pick }),
-        ...(last
-          ? after && { next: after }
-          : { next: () => chain(lines, i + 1, after) }),
-      });
-      const remember = (key: string, value: string) =>
-        reply(value, () => game.dispatch(chose(key, value)));
-      return {
-        speaker: l.speaker,
-        line: fill(l.line, vars()),
-        choices: l.choose
-          ? [
-              remember(l.choose.key, l.choose.options[0]),
-              remember(l.choose.key, l.choose.options[1]),
-            ]
-          : [reply("Go on")],
-      };
+    const ctx: LinesContext = {
+      vars: () => storyVars(game.state()),
+      remember: (key, value) => game.dispatch(chose(key, value)),
     };
 
     /** Puts the camera at the desk; returns a restore. */
@@ -111,7 +71,7 @@ export default {
         const stand = b.atDesk ? sitAtDesk() : undefined;
         const learn = b.learn;
         const debrief = learn
-          ? () => chain([{ speaker: "What to spot", line: learn }], 0)
+          ? () => linesDialog(ctx, [{ speaker: "What to spot", line: learn }])
           : undefined;
         const { call } = b;
         let started = false;
@@ -122,7 +82,7 @@ export default {
               return callDialog(call, (w) => (won = w), debrief);
             }
           : debrief;
-        openDialog(chain(b.lines, 0, tail), () => {
+        openDialog(linesDialog(ctx, b.lines, tail), () => {
           stand?.();
           // Settled once the player is done reading, so the boss's verdict
           // doesn't talk over the debrief. Leaving mid-call is a hang-up.
