@@ -46,6 +46,9 @@ export const sfx = {
     ),
   /** `delay` lets it follow a stinger instead of muddying it. */
   heat: (delay = 0) => play("square", [[150, 0, 0.07]], 0.3, delay),
+  /** One key press on a nearby keyboard; `gain` falls off with distance. */
+  key: (gain: number, delay: number) =>
+    play("square", [[2200 + Math.random() * 1400, 0, 0.018]], gain, delay),
   /** A soft footfall; the pitch wanders so steps don't sound looped. */
   step: () => play("triangle", [[75 + Math.random() * 30, 0, 0.09]], 0.3),
 };
