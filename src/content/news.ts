@@ -67,10 +67,10 @@ export const AMBIENT: ReadonlyArray<NewsItem> = (
   [
     ["Hamar council votes 7 to 6 to keep the Thursday market", ""],
     [
-      "BankCo repeats: it will never ask for your code",
+      "Fjellstad Bank repeats: it will never ask for your code",
       `"We print it on the receipts now," a spokesperson said.`,
     ],
-    ["Parcel volumes up 18% before Christmas, ParcelPost says", ""],
+    ["Parcel volumes up 18% before Christmas, QuickCrate says", ""],
     [
       "Bodø police: fake delivery texts are up again this autumn",
       `"If you didn't order anything, there is no parcel."`,

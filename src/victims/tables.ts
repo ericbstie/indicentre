@@ -347,7 +347,7 @@ export const DEFENSES: ReadonlyArray<
     behavior: "Checked the sender's address and saw it didn't match.",
     lines: [
       "That address isn't theirs. It's not even close.",
-      "BankCo doesn't spell its own name with a zero.",
+      "Fjellstad Bank has one d at the end. Your link has two.",
     ],
   },
   {
