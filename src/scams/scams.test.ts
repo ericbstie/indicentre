@@ -1,9 +1,10 @@
 import { describe, expect, test } from "bun:test";
 import { initialState, reduce } from "../core/state.ts";
-import type { Victim } from "../victims/types.ts";
+import { TAGS, type Victim } from "../victims/types.ts";
 import phishing from "./phishing.ts";
 import { availableScams, scams, starterScams } from "./registry.ts";
-import { fitTags, personalize, resolveScam } from "./resolve.ts";
+import { personalize, pulls, resolveScam } from "./resolve.ts";
+import { CHANNELS } from "./types.ts";
 
 const victim = (over: Partial<Victim> = {}): Victim => ({
   id: "x",
@@ -22,14 +23,30 @@ const victim = (over: Partial<Victim> = {}): Victim => ({
 const template = (id: string) => phishing.templates.find((t) => t.id === id)!;
 
 describe("scam data", () => {
-  test("ids are unique and every scam is well formed", () => {
+  test("ids are unique", () => {
     expect(new Set(scams.map((s) => s.id)).size).toBe(scams.length);
-    for (const s of scams) {
-      expect(s.templates.length).toBeGreaterThan(0);
-      expect(s.lesson.length).toBeGreaterThan(0);
-      for (const t of s.templates) expect(t.redFlags.length).toBeGreaterThan(0);
-    }
   });
+
+  for (const s of scams) {
+    test(`${s.id} is well formed`, () => {
+      expect(CHANNELS).toContain(s.channel);
+      expect(s.minutes).toBeGreaterThan(0);
+      expect(s.payout).toBeGreaterThan(0);
+      expect(s.heat.fail).toBeGreaterThan(s.heat.success);
+      expect(s.fitTags.length).toBeGreaterThan(0);
+      for (const tag of s.fitTags) expect(TAGS).toContain(tag);
+      expect(s.whatToSpot).toHaveLength(3);
+      for (const line of [...s.whatToSpot, s.successLine])
+        expect(line.trim().length).toBeGreaterThan(0);
+      expect(s.templates.length).toBeGreaterThan(0);
+      const steps = [...(s.warmups ?? []), ...s.templates];
+      expect(new Set(steps.map((t) => t.id)).size).toBe(steps.length);
+      for (const t of steps) {
+        expect(t.redFlags.length).toBeGreaterThan(0);
+        expect(Object.keys(t.lures).length).toBeGreaterThan(0);
+      }
+    });
+  }
 
   test("each scam lives in src/scams/<id>.ts", async () => {
     for (const s of scams)
@@ -47,8 +64,10 @@ describe("scam data", () => {
 });
 
 describe("resolution", () => {
-  test("fitTags are the template's lures", () => {
-    expect(fitTags(template("account-locked"))).toEqual([
+  test("a template pulls the scam's fitTags plus its own lures", () => {
+    expect(pulls(phishing, template("account-locked"))).toEqual([
+      "parcel",
+      "bank",
       "authority",
       "urgency",
     ]);

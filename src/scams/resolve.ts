@@ -5,9 +5,16 @@ import { type Attempt, attempt } from "../victims/resistance.ts";
 import { firstName, type Tag, type Victim } from "../victims/types.ts";
 import { LURES, type ScamDef, type ScamTemplate } from "./types.ts";
 
-/** Victim weakness tags this template pulls (its lures with weight > 0). */
-export const fitTags = (t: ScamTemplate): ReadonlyArray<Tag> =>
-  LURES.filter((l) => (t.lures[l] ?? 0) > 0);
+/**
+ * Victim weakness tags a template pulls: the scam's fitTags plus the
+ * template's lures with weight > 0.
+ */
+export const pulls = (scam: ScamDef, t: ScamTemplate): ReadonlyArray<Tag> => [
+  ...new Set<Tag>([
+    ...scam.fitTags,
+    ...LURES.filter((l) => (t.lures[l] ?? 0) > 0),
+  ]),
+];
 
 export type Outcome = Attempt & {
   readonly bucks: number;
@@ -31,7 +38,7 @@ export const resolveScam = (
   template: ScamTemplate,
   mods: Modifiers = NO_MODS,
 ): Outcome => {
-  const a = attempt(rng, victim, fitTags(template), mods.chanceBonus);
+  const a = attempt(rng, victim, pulls(scam, template), mods.chanceBonus);
   const bucks = a.success ? payout(scam, victim) : 0;
   const heat = a.success ? scam.heat.success : failHeat(scam, mods);
   return {
