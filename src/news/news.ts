@@ -34,7 +34,7 @@ export interface NewsItem {
 }
 
 /** Scam bucks are game money; the news reports kroner, rounded like a paper would. */
-export const BUCKS_TO_KR = 650;
+const BUCKS_TO_KR = 650;
 
 export const kroner = (bucks: number) =>
   (Math.round((bucks * BUCKS_TO_KR) / 100) * 100).toLocaleString("en-US");
@@ -55,7 +55,7 @@ const sentence = (s: string) => {
 export const profileLine = (v: VictimProfile) =>
   `${firstName(v)}, ${v.age}. ${sentence(v.detail)}`;
 
-export const slotsFor = (
+const slotsFor = (
   rng: Rng,
   e: EventOf<"ScamResolved">,
 ): Record<string, string> => ({
@@ -69,7 +69,7 @@ export const slotsFor = (
   ).toLowerCase(),
 });
 
-export const tagsFor = ({ victim: { age } }: EventOf<"ScamResolved">) => {
+const tagsFor = ({ victim: { age } }: EventOf<"ScamResolved">) => {
   const tags: NewsTag[] = ["money"];
   if (age >= 65) tags.push("elderly");
   if (age < 26) tags.push("young");
@@ -89,10 +89,7 @@ export const victimStory = (rng: Rng, e: EventOf<"ScamResolved">): NewsItem => {
 };
 
 /** The story the TV runs when the target caught the scam: the lesson, told by them. */
-export const spottedStory = (
-  rng: Rng,
-  e: EventOf<"ScamResolved">,
-): NewsItem => {
+const spottedStory = (rng: Rng, e: EventOf<"ScamResolved">): NewsItem => {
   const slots = slotsFor(rng, e);
   return {
     headline: fill(pick(rng, SPOTTED_HEADLINES), slots),

@@ -75,12 +75,14 @@ src/
     system.ts          GameSystem, SystemContext {game, world}
     index.ts           generated
     <id>.ts            clock.ts, welcome.ts, NPCs, news TV, boss...
-  content/             static text and data (mails, coworkers, later news)
+  content/             static text and data (mails, coworkers, news)
   dialog/              openDialog({ speaker, line, choices }) overlay
   audio/               Web Audio, browser-only: engine (buses, mute),
                        babble (gibberish voices), speak, music, sfx
   desktop/             PC overlay shell (desktop.ts/.css), html.ts esc()
-  scene/               three.js: office, player, npc, interact registry
+  scene/               three.js: office, player, npc, interact registry, tv,
+                       screenText (text on a canvas-textured plane)
+  news/                pure news model, story generator, feed queue
   hud/                 HUD overlay (hud.ts/.css), modal.ts one-button blocking card
 scripts/
   gen.ts               writes the three generated index.ts files

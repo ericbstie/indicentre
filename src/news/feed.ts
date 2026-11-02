@@ -28,5 +28,3 @@ export const createFeed = (rng: Rng, ambient: ReadonlyArray<NewsItem>) => {
     },
   };
 };
-
-export type Feed = ReturnType<typeof createFeed>;
