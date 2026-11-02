@@ -33,3 +33,31 @@ export const sample = <T>(rng: Rng, xs: ReadonlyArray<T>, k: number): T[] => {
   }
   return out;
 };
+
+/** Float in [min, max). */
+export const range = (rng: Rng, min: number, max: number) =>
+  min + rng() * (max - min);
+
+/** Pick by weight. Items with weight <= 0 are never picked. */
+export const weighted = <T>(
+  rng: Rng,
+  xs: ReadonlyArray<T>,
+  weight: (x: T) => number,
+): T => {
+  const total = xs.reduce((n, x) => n + Math.max(0, weight(x)), 0);
+  if (total <= 0) throw new Error("weighted pick with no positive weights");
+  let r = rng() * total;
+  for (const x of xs) {
+    r -= Math.max(0, weight(x));
+    if (r < 0) return x;
+  }
+  return xs.findLast((x) => weight(x) > 0)!;
+};
+
+/** Stable 32-bit seed from a string (FNV-1a), e.g. `?seed=playtest-3`. */
+export const seedFrom = (s: string) => {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++)
+    h = Math.imul(h ^ s.charCodeAt(i), 0x01000193);
+  return h >>> 0;
+};
