@@ -9,7 +9,8 @@ import {
   SHIFT_MINUTES,
   WIN_DAY,
 } from "../src/core/economy.ts";
-import { scams, starterScams } from "../src/scams/registry.ts";
+import { beats } from "../src/content/story.ts";
+import { scams } from "../src/scams/registry.ts";
 import {
   failHeat,
   payout,
@@ -167,7 +168,12 @@ interface Run {
 
 const run = (seed: number, pl: Player): Run => {
   const rng = seeded(seed);
-  let s = initialState(starterScams);
+  // The story hands out day 1's scam for free.
+  let s = initialState(
+    beats.flatMap((b) =>
+      b.day <= 1 && b.free && b.introduces ? [b.introduces] : [],
+    ),
+  );
   const bought: Array<[string, number]> = [];
   while (s.status === "playing") {
     const day = s.day;

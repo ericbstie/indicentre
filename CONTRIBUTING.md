@@ -88,7 +88,7 @@ src/
   scams/               REGISTRY: one scam per file, plus the scam system
     types.ts           Lure, ScamTemplate, ScamDef
     index.ts           generated, gitignored
-    registry.ts        scams (shop order), starterScams, availableScams
+    registry.ts        scams (shop order), availableScams
     resolve.ts         fitTags(), resolveScam(victim) -> Outcome{actions}
     <id>.ts            a scam
   victims/             procedural victims: tables, generator, hints,
@@ -163,7 +163,7 @@ synchronous `Game` facade and stays Effect-free. New long-lived services
 | I want to add…                         | Touch                                                           |
 | -------------------------------------- | --------------------------------------------------------------- |
 | a desktop app                          | `bun run new:app <id>` → `src/apps/<id>.ts` + `.css`            |
-| a scam type                            | `bun run new:scam <id>` → `src/scams/<id>.ts`                   |
+| a scam type                            | `bun run new:scam <id>` + its intro beat in `content/story.ts`  |
 | an NPC, prop, TV, timer, boss reaction | `bun run new:system <id>` → `src/systems/<id>.ts`               |
 | text (mails, dialogue, news)           | `src/content/<topic>.ts`                                        |
 | a story scene or a day's new scam      | a beat in `src/content/story.ts`                                |

@@ -5,7 +5,7 @@ import catfish from "./catfish.ts";
 import techSupport from "./tech-support.ts";
 import { TAGS, type Victim } from "../victims/types.ts";
 import phishing from "./phishing.ts";
-import { availableScams, scams, starterScams } from "./registry.ts";
+import { availableScams, scams } from "./registry.ts";
 import {
   personalize,
   pulls,
@@ -59,10 +59,6 @@ describe("scam data", () => {
   test("each scam lives in src/scams/<id>.ts", async () => {
     for (const s of scams)
       expect(await Bun.file(`src/scams/${s.id}.ts`).exists()).toBe(true);
-  });
-
-  test("phishing is a starter scam", () => {
-    expect(starterScams).toContain("phishing");
   });
 
   test("locked scams are not available", () => {

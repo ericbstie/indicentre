@@ -38,7 +38,7 @@ export interface ScamDef {
   readonly id: ScamId;
   readonly name: string;
   readonly channel: Channel;
-  /** Scam bucks to unlock; 0 = available from the start. */
+  /** Shop price once the story introduces it (src/content/story.ts). */
   readonly price: number;
   /** A tool (src/shop/tools.ts) the Shop wants you to own before selling this. */
   readonly requires?: ToolId;
