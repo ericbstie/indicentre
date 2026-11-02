@@ -9,6 +9,29 @@ permissions:
   contents: read
 
 jobs:
+  # Two PRs that are each green alone can break main together (news made
+  # ScamResolved.victim required while the catalog added an emit without it).
+  # A PR must contain the current main, so its checks ran on what will land.
+  fresh:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - name: Branch contains latest main
+        run: |
+          git fetch -q origin "$BASE"
+          if ! git merge-base --is-ancestor FETCH_HEAD HEAD; then
+            echo "::error::Behind $BASE by $(git rev-list --count HEAD..FETCH_HEAD) commit(s). Rebase on origin/$BASE, rerun checks, then merge."
+            exit 1
+          fi
+        env:
+          BASE: ${{ github.base_ref }}
+
   check:
     runs-on: ubuntu-latest
     timeout-minutes: 10
