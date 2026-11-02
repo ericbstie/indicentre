@@ -62,12 +62,13 @@ src/
     index.ts           generated
     <id>.ts, <id>.css  an app and its styles
   scams/               REGISTRY: one scam per file, plus the scam system
-    types.ts           Lure, Target, ScamTemplate, ScamDef
+    types.ts           Lure, ScamTemplate, ScamDef
     index.ts           generated
     registry.ts        scams (shop order), starterScams, scamById
-    targets.ts         procedural targets from archetypes
-    resolve.ts         successChance(), resolveScam() -> Outcome{actions}
+    resolve.ts         fitTags(), resolveScam(victim) -> Outcome{actions}
     <id>.ts            a scam
+  victims/             procedural victims: tables, generator, hints,
+                       resistance (odds), reveal(level) view
   systems/             REGISTRY: one gameplay system per file
     system.ts          GameSystem, SystemContext {game, world}
     index.ts           generated
@@ -101,17 +102,17 @@ synchronous `Game` facade and stays Effect-free. New long-lived services
 
 ## Which file do I touch for X?
 
-| I want to add…                         | Touch                                                         |
-| -------------------------------------- | ------------------------------------------------------------- |
-| a desktop app                          | `bun run new:app <id>` → `src/apps/<id>.ts` + `.css`          |
-| a scam type                            | `bun run new:scam <id>` → `src/scams/<id>.ts`                 |
-| an NPC, prop, TV, timer, boss reaction | `bun run new:system <id>` → `src/systems/<id>.ts`             |
-| text (mails, dialogue, news)           | `src/content/<topic>.ts`                                      |
-| a reaction to money/heat/day/scams     | a system that calls `game.on(...)`                            |
-| a new kind of event                    | append a variant to `core/events.ts`                          |
-| new persistent state                   | append field + `Action` + `reduce` case + test in `state.ts`  |
-| a new lure                             | `LURES` in `scams/types.ts` + every archetype in `targets.ts` |
-| shared colors                          | `client/tokens.css` (rarely; prefer your own `.css`)          |
+| I want to add…                         | Touch                                                        |
+| -------------------------------------- | ------------------------------------------------------------ |
+| a desktop app                          | `bun run new:app <id>` → `src/apps/<id>.ts` + `.css`         |
+| a scam type                            | `bun run new:scam <id>` → `src/scams/<id>.ts`                |
+| an NPC, prop, TV, timer, boss reaction | `bun run new:system <id>` → `src/systems/<id>.ts`            |
+| text (mails, dialogue, news)           | `src/content/<topic>.ts`                                     |
+| a reaction to money/heat/day/scams     | a system that calls `game.on(...)`                           |
+| a new kind of event                    | append a variant to `core/events.ts`                         |
+| new persistent state                   | append field + `Action` + `reduce` case + test in `state.ts` |
+| a new lure                             | `LURES` in `scams/types.ts` + `TAGS` in `victims/types.ts`   |
+| shared colors                          | `client/tokens.css` (rarely; prefer your own `.css`)         |
 
 A system gets `{ game, world }`: add meshes with
 `world.office.scene.add(...)`, make them usable with

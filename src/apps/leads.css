@@ -73,3 +73,18 @@
   background: #fff8d0;
   border-left: 4px solid var(--warn);
 }
+
+.leads button[data-send] small {
+  display: block;
+  font-size: 11px;
+  opacity: 0.85;
+}
+
+.card > small + small {
+  margin-top: 4px;
+}
+
+.result blockquote {
+  margin: 8px 0;
+  font-style: italic;
+}

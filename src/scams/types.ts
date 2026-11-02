@@ -1,24 +1,9 @@
 import type { ScamId } from "../core/state.ts";
 
-/** Psychological levers a scam pulls. Targets have a susceptibility to each. */
+/** Psychological levers a scam pulls. Each is also a victim weakness tag. */
 export const LURES = ["authority", "urgency", "greed", "curiosity"] as const;
 export type Lure = (typeof LURES)[number];
 export type LureWeights = Readonly<Record<Lure, number>>;
-
-export interface Target {
-  readonly id: string;
-  readonly name: string;
-  readonly age: number;
-  readonly archetype: string;
-  /** What the player "knows" about them; hints at which lure fits. */
-  readonly notes: ReadonlyArray<string>;
-  /** 0..1 per lure. */
-  readonly susceptibility: LureWeights;
-  /** 0..1, how likely they are to spot red flags. */
-  readonly savvy: number;
-  /** Payout multiplier, ~0.5..2. */
-  readonly wealth: number;
-}
 
 /** One concrete message/script the player can send. */
 export interface ScamTemplate {
