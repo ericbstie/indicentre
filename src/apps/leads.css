@@ -103,6 +103,10 @@
   border-radius: 6px;
 }
 
+.dossier .lesson {
+  margin: 8px 0 0;
+}
+
 .dossier h4 {
   margin: 0 0 8px;
 }

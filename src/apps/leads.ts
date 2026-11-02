@@ -85,6 +85,7 @@ const viewDossier = (v: VictimView, best?: { label: string; p: number }) => {
               : ""
           }</dd>
         </dl>
+        <p class="lesson"><b>What ${esc(firstName(v))} could have hidden:</b> ${esc(v.recent.hide)}</p>
       </section>`
     : `<p class="empty">No dossier. Persondata in the Shop builds one from public posts.</p>`;
 };
