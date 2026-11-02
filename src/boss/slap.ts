@@ -1,6 +1,6 @@
 import "./slap.css";
 
-export const SLAP_MS = 700;
+const SLAP_MS = 700;
 
 /** Cartoon slap: the screen jolts and flashes red, then settles. */
 export const slap = () =>

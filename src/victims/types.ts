@@ -21,15 +21,7 @@ export const TAGS = [
 ] as const;
 export type Tag = (typeof TAGS)[number];
 
-export const AGE_BANDS = [
-  "20s",
-  "30s",
-  "40s",
-  "50s",
-  "60s",
-  "70s",
-  "80s",
-] as const;
+const AGE_BANDS = ["20s", "30s", "40s", "50s", "60s", "70s", "80s"] as const;
 export type AgeBand = (typeof AGE_BANDS)[number];
 
 export const ageBand = (age: number): AgeBand =>

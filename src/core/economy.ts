@@ -8,8 +8,8 @@ export const SHIFT_MINUTES = 8 * 60;
 export const OVERNIGHT_COOLDOWN = 25;
 
 /** Day 1 quota and how much it rises each day. */
-export const QUOTA_BASE = 60;
-export const QUOTA_STEP = 15;
+const QUOTA_BASE = 60;
+const QUOTA_STEP = 15;
 export const quotaFor = (day: number) => QUOTA_BASE + QUOTA_STEP * (day - 1);
 
 /** Missing the quota this many days in a row gets you fired. */

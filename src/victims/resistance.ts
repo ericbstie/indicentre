@@ -15,7 +15,7 @@ export const fit = (v: Victim, fitTags: ReadonlyArray<Tag>) =>
     ? fitTags.filter((t) => v.weaknesses.includes(t)).length / fitTags.length
     : 0;
 
-export const isCountered = (v: Victim, fitTags: ReadonlyArray<Tag>) =>
+const isCountered = (v: Victim, fitTags: ReadonlyArray<Tag>) =>
   fitTags.some((t) => v.defense.counters.includes(t));
 
 /**

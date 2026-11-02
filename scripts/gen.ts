@@ -12,7 +12,7 @@ interface Registry {
   readonly exportName: string;
 }
 
-export const REGISTRIES: ReadonlyArray<Registry> = [
+const REGISTRIES: ReadonlyArray<Registry> = [
   {
     dir: "src/apps",
     typeName: "DesktopApp",
