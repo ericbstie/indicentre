@@ -1,6 +1,11 @@
-import { pick, type Rng } from "../core/rng.ts";
+import { noRepeat, pick, type Rng } from "../core/rng.ts";
 import { DEFENSES } from "./tables.ts";
+import { voiced } from "./generate.ts";
 import type { Defense, Tag, Victim } from "./types.ts";
+
+// A defense the scam ran into, rather than the victim's own: say a
+// different line from last time.
+const pickLine = noRepeat();
 
 export const MIN_CHANCE = 0.05;
 export const MAX_CHANCE = 0.9;
@@ -67,7 +72,9 @@ export const attempt = (
   return {
     success: false,
     chance,
-    defense: fitting.length ? pick(rng, fitting) : v.defense,
+    defense: fitting.length
+      ? voiced(rng, pick(rng, fitting), pickLine)
+      : v.defense,
   };
 };
 

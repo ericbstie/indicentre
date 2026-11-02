@@ -18,6 +18,9 @@ export const seeded = (seed: number): Rng => {
 export const int = (rng: Rng, min: number, max: number) =>
   min + Math.floor(rng() * (max - min + 1));
 
+/** `pick`, or anything that picks like it (see `noRepeat`). */
+export type Picker = <T>(rng: Rng, xs: ReadonlyArray<T>) => T;
+
 export const pick = <T>(rng: Rng, xs: ReadonlyArray<T>): T => {
   const x = xs[Math.floor(rng() * xs.length)];
   if (x === undefined) throw new Error("pick from empty list");
@@ -29,9 +32,9 @@ export const pick = <T>(rng: Rng, xs: ReadonlyArray<T>): T => {
  * returns it twice in a row (pools of 2+). Keep one per feature, so lines
  * don't repeat back to back across batches.
  */
-export const noRepeat = () => {
+export const noRepeat = (): Picker => {
   const last = new WeakMap<ReadonlyArray<unknown>, unknown>();
-  return <T>(rng: Rng, xs: ReadonlyArray<T>): T => {
+  return (rng, xs) => {
     const prev = last.get(xs);
     const x = pick(rng, xs.length > 1 ? xs.filter((y) => y !== prev) : xs);
     last.set(xs, x);

@@ -15,13 +15,13 @@ const PRONOUNS = /\b(he|she|him|her|his|hers)\b/i;
 const all = [
   ...Object.values(FRAGMENTS).flat(),
   ...DETAILS.map((d) => d.text),
-  ...DEFENSES.map((d) => d.behavior),
+  ...DEFENSES.flatMap((d) => [d.behavior, ...d.lines]),
 ];
 
 describe("hint content", () => {
-  test("30+ fragments, every tag has some", () => {
-    expect(Object.values(FRAGMENTS).flat().length).toBeGreaterThanOrEqual(30);
-    for (const t of TAGS) expect(FRAGMENTS[t].length).toBeGreaterThan(1);
+  test("60+ fragments, 5+ per tag", () => {
+    expect(Object.values(FRAGMENTS).flat().length).toBeGreaterThanOrEqual(60);
+    for (const t of TAGS) expect(FRAGMENTS[t].length).toBeGreaterThanOrEqual(5);
   });
 
   test("voice rules: no stock phrases, no gendered pronouns", () => {

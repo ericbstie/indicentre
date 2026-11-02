@@ -14,7 +14,7 @@ import {
 } from "../scams/resolve.ts";
 import { type Modifiers, modifiersFor } from "../shop/tools.ts";
 import type { Channel, ScamDef, ScamTemplate } from "../scams/types.ts";
-import { generateVictims, namesUsedOn } from "../victims/generate.ts";
+import { daily, generateVictims } from "../victims/generate.ts";
 import { fitLabel, successChance } from "../victims/resistance.ts";
 import { writeHints } from "../victims/hints.ts";
 import { firstName, type Victim } from "../victims/types.ts";
@@ -30,7 +30,7 @@ interface Lead {
   readonly view: VictimView;
 }
 
-const namesToday = namesUsedOn();
+const today = daily();
 
 const drawLeads = (
   seed: number,
@@ -38,12 +38,11 @@ const drawLeads = (
   level: RevealLevel,
 ): ReadonlyArray<Lead> => {
   const rng = seeded(seed);
-  return generateVictims(rng, LEADS_PER_BATCH, namesToday(day)).map(
-    (victim) => ({
-      victim,
-      view: reveal(victim, writeHints(rng, victim), level),
-    }),
-  );
+  const t = today(day);
+  return generateVictims(rng, LEADS_PER_BATCH, t).map((victim) => ({
+    victim,
+    view: reveal(victim, writeHints(rng, victim, t.pickLine), level),
+  }));
 };
 
 const CHANNEL: Record<Channel, string> = {

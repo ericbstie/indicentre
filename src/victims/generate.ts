@@ -1,4 +1,13 @@
-import { int, pick, range, type Rng, sample, weighted } from "../core/rng.ts";
+import {
+  int,
+  noRepeat,
+  pick,
+  type Picker,
+  range,
+  type Rng,
+  sample,
+  weighted,
+} from "../core/rng.ts";
 import {
   DEFENSES,
   DETAILS,
@@ -6,9 +15,31 @@ import {
   LAST_NAMES,
   OCCUPATIONS,
 } from "./tables.ts";
-import { firstName, type Victim } from "./types.ts";
+import { type Defense, firstName, type Victim } from "./types.ts";
 
 const MAX_NAME_TRIES = 50;
+
+/**
+ * What one day's leads have used so far: names (first and full) and, per
+ * line pool, the line said last. `newDay()` starts clean.
+ */
+const newDay = () => ({
+  names: new Set<string>(),
+  pickLine: noRepeat(),
+});
+type Today = ReturnType<typeof newDay>;
+
+/** A defense habit with one of its lines. */
+export const voiced = (
+  rng: Rng,
+  d: (typeof DEFENSES)[number],
+  pickLine: Picker = pick,
+): Defense => ({
+  id: d.id,
+  behavior: d.behavior,
+  line: pickLine(rng, d.lines),
+  counters: d.counters,
+});
 
 const fits = (age: number, d: { minAge?: number; maxAge?: number }) =>
   age >= (d.minAge ?? 0) && age <= (d.maxAge ?? Infinity);
@@ -27,11 +58,11 @@ const drawName = (rng: Rng, used: ReadonlySet<string>) => {
   return name;
 };
 
-/** One victim whose first and full name are not in `used`. */
+/** One victim whose first and full name `today` hasn't used. */
 export const generateVictim = (
   rng: Rng,
   id: string,
-  used: ReadonlySet<string> = new Set(),
+  today: Today = newDay(),
 ): Victim => {
   const job = weighted(rng, OCCUPATIONS, (o) => o.w);
   const age = int(rng, job.age[0], job.age[1]);
@@ -43,7 +74,7 @@ export const generateVictim = (
   const defense = weighted(rng, DEFENSES, (d) =>
     d.counters.includes(detail.tag) ? 0 : d.w,
   );
-  const name = drawName(rng, used);
+  const name = drawName(rng, today.names);
   return {
     id,
     name,
@@ -54,41 +85,33 @@ export const generateVictim = (
     wealth: range(rng, ...job.wealth),
     weaknesses,
     detail: { text: detail.text, tag: detail.tag },
-    defense: {
-      id: defense.id,
-      behavior: defense.behavior,
-      line: defense.line,
-      counters: defense.counters,
-    },
+    defense: voiced(rng, defense, today.pickLine),
   };
 };
 
 /**
  * n victims, none sharing a first or full name with each other or with
- * `used`. Their names are added to `used`.
+ * anyone `today` has seen. Their names are added to `today`.
  */
 export const generateVictims = (
   rng: Rng,
   n: number,
-  used = new Set<string>(),
+  today: Today = newDay(),
   prefix = "v",
 ) =>
   Array.from({ length: n }, (_, i) => {
-    const v = generateVictim(rng, `${prefix}${i}`, used);
-    used.add(v.name).add(firstName(v));
+    const v = generateVictim(rng, `${prefix}${i}`, today);
+    today.names.add(v.name).add(firstName(v));
     return v;
   });
 
-/**
- * The names used so far on a day, for `generateVictims`. Asking for a new
- * day starts an empty set, so nobody comes back the same day.
- */
-export const namesUsedOn = () => {
+/** `today(day)`: the same `newDay()` all day, a fresh one when the day changes. */
+export const daily = () => {
   let day = -1;
-  const used = new Set<string>();
+  let today = newDay();
   return (d: number) => {
-    if (d !== day) used.clear();
+    if (d !== day) today = newDay();
     day = d;
-    return used;
+    return today;
   };
 };

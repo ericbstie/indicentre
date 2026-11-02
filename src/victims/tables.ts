@@ -295,48 +295,72 @@ export const DETAILS: ReadonlyArray<
 ];
 
 /** The tell. Some victims win, and when they do this is what the player learns. */
-export const DEFENSES: ReadonlyArray<Defense & { readonly w: number }> = [
+export const DEFENSES: ReadonlyArray<
+  Omit<Defense, "line"> & {
+    readonly w: number;
+    /** What they might say; one per victim, never the last one used. */
+    readonly lines: readonly [string, string, ...string[]];
+  }
+> = [
   {
     w: 3,
     id: "calls-back",
     counters: ["bank"],
     behavior: "Called the bank on the number printed on the card instead.",
-    line: "I'll ring the number on my card and ask them myself. Oh, you're busy? Funny, that.",
+    lines: [
+      "I'll ring the number on my card and ask them myself. Oh, you're busy? Funny, that.",
+      "I'll ring the bank myself. If it's you, you'll pick up.",
+    ],
   },
   {
     w: 2,
     id: "asks-family",
     counters: ["tech-help", "fear"],
     behavior: "Asked a family member before doing anything.",
-    line: "My daughter said if anyone calls about my computer I hang up. So. Bye.",
+    lines: [
+      "My daughter said if anyone calls about my computer I hang up. So. Bye.",
+      "Let me just ask my son. Hello? Oh, you've gone quiet.",
+    ],
   },
   {
     w: 2,
     id: "checks-sender",
     counters: ["parcel", "urgency", "curiosity"],
     behavior: "Checked the sender's address and saw it didn't match.",
-    line: "That address isn't theirs. It's not even close.",
+    lines: [
+      "That address isn't theirs. It's not even close.",
+      "BankCo doesn't spell its own name with a zero.",
+    ],
   },
   {
     w: 2,
     id: "uses-app",
     counters: ["parcel"],
     behavior: "Opened the shop's own app instead of the link. No fee there.",
-    line: "The app says it's out for delivery. So what's this, then?",
+    lines: [
+      "The app says it's out for delivery. So what's this, then?",
+      "Nothing in the app. Nothing on my doorstep either. Bye.",
+    ],
   },
   {
     w: 2,
     id: "sleeps-on-it",
     counters: ["urgency", "greed"],
     behavior: "Waited a day. The 'deadline' passed and nothing happened.",
-    line: "If it's real it'll still be real tomorrow.",
+    lines: [
+      "If it's real it'll still be real tomorrow.",
+      "Twenty-four hours, it says. I'll have a look in forty-eight.",
+    ],
   },
   {
     w: 2,
     id: "no-fee-for-prizes",
     counters: ["greed"],
     behavior: "Knew that money you have to pay a fee to receive never arrives.",
-    line: "I pay you so you can pay me? No. I didn't enter anything.",
+    lines: [
+      "I pay you so you can pay me? No. I didn't enter anything.",
+      "I've never won a raffle in my life. I'm not starting with a fee.",
+    ],
   },
   {
     w: 2,
@@ -344,7 +368,10 @@ export const DEFENSES: ReadonlyArray<Defense & { readonly w: number }> = [
     counters: ["romance", "lonely"],
     behavior:
       "Asked for a video call. The other side suddenly had a broken camera.",
-    line: "Twelve weeks and your camera's still broken? Buy a new phone.",
+    lines: [
+      "Twelve weeks and your camera's still broken? Buy a new phone.",
+      "Camera on, or I'm logging off. Your choice.",
+    ],
   },
   {
     w: 2,
@@ -352,35 +379,50 @@ export const DEFENSES: ReadonlyArray<Defense & { readonly w: number }> = [
     counters: ["romance"],
     behavior:
       "Reverse-searched the profile photo. It belonged to a dentist in Ohio.",
-    line: "Your photo is on a teeth-whitening ad. Nice teeth, though.",
+    lines: [
+      "Your photo is on a teeth-whitening ad. Nice teeth, though.",
+      "Funny. You're also in a brochure for a dentist.",
+    ],
   },
   {
     w: 2,
     id: "no-upfront-pay",
     counters: ["job"],
     behavior: "Refused a job that wanted money before the first day.",
-    line: "Employers pay me. That's the whole arrangement.",
+    lines: [
+      "Employers pay me. That's the whole arrangement.",
+      "A starter fee? For a job? Do I pay for my own payslip as well?",
+    ],
   },
   {
     w: 2,
     id: "no-remote-access",
     counters: ["tech-help", "fear"],
     behavior: "Wouldn't install anything a stranger asked for.",
-    line: "Nobody is getting into this computer. I can barely get into it.",
+    lines: [
+      "Nobody is getting into this computer. I can barely get into it.",
+      "Install what? No. I don't even install the printer updates.",
+    ],
   },
   {
     w: 1,
     id: "safe-word",
     counters: ["family"],
     behavior: "Asked for the family safe word. The 'grandson' didn't know it.",
-    line: "What's the word, then? ... That's what I thought.",
+    lines: [
+      "What's the word, then? ... That's what I thought.",
+      "Nice try. My grandson has never once called me that.",
+    ],
   },
   {
     w: 2,
     id: "looks-up-number",
     counters: ["authority", "fear"],
     behavior: "Looked up the office's real number and asked them directly.",
-    line: "I phoned the actual office. They'd never heard of you.",
+    lines: [
+      "I phoned the actual office. They'd never heard of you.",
+      "The real number's on their website. Shall we both ring it now?",
+    ],
   },
   {
     w: 1,
@@ -388,7 +430,10 @@ export const DEFENSES: ReadonlyArray<Defense & { readonly w: number }> = [
     counters: ["authority", "fear", "bank"],
     behavior:
       "Forwarded the message to the bank's fraud team and blocked the number.",
-    line: "Forwarded. Blocked. Back to my crossword.",
+    lines: [
+      "Forwarded. Blocked. Back to my crossword.",
+      "That's going straight to the fraud team. They know me there.",
+    ],
   },
 ];
 
