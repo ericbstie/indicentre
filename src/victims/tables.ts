@@ -255,7 +255,7 @@ export const DETAILS: ReadonlyArray<
   {
     w: 2,
     tag: "greed",
-    text: "Bought a scratch card every Friday for nine years. Won 50 once.",
+    text: "Bought a scratch card every Friday for nine years and won 50 kr once.",
   },
   {
     w: 2,
@@ -266,7 +266,7 @@ export const DETAILS: ReadonlyArray<
   {
     w: 2,
     tag: "curiosity",
-    text: "Clicks every 'you won't believe' headline. Every single one.",
+    text: "Clicks every 'you won't believe' headline.",
   },
   {
     w: 1,
@@ -303,7 +303,7 @@ export const DETAILS: ReadonlyArray<
   {
     w: 2,
     tag: "urgency",
-    text: "Replies to texts within ten seconds. Brags about it.",
+    text: "Replies to texts within ten seconds and brags about it.",
   },
   {
     w: 1,
@@ -326,7 +326,7 @@ export const DEFENSES: ReadonlyArray<
     counters: ["bank"],
     behavior: "Called the bank on the number printed on the card instead.",
     lines: [
-      "I'll ring the number on my card and ask them myself. Oh, you're busy? Funny, that.",
+      "I'll ring the number on my card and ask them myself. Oh, now you have to go?",
       "I'll ring the bank myself. If it's you, you'll pick up.",
     ],
   },
@@ -336,7 +336,7 @@ export const DEFENSES: ReadonlyArray<
     counters: ["tech-help", "fear"],
     behavior: "Asked a family member before doing anything.",
     lines: [
-      "My daughter said if anyone calls about my computer I hang up. So. Bye.",
+      "My grandson set a rule: anyone who rings about my computer gets hung up on. Sorry, those are the rules.",
       "Let me just ask my son. Hello? Oh, you've gone quiet.",
     ],
   },
@@ -354,10 +354,11 @@ export const DEFENSES: ReadonlyArray<
     w: 2,
     id: "uses-app",
     counters: ["parcel"],
-    behavior: "Opened the shop's own app instead of the link. No fee there.",
+    behavior:
+      "Opened the shop's own app instead of the link, and there was no fee in it.",
     lines: [
       "The app says it's out for delivery. So what's this, then?",
-      "Nothing in the app. Nothing on my doorstep either. Bye.",
+      "Nothing in the app and nothing on my doorstep, so I'm deleting this text.",
     ],
   },
   {
@@ -388,7 +389,7 @@ export const DEFENSES: ReadonlyArray<
       "Asked for a video call. The other side suddenly had a broken camera.",
     lines: [
       "Twelve weeks and your camera's still broken? Buy a new phone.",
-      "Camera on, or I'm logging off. Your choice.",
+      "Camera on, or I'm logging off.",
     ],
   },
   {
@@ -396,7 +397,7 @@ export const DEFENSES: ReadonlyArray<
     id: "image-search",
     counters: ["romance"],
     behavior:
-      "Reverse-searched the profile photo. It belonged to a dentist in Ohio.",
+      "Reverse-searched the profile photo. It belonged to a dentist in Trondheim.",
     lines: [
       "Your photo is on a teeth-whitening ad. Nice teeth, though.",
       "Funny. You're also in a brochure for a dentist.",
@@ -548,7 +549,7 @@ type AgeFit = { readonly minAge?: number; readonly maxAge?: number };
 export const HOBBIES: ReadonlyArray<Leak & AgeFit> = [
   {
     minAge: 40,
-    text: "Sings in a church choir. Rehearsals on Thursdays.",
+    text: "Sings in a church choir that rehearses on Thursdays.",
     source: "Choir newsletter, public PDF",
   },
   {
@@ -562,7 +563,7 @@ export const HOBBIES: ReadonlyArray<Leak & AgeFit> = [
     source: "Show results page",
   },
   {
-    text: "Posts a cake every Sunday. Every single Sunday.",
+    text: "Posts a photo of a cake every Sunday.",
     source: "Public photo feed",
   },
   {

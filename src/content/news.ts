@@ -84,7 +84,7 @@ export const AMBIENT: ReadonlyArray<NewsItem> = (
     ["Student loans pay out Friday. So do the fake 'loan office' mails", ""],
     ["Lottery board: you can't win a draw you never entered", ""],
     [
-      "Moss man, 81, takes his first computer course. Passes",
+      "Moss man, 81, passes his first computer course",
       `"The teacher said hover before you click. I hover over everything now."`,
     ],
     ["Ålesund ferry 40 minutes late, seagull blamed", ""],
@@ -103,7 +103,7 @@ export const AMBIENT: ReadonlyArray<NewsItem> = (
     ["Local man wins 2,000 kr on a scratch card, tells everyone", ""],
     [
       "Tromsø library opens an 'is this a scam?' desk on Saturdays",
-      `"Bring the letter. Or the phone. Or your grandson."`,
+      `"Bring the letter, or the phone, or the grandson who set the phone up."`,
     ],
     ["Study: most scam victims aren't old. Most are in a hurry", ""],
     [
@@ -120,7 +120,7 @@ export const AMBIENT: ReadonlyArray<NewsItem> = (
     ],
     [
       "Skien plumbing firm pays 34,600 kr to a supplier's 'new account'",
-      `"The supplier never moved banks," the owner said. "We ring them now. Every time."`,
+      `"The supplier never moved banks," the owner said. "We ring them now before we pay anything."`,
     ],
   ] as const
 ).map(([headline, quote]) => ({

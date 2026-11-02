@@ -48,42 +48,42 @@ export const bossLines: Readonly<Record<BossReaction, MoodLines>> = {
   },
   quotaMissed: {
     low: [
-      "Quota is a number, junior. Not a suggestion.",
+      "Quota is a number, junior, not a suggestion.",
       "I put your total in the shared drive. The shared drive is embarrassed.",
       "Short again. HR has a template for this. I've never had to use it twice.",
     ],
     high: [
       "I believed in you this morning. Look what you did to my morning.",
       "Missed it. Tomorrow you surprise me. The good kind of surprise.",
-      "Missed. I'm calling it a learning day in the report. Once.",
+      "Missed. I'll write 'learning day' in the report. I get two of those a year.",
     ],
   },
   quotaMet: {
     low: [
       "Quota met. Exactly met. Ambition is free, you know.",
-      "On the line. Not over it. On it.",
+      "Exactly on the line. I've seen pensioners with more ambition.",
       "Met. Tomorrow I want met-plus.",
     ],
     high: [
       "Quota hit. Go home, come back hungrier.",
-      "Quota met. Solid. Boring, but solid.",
+      "Quota met. Nobody will write a song about it, but it's met.",
       "That's the number. Same again tomorrow, then a bit more.",
     ],
   },
   quotaSmashed: {
     low: [
-      "Double quota. Fine. I was wrong about you. Once.",
+      "Double quota. I've moved your name up the whiteboard, one below mine.",
       "Double. Don't smile, it makes the others nervous.",
     ],
     high: [
       "Double quota! I'm printing this and pinning it next to the eagle poster.",
       "Double quota. I told regional about you. Spelled your name right and everything.",
-      "Double! Take the good chair tomorrow. Just tomorrow.",
+      "Double! The good chair is yours tomorrow, and only tomorrow.",
     ],
   },
   watchStart: {
     low: [
-      "Show me your technique. I'll just stand here. Breathing.",
+      "Show me your technique. I'll just stand here and breathe.",
       "Next one, I watch. Do it exactly how you'd do it if I wasn't here.",
       "Don't mind me. I'm just here with my clipboard.",
     ],
@@ -98,7 +98,7 @@ export const bossLines: Readonly<Record<BossReaction, MoodLines>> = {
       "Acceptable. I'm writing down 'acceptable'.",
     ],
     high: [
-      "See? Technique. I taught you that. Spiritually.",
+      "See? Technique. I taught you that, in spirit.",
       "Clean. That one's going in the training deck.",
     ],
   },

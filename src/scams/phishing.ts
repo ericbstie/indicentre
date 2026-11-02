@@ -10,7 +10,7 @@ export default {
   heat: { success: 2, fail: 8 },
   fitTags: ["parcel", "bank"],
   successLines: [
-    "Done! I filled everything in. Thank you so much for warning me, you are very kind.",
+    "Filled it all in. The bank rang this afternoon about a payment I didn't make.",
     "I typed my code in twice because the first time the page went white. All sorted now, I think.",
     "Verified! My husband says I should have asked him first, but he wasn't home and it said 24 hours.",
   ],
@@ -35,7 +35,7 @@ BankCo Security Team`,
       subject: "Your parcel is on hold",
       body: `Hi {name},
 
-Your parcel could not be delivered due to an unpaid customs fee of 2.99.
+Your parcel could not be delivered due to an unpaid customs fee of 1.99.
 Pay now to schedule redelivery: [ Pay fee ]
 
 ParcelPost-Delivery Services`,

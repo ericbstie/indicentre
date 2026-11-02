@@ -12,7 +12,7 @@ export default {
   successLines: [
     "Paid the fee! The money clears in 6 to 8 weeks. I've already told my sister about the boat.",
     "I never win anything, so I knew this one had to be real. Fee's paid. I'm keeping it quiet like they said.",
-    "Second fee paid. The first one was for clearance, this one was for the tax. Makes sense when you think about it.",
+    "Paid the second fee. That was the last of the holiday money.",
   ],
   templates: [
     {

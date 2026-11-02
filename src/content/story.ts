@@ -49,10 +49,6 @@ export const beats: ReadonlyArray<Beat> = [
     lines: [
       {
         speaker: "Boss",
-        line: "Welcome to Windoze tech support! Ahaha. Just kidding. We are a customer care company.",
-      },
-      {
-        speaker: "Boss",
         line: "Quota today: {quota} bucks. And more than Tommy.",
       },
     ],
@@ -92,7 +88,7 @@ export const beats: ReadonlyArray<Beat> = [
     lines: [
       {
         speaker: "Tommy",
-        line: "First day? I did four hundred on my first day. Ask anyone. Like the watch? It's real. Mostly.",
+        line: "First day? I did four hundred on my first day, ask anyone. Like the watch? I bought it off a lead.",
       },
     ],
   },
@@ -133,7 +129,7 @@ export const beats: ReadonlyArray<Beat> = [
         defense: {
           behavior:
             "Asked his daughter before doing anything a caller told him to.",
-          line: "My daughter says real companies don't ring people about their computer. So. Bye.",
+          line: "My daughter says real companies don't ring people about their computer. I'm going to ring her now.",
         },
       },
       ms: 3500,
@@ -159,11 +155,11 @@ export const beats: ReadonlyArray<Beat> = [
       ],
       won: {
         speaker: "You",
-        line: "Five hundred. Thank you, Arne. Do not redeem.",
+        line: "Five hundred in gift cards. Thank you, Arne, you've been very helpful.",
       },
       lost: {
         speaker: "Arne",
-        line: "My daughter says real companies don't ring people about their computer. So. Bye.",
+        line: "My daughter says real companies don't ring people about their computer. I'm going to ring her now.",
       },
       payout: 50,
       minutes: 30,
@@ -181,7 +177,7 @@ export const beats: ReadonlyArray<Beat> = [
     lines: [
       {
         speaker: "Mags",
-        line: "Boss is in a meeting about meetings. Breathe.",
+        line: "Boss is in a meeting about meetings, so you can breathe.",
       },
       {
         speaker: "Mags",
@@ -212,7 +208,7 @@ export const beats: ReadonlyArray<Beat> = [
     lines: [
       {
         speaker: "Boss",
-        line: "Volume day! Parcel texts. Everybody is waiting for a parcel. Even me. It's a chair.",
+        line: "Volume day! Parcel texts. Everybody is waiting for a parcel, even me, and mine is a chair.",
       },
       {
         speaker: "Boss",
@@ -243,7 +239,7 @@ export const beats: ReadonlyArray<Beat> = [
     lines: [
       {
         speaker: "TV",
-        line: 'Evening news. A pensioner in Tromsø paid 2.99 to release a parcel she never ordered. Then her card paid 2,990 more. "I just wanted the parcel," she says.',
+        line: 'Evening news. A pensioner in Tromsø paid 1.99 to release a parcel nobody ordered. The card then paid 2,990 more. "I just wanted the parcel."',
       },
       { speaker: "Priya", line: "Turn it over. It's always the same lady." },
     ],
@@ -297,7 +293,7 @@ export const beats: ReadonlyArray<Beat> = [
     lines: [
       {
         speaker: "Tommy's screen",
-        line: 'Tommy\'s at lunch. His screen is unlocked. A chat window: "hiii sorry I think a friend gave me the wrong number??" Same photo. Same dog. Biscuit.',
+        line: 'Tommy\'s at lunch. His screen is unlocked. A chat window: "hiii sorry I think a friend gave me the wrong number??" Same photo. Same dog, still called Biscuit.',
       },
       {
         speaker: "Tommy",
@@ -309,7 +305,7 @@ export const beats: ReadonlyArray<Beat> = [
       },
       {
         speaker: "Boss",
-        line: "Romance desk is yours. Go easy today. Feelings take time.",
+        line: "Romance desk is yours. Go easy today: feelings take time.",
       },
     ],
     learn:
@@ -362,7 +358,7 @@ export const beats: ReadonlyArray<Beat> = [
     lines: [
       {
         speaker: "Tommy",
-        line: 'Two of your leads got a text last night from "a friend". Telling them it\'s a scam. Wonder who.',
+        line: 'Two of your leads got a text last night from "a friend", telling them it\'s a scam. I wonder who sent that.',
       },
       {
         speaker: "Mags",
@@ -417,7 +413,7 @@ export const beats: ReadonlyArray<Beat> = [
     lines: [
       {
         speaker: "Boss",
-        line: "Last day. You're level with Tommy. Top seller gets the window desk. And my respect. Mostly the desk.",
+        line: "Last day. You're level with Tommy. Top seller gets the window desk and my respect, mostly the desk.",
       },
       {
         speaker: "Tommy",
@@ -430,8 +426,6 @@ export const beats: ReadonlyArray<Beat> = [
 export interface Ending {
   readonly lines: ReadonlyArray<Line>;
   readonly title: string;
-  /** One line above the "What to spot" list. */
-  readonly note?: string;
 }
 
 /** How a run ends. The win mirrors day 0: you catfish the catfisher. */
@@ -446,7 +440,7 @@ export const endings: Readonly<Record<"won" | "shutdown" | "fired", Ending>> = {
       { speaker: "Tommy", line: "lol who is this. ok. you seem sweet tho" },
       {
         speaker: "Phone",
-        line: "16:40. A crisis. A small ask. Then a bigger one. Tommy pays both.",
+        line: "16:40. A crisis, a small ask, then a bigger one. Tommy pays both before dinner.",
       },
       {
         speaker: "Boss",
@@ -461,7 +455,6 @@ export const endings: Readonly<Record<"won" | "shutdown" | "fired", Ending>> = {
         line: 'A new chat opens. Somewhere a junior is typing: "hi?"',
       },
     ],
-    note: "Never met. Camera always broken. A crisis, a small ask, a bigger one. On day 0 you missed every one. Tommy did too.",
   },
   shutdown: {
     title: "Raided",

@@ -11,7 +11,7 @@ export default {
   fitTags: ["romance", "lonely"],
   successLines: [
     "Sent it this morning. He says the satellite on the platform is down this week, so no calls. I'm counting days.",
-    "My friends say it's too fast. They don't hear how he writes to me at six every morning.",
+    "My friends stopped asking about him. I stopped telling them.",
     "Paid for the ferry. He sent a photo of the ticket. It's a bit blurry, but the sea is out there, isn't it.",
   ],
   warmups: [

@@ -12,7 +12,7 @@ export default {
   successLines: [
     "He was so patient with me. Forty minutes! You don't get service like that anymore.",
     "I let him into the computer and he found all the viruses. Hundreds of them. I had no idea.",
-    "Took the lifetime licence. At my age, lifetime isn't that long, so it felt like good value.",
+    "Paid for the licence. The computer is slower now, and the bank has stopped my card.",
   ],
   templates: [
     {
