@@ -1,7 +1,7 @@
 // Typed game events. Features subscribe to these instead of editing the
-// reducer. State-derived events (bucks, heat, day) are emitted by the store
-// after every dispatch; others (ScamResolved) are emitted by the code that
-// knows about them. Append new variants; don't reorder.
+// reducer. GameEvent lists only the cross-cutting ones: state-derived events
+// the store emits after every dispatch, plus ScamResolved. A feature's own
+// events are declared in the feature's file with `defineEvent`.
 
 import type { DeskTier } from "../workplace/slice.ts";
 import type { DaySummary } from "./economy.ts";
@@ -35,12 +35,6 @@ export type GameEvent =
     }
   | { readonly type: "HeatChanged"; readonly from: number; readonly to: number }
   | { readonly type: "DayAdvanced"; readonly day: number }
-  | {
-      readonly type: "HintGiven";
-      readonly coworker: string;
-      readonly scam: ScamId;
-      readonly hint: string;
-    }
   | { readonly type: "DayEnded"; readonly summary: DaySummary }
   | {
       readonly type: "RunEnded";
@@ -50,6 +44,14 @@ export type GameEvent =
 
 export type EventType = GameEvent["type"];
 export type EventOf<T extends EventType> = Extract<GameEvent, { type: T }>;
+
+/** A feature-owned event: `export const X = defineEvent<Payload>("X")`. */
+export interface EventDef<P> {
+  readonly name: string;
+  /** Type-only: carries the payload type. */
+  readonly payload?: (p: P) => void;
+}
+export const defineEvent = <P>(name: string): EventDef<P> => ({ name });
 
 /** Events implied by a state transition. Pure. */
 export const diffEvents = (prev: GameState, next: GameState): GameEvent[] => {
@@ -79,24 +81,32 @@ export const diffEvents = (prev: GameState, next: GameState): GameEvent[] => {
 
 export interface EventBus {
   /** Subscribe to one event type. Returns an unsubscribe. */
-  readonly on: <T extends EventType>(
+  on<T extends EventType>(
     type: T,
     handler: (event: EventOf<T>) => void,
-  ) => () => void;
+  ): () => void;
+  on<P>(def: EventDef<P>, handler: (payload: P) => void): () => void;
   /** Deliver an event synchronously to its subscribers. */
-  readonly emit: (event: GameEvent) => void;
+  emit(event: GameEvent): void;
+  emit<P>(def: EventDef<P>, payload: P): void;
 }
 
+type Handler = (e: unknown) => void;
+
 export const createBus = (): EventBus => {
-  const handlers = new Map<EventType, Set<(e: GameEvent) => void>>();
+  // Cross-cutting events are keyed by type, feature events by their def,
+  // so two features can never collide on a name.
+  const handlers = new Map<unknown, Set<Handler>>();
   return {
-    on: (type, handler) => {
-      const set = handlers.get(type) ?? new Set();
-      handlers.set(type, set);
-      const h = handler as (e: GameEvent) => void;
-      set.add(h);
-      return () => set.delete(h);
+    on: (k: EventType | EventDef<unknown>, handler: Handler) => {
+      const set = handlers.get(k) ?? new Set();
+      handlers.set(k, set);
+      set.add(handler);
+      return () => set.delete(handler);
     },
-    emit: (event) => handlers.get(event.type)?.forEach((h) => h(event)),
-  };
+    emit: (e: GameEvent | EventDef<unknown>, payload?: unknown) => {
+      const [key, value] = "type" in e ? [e.type, e] : [e, payload];
+      handlers.get(key)?.forEach((h) => h(value));
+    },
+  } as EventBus;
 };

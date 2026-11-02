@@ -1,6 +1,7 @@
 import {
   type Coworker,
   coworkers,
+  HintGiven,
   heardHint,
   hintsHeard,
   idleLine,
@@ -25,8 +26,7 @@ export default {
 
     const give = (c: Coworker, i: number) => {
       game.dispatch(heardHint(c.id));
-      game.emit({
-        type: "HintGiven",
+      game.emit(HintGiven, {
         coworker: c.id,
         scam: c.specialty,
         hint: c.hints[i] ?? "",

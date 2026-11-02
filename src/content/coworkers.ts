@@ -1,3 +1,4 @@
+import { defineEvent } from "../core/events.ts";
 import { defineSlice } from "../core/slice.ts";
 import type { GameState, ScamId } from "../core/state.ts";
 import type { NpcLook } from "../scene/npc.ts";
@@ -128,6 +129,13 @@ export const heardHint = (coworker: string) =>
   ({ type: "hints/heard", coworker }) as const;
 export const hintsHeard = (s: GameState, coworker: string) =>
   hintsHeardSlice.get(s)[coworker] ?? 0;
+
+/** A coworker just shared one of their hints. */
+export const HintGiven = defineEvent<{
+  readonly coworker: string;
+  readonly scam: ScamId;
+  readonly hint: string;
+}>("HintGiven");
 
 /** Hints this coworker will share, given how often the player has failed their specialty. */
 export const unlockedHints = (c: Coworker, s: GameState) =>
