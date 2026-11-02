@@ -27,6 +27,8 @@ export interface GameState {
   /** Newest first. */
   readonly inbox: ReadonlyArray<Mail>;
   readonly status: "playing" | "shutdown";
+  /** Failed attempts per scam type; coworkers open up as this grows. */
+  readonly scamFails: Readonly<Record<ScamId, number>>;
 }
 
 export type Action =
@@ -36,7 +38,8 @@ export type Action =
   | { readonly type: "tick"; readonly minutes: number }
   | { readonly type: "unlock"; readonly scam: ScamId }
   | { readonly type: "mail"; readonly mail: Omit<Mail, "read"> }
-  | { readonly type: "readMail"; readonly id: string };
+  | { readonly type: "readMail"; readonly id: string }
+  | { readonly type: "scamFailed"; readonly scam: ScamId };
 
 export const initialState = (
   unlockedScams: ReadonlyArray<ScamId> = [],
@@ -48,6 +51,7 @@ export const initialState = (
   unlockedScams,
   inbox: [],
   status: "playing",
+  scamFails: {},
 });
 
 const clamp = (n: number, lo: number, hi: number) =>
@@ -58,6 +62,8 @@ export const canAfford = (s: GameState, amount: number) =>
 
 export const unreadCount = (s: GameState) =>
   s.inbox.filter((m) => !m.read).length;
+
+export const failsAt = (s: GameState, scam: ScamId) => s.scamFails[scam] ?? 0;
 
 export const isUnlocked = (s: GameState, scam: ScamId) =>
   s.unlockedScams.includes(scam);
@@ -114,6 +120,11 @@ export const reduce = (s: GameState, a: Action): GameState => {
       return {
         ...s,
         inbox: s.inbox.map((m) => (m.id === a.id ? { ...m, read: true } : m)),
+      };
+    case "scamFailed":
+      return {
+        ...s,
+        scamFails: { ...s.scamFails, [a.scam]: failsAt(s, a.scam) + 1 },
       };
   }
 };
