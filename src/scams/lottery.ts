@@ -9,8 +9,11 @@ export default {
   payout: 50,
   heat: { success: 2, fail: 7 },
   fitTags: [],
-  successLine:
+  successLines: [
     "Paid the fee! The money clears in 6 to 8 weeks. I've already told my sister about the boat.",
+    "I never win anything, so I knew this one had to be real. Fee's paid. I'm keeping it quiet like they said.",
+    "Second fee paid. The first one was for clearance, this one was for the tax. Makes sense when you think about it.",
+  ],
   templates: [
     {
       id: "grand-draw",

@@ -1,6 +1,6 @@
 import "./leads.css";
 import { receiveMail } from "../content/mail.ts";
-import { seedFrom, seeded } from "../core/rng.ts";
+import { noRepeat, seedFrom, seeded } from "../core/rng.ts";
 import { availableScams } from "../scams/registry.ts";
 import {
   bonusFor,
@@ -33,6 +33,8 @@ interface Lead {
 }
 
 const today = daily();
+/** Win replies don't repeat back to back. */
+const pickReply = noRepeat();
 
 const drawLeads = (
   seed: number,
@@ -97,6 +99,8 @@ interface Result {
   readonly scam: ScamDef;
   readonly template: ScamTemplate;
   readonly outcome: Outcome;
+  /** A win's reply from `successLines`, personalized. */
+  readonly reply: string;
 }
 
 /** Pick a target, pick a scam template, send, see what happened. */
@@ -229,11 +233,7 @@ export default {
             ? `${esc(first)} fell for it. +${esc(o.bucks)} bucks`
             : `${esc(first)} ${r.scam.warmups?.includes(r.template) ? "blocked you" : "didn't bite"}. Heat +${esc(o.heat)}`
         }</h3>
-        ${
-          o.success
-            ? `<blockquote>"${esc(personalize(r.scam.successLine, r.target))}"</blockquote>`
-            : ""
-        }
+        ${o.success ? `<blockquote>"${esc(r.reply)}"</blockquote>` : ""}
         <button class="btn" data-next>Next leads</button>
       </div>`;
     };
@@ -280,7 +280,11 @@ export default {
         template,
         mods(),
       );
-      result = { target, scam, template, outcome };
+      const reply = personalize(
+        pickReply(seeded(seedNow() + 11), scam.successLines),
+        target,
+      );
+      result = { target, scam, template, outcome, reply };
       outcome.actions.forEach(game.dispatch);
       resolved(target, scam, outcome);
       if (outcome.success) {
@@ -289,7 +293,7 @@ export default {
             id: `reply-${seedNow()}`,
             from: target.name,
             subject: `Re: ${personalize(template.subject, target)}`,
-            body: personalize(scam.successLine, target),
+            body: reply,
           }),
         );
       }
@@ -313,7 +317,7 @@ export default {
         landed.set(key(target, scam), done + 1);
         return;
       }
-      result = { target, scam, template, outcome };
+      result = { target, scam, template, outcome, reply: "" };
       resolved(target, scam, outcome);
     };
 

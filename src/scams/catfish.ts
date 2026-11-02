@@ -9,8 +9,11 @@ export default {
   payout: 220,
   heat: { success: 6, fail: 15 },
   fitTags: ["romance", "lonely"],
-  successLine:
+  successLines: [
     "Sent it this morning. He says the satellite on the platform is down this week, so no calls. I'm counting days.",
+    "My friends say it's too fast. They don't hear how he writes to me at six every morning.",
+    "Paid for the ferry. He sent a photo of the ticket. It's a bit blurry, but the sea is out there, isn't it.",
+  ],
   warmups: [
     {
       id: "hello",

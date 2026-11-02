@@ -10,8 +10,11 @@ export default {
   payout: 160,
   heat: { success: 6, fail: 14 },
   fitTags: ["bank"],
-  successLine:
+  successLines: [
     "Paid it before lunch. Trine from Haldorsen even rang to say thanks, so that's sorted. Strange that Trine doesn't remember ringing.",
+    "The boss said don't wait for him, so I didn't. He's back Monday. I'll tell him it's done.",
+    "Renewed the register entry. We've never been in a trade register before. Feels official.",
+  ],
   templates: [
     {
       id: "new-bank-details",
