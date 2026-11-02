@@ -11,9 +11,10 @@ const world = createWorld();
 const hud = mountHud(game);
 const { desktop, sitDown, standUp } = mountDesktop(game, world);
 
-world.onFrame(() =>
-  hud.prompt(world.interactions.update(world.player.controls.isLocked)),
-);
+world.onFrame(() => {
+  const looking = world.player.controls.isLocked;
+  hud.aim(looking, world.interactions.update(looking));
+});
 for (const system of systems) system.start({ game, world });
 world.start();
 
