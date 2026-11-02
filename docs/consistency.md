@@ -43,3 +43,23 @@ rule only when you find a real duplicate, and cite where.
   `var(--line)` while `.template` used `#ddd`; `#444`/`#555` instead of
   `var(--ink-soft)` in `leads.css` and PR #4; `#e0e0e0` instead of
   `var(--line)` for the mail list rows (`src/apps/mail.css`).
+
+## Pass 3 (after the story arc and scams 6-8)
+
+- **A number on screen comes from the function that applies it.** Seen: the
+  Shop printed `heat.fail` raw while Leads used `failHeat()` with the
+  Spoofed caller ID, so one scam showed +13 and +7 (`src/shop/catalog.ts`).
+- **`fitTags` name the victim's situation; lures live on templates.** Seen:
+  X
+  copied from the `new:scam` scaffold, so every pitch showed the same chips.
+- **Anything that talks waits in `queueDialog`.** Seen: the catfisher clue
+  polled `dialogOpen()`/`modalOpen()` itself (`src/systems/catfisher.ts`).
+- **One made-up name per real thing, one label per idea.** Seen: "Windowly"
+  in the boss's joke next to "Windoze" in Rohan's script; "What you learned"
+  on the run-end card for the beats' "What to spot" lines.
+- **After a pitch: outcome, bucks, heat and a win's reply. Nothing else.**
+  Seen: a loss quoting the victim's defense, the day 2 call's lesson after
+  the call, and Priya promising "what they should have spotted" after every
+  send. The content contract greps for it.
+- **A line the player hears again comes from a pool of 3+ picked with
+  `noRepeat()`.** Seen: one `successLine` per scam (playtest 1).
