@@ -27,17 +27,14 @@ export const bossLines: Readonly<Record<BossReaction, MoodLines>> = {
     low: [
       "Three in a row. That's a fine. It's on the list by the printer, between sleeping at the desk and eating at the desk.",
       "Three misses. Sign the fine form. If you don't sign it, it doubles, and that's not me, that's the form.",
-      "Your call log looks like a weather report. All of it bad.",
     ],
     high: [
       "Three misses. Rohan's Tuesday call is on the training tape. Listen to it on your break.",
       "Bad patch. Have some water, the water is free until Friday.",
-      "Rough hour. Shake it off. Quietly, people are working.",
     ],
   },
   bigWin: {
     low: [
-      "Hm. Good. Don't get used to me saying good.",
       "That one goes on the board. In pencil, for now.",
       "Fine. That's the number I wanted on Tuesday.",
     ],
@@ -50,25 +47,21 @@ export const bossLines: Readonly<Record<BossReaction, MoodLines>> = {
   quotaMissed: {
     low: [
       "Short. Fill in the end-of-day form and read me the box that says 'successes'.",
-      "I put your total in the shared drive. The shared drive is embarrassed.",
       "Short again. HR has a template for this. I've never had to use it twice.",
     ],
     high: [
       "Missed. Don't fear the fine, let it fuel your fire. That's off the poster, I didn't make it up.",
-      "Missed it. Tomorrow you surprise me. The good kind of surprise.",
       "Missed. I'll write 'learning day' in the report. I get two of those a year.",
     ],
   },
   quotaMet: {
     low: [
       "Quota met. Exactly met. Ambition is free, you know.",
-      "Exactly on the line. I've seen pensioners with more ambition.",
       "Met. This week's prize is the desk fan, and the fan is not for people who just meet.",
     ],
     high: [
       "Quota met. You're on the board, bottom half, but on it.",
       "Quota met. Nobody will write a song about it, but it's met.",
-      "That's the number. Same again tomorrow, then a bit more.",
     ],
   },
   quotaSmashed: {
@@ -85,7 +78,6 @@ export const bossLines: Readonly<Record<BossReaction, MoodLines>> = {
   watchStart: {
     low: [
       "Show me your technique. I'll just stand here and breathe.",
-      "Next one, I watch. Do it exactly how you'd do it if I wasn't here.",
       "Don't mind me. I'm filling in your form as we go.",
     ],
     high: [
@@ -107,7 +99,6 @@ export const bossLines: Readonly<Record<BossReaction, MoodLines>> = {
     low: [
       "That's not a technique, that's a hobby.",
       "They spotted it before you finished the subject line.",
-      "I watched that whole thing. I want those minutes back.",
     ],
     high: [
       "They noticed. Read your own message once before you send it.",
