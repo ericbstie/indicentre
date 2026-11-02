@@ -134,7 +134,7 @@ describe("content contract", () => {
 
   // Slop rules (research/avoiding-slop.md). Scam mail bodies and the chat
   // personas imitate how scammers write, so the voice rules skip them.
-  const CHAT = ["Angel ♥", "Sam ♥"];
+  const CHAT = ["Angel ♥"];
   const voiced = {
     ...CONTENT,
     scams: scams.map((s) => s.successLines),
