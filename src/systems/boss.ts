@@ -13,7 +13,7 @@ import {
   scamMood,
 } from "../core/boss.ts";
 import type { EventOf } from "../core/events.ts";
-import { openDialog } from "../dialog/dialog.ts";
+import { queueDialog } from "../dialog/dialog.ts";
 import { modalOpen } from "../hud/modal.ts";
 import { createNpc } from "../scene/npc.ts";
 import type { GameSystem } from "./system.ts";
@@ -58,11 +58,13 @@ export default {
       use: () => walker.face(world.camera.position),
     });
 
-    /** Opens his line in the dialog; resolves when dismissed or after LINE_MS. */
+    /** Queues his line behind any open dialog or card; resolves when
+     * dismissed or LINE_MS after it shows. */
     const say = (line: string) =>
       new Promise<void>((resolve) => {
-        openDialog({ speaker: "Boss", line }, resolve);
-        setTimeout(resolve, LINE_MS);
+        void queueDialog({ speaker: "Boss", line }, resolve).then(() =>
+          setTimeout(resolve, LINE_MS),
+        );
       });
     const said = new Map<BossReaction, number>();
     /** Says the next line for `reaction` from the pool his mood picks. */

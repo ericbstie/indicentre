@@ -1,5 +1,6 @@
 import "./dialog.css";
 import { hush, speak } from "../audio/speak.ts";
+import { modalOpen } from "../hud/modal.ts";
 
 export interface DialogChoice {
   readonly label: string;
@@ -101,4 +102,31 @@ const closeDialog = () => {
   const done = onClose;
   onClose = undefined;
   done?.();
+  drain();
 };
+
+/** How often a waiting line checks whether a modal card has closed. */
+const RETRY_MS = 250;
+const queue: Array<() => void> = [];
+let retry: ReturnType<typeof setTimeout> | undefined;
+
+const drain = () => {
+  clearTimeout(retry);
+  retry = undefined;
+  if (!queue.length) return;
+  if (current || modalOpen()) retry = setTimeout(drain, RETRY_MS);
+  else queue.shift()!();
+};
+
+/**
+ * Shows `node` once nothing else is up (another dialog or a modal card),
+ * in the order queued, instead of talking over it. Resolves when shown.
+ */
+export const queueDialog = (node: DialogNode, closed?: () => void) =>
+  new Promise<void>((shown) => {
+    queue.push(() => {
+      openDialog(node, closed);
+      shown();
+    });
+    drain();
+  });
