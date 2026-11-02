@@ -15,7 +15,7 @@
     "new:scam": "bun scripts/new.ts scam",
     "new:system": "bun scripts/new.ts system",
     "fmt": "bun fmt --no-script",
-    "sim": "bun scripts/sim.ts",
+    "sim": "bun scripts/gen.ts && bun scripts/sim.ts",
     "test": "bun scripts/gen.ts && bun test --pass-with-no-tests",
     "smoke": "bun scripts/gen.ts && bun scripts/smoke.ts"
   },
