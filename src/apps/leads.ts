@@ -70,7 +70,7 @@ interface Result {
   readonly outcome: Outcome;
 }
 
-/** Pick a target, pick a scam template, send, see what happened and why. */
+/** Pick a target, pick a scam template, send, see what happened. */
 export default {
   id: "leads",
   title: "Leads",
@@ -181,14 +181,8 @@ export default {
         ${
           o.success
             ? `<blockquote>"${esc(personalize(r.scam.successLine, r.target))}"</blockquote>`
-            : `<blockquote>"${esc(o.defense.line)}"</blockquote>
-        <p><b>What ${esc(first)} did right:</b> ${esc(o.defense.behavior)}</p>`
+            : `<blockquote>"${esc(o.defense.line)}"</blockquote>`
         }
-        <p>Odds were ${esc(pct(o.chance))}.</p>
-        <h4>Red flags ${esc(first)} ${o.success ? "missed" : "could have spotted"}</h4>
-        <ul>${r.template.redFlags.map((f) => `<li>${esc(f)}</li>`).join("")}</ul>
-        <div class="lesson"><b>What to spot: ${esc(r.scam.name)}</b>
-        <ul>${r.scam.whatToSpot.map((l) => `<li>${esc(l)}</li>`).join("")}</ul></div>
         <button class="btn" data-next>Next leads</button>
       </div>`;
     };
