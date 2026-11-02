@@ -195,10 +195,13 @@ export default {
         mods(),
         freshness(game.state(), scam.id),
       );
-      const reply = personalize(
-        pickReply(seeded(seedNow() + 11), scam.successLines),
-        target,
-      );
+      // Only wins pick, so a loss can't shift the memory and let the last win's line repeat.
+      const reply = outcome.success
+        ? personalize(
+            pickReply(seeded(seedNow() + 11), scam.successLines),
+            target,
+          )
+        : "";
       result = { target, scam, template, outcome, reply };
       outcome.actions.forEach(game.dispatch);
       if (outcome.success) game.dispatch(markLanded(game.state(), scam.id));
