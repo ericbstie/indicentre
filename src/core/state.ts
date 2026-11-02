@@ -8,6 +8,7 @@ import {
   type Purchase,
   type ToolId,
 } from "./economy.ts";
+import { initialWorkplace, type WorkplaceState } from "../workplace/slice.ts";
 
 export const SHUTDOWN_MAX = 100;
 
@@ -50,6 +51,7 @@ export interface GameState {
   readonly ownedTools: ReadonlyArray<ToolId>;
   /** Catfisher file clues found, oldest first (content/catfisher.ts ids). */
   readonly clues: ReadonlyArray<string>;
+  readonly workplace: WorkplaceState;
 }
 
 export type Action =
@@ -84,6 +86,7 @@ export const initialState = (
   days: [],
   ownedTools: [],
   clues: [],
+  workplace: initialWorkplace,
 });
 
 const clamp = (n: number, lo: number, hi: number) =>
