@@ -9,6 +9,7 @@ import {
 } from "../content/news.ts";
 import type { EventOf, VictimProfile } from "../core/events.ts";
 import { pick, type Rng } from "../core/rng.ts";
+import { fill } from "../core/text.ts";
 import { scams } from "../scams/registry.ts";
 import { firstName } from "../victims/types.ts";
 
@@ -27,8 +28,11 @@ export const kroner = (bucks: number) =>
   (Math.round((bucks * BUCKS_TO_KR) / 100) * 100).toLocaleString("en-US");
 
 /** Fills `{slot}`s and capitalizes the result, since a slot may open a headline. */
-export const fill = (text: string, slots: Readonly<Record<string, string>>) => {
-  const out = text.replace(/\{(\w+)\}/g, (m, k: string) => slots[k] ?? m);
+export const headline = (
+  text: string,
+  slots: Readonly<Record<string, string>>,
+) => {
+  const out = fill(text, slots);
   return out.charAt(0).toUpperCase() + out.slice(1);
 };
 
@@ -58,7 +62,7 @@ const slotsFor = (
 export const victimStory = (rng: Rng, e: EventOf<"ScamResolved">): NewsItem => {
   const slots = slotsFor(rng, e);
   return {
-    headline: fill(pick(rng, VICTIM_HEADLINES), slots),
+    headline: headline(pick(rng, VICTIM_HEADLINES), slots),
     profile: profileLine(e.victim),
     quote: `"${pick(rng, VICTIM_QUOTES)}"`,
     kind: "victim",
@@ -69,7 +73,7 @@ export const victimStory = (rng: Rng, e: EventOf<"ScamResolved">): NewsItem => {
 const spottedStory = (rng: Rng, e: EventOf<"ScamResolved">): NewsItem => {
   const slots = slotsFor(rng, e);
   return {
-    headline: fill(pick(rng, SPOTTED_HEADLINES), slots),
+    headline: headline(pick(rng, SPOTTED_HEADLINES), slots),
     profile: `${firstName(e.victim)}, ${e.victim.age}. ${sentence(e.victim.defense.behavior)}`,
     quote: `"${e.victim.defense.line}"`,
     kind: "spotted",

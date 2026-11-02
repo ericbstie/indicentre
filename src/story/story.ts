@@ -123,10 +123,6 @@ export const storyVars = (s: GameState) => {
   };
 };
 
-/** Replaces `{key}` with `vars[key]`; unknown keys stay as they are. */
-export const fill = (text: string, vars: Readonly<Record<string, string>>) =>
-  text.replace(/\{(\w+)\}/g, (m, k: string) => vars[k] ?? m);
-
 /** The beat that brings in `scam`; scams without one never become available. */
 const introOf = (beats: ReadonlyArray<Beat>, scam: ScamId) =>
   beats.find((b) => b.introduces === scam);

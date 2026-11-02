@@ -1,7 +1,13 @@
 import { expect, test } from "bun:test";
 import type { EventOf } from "../core/events.ts";
 import { seeded } from "../core/rng.ts";
-import { fill, kroner, profileLine, storyFor, victimStory } from "./news.ts";
+import {
+  headline,
+  kroner,
+  profileLine,
+  storyFor,
+  victimStory,
+} from "./news.ts";
 
 const event: EventOf<"ScamResolved"> = {
   type: "ScamResolved",
@@ -27,8 +33,8 @@ test("kroner rounds to the nearest hundred with separators", () => {
   expect(kroner(0)).toBe("0");
 });
 
-test("fill replaces known slots, leaves unknown ones, capitalizes", () => {
-  expect(fill("{a} and {b}", { a: "x" })).toBe("X and {b}");
+test("headline replaces known slots, leaves unknown ones, capitalizes", () => {
+  expect(headline("{a} and {b}", { a: "x" })).toBe("X and {b}");
 });
 
 test("profile line uses the victim's concrete detail", () => {
