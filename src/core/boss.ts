@@ -50,3 +50,7 @@ export const scamMood = (
       ? MOOD.bigWin
       : MOOD.success
     : MOOD.fail + (streak === FAIL_STREAK ? MOOD.failStreak : 0);
+
+/** Which line pool the boss speaks from. */
+export const moodPool = (mood: number): "low" | "high" =>
+  mood < WATCH_BELOW ? "low" : "high";

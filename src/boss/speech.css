@@ -1,0 +1,19 @@
+.boss-say {
+  position: fixed;
+  z-index: 3;
+  bottom: 14vh;
+  left: 50%;
+  max-width: min(560px, 90vw);
+  padding: 10px 16px;
+  color: #111;
+  background: #f4f0e4;
+  border-left: 6px solid #b02020;
+  border-radius: 4px;
+  box-shadow: 0 4px 16px #0008;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.boss-say b {
+  margin-right: 6px;
+}
