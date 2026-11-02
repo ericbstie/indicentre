@@ -1,7 +1,8 @@
 import * as THREE from "three";
 
 const SECONDS = 0.35;
-const still =
+/** The player asked for less motion: snap instead of glide, no flicker. */
+export const still =
   typeof matchMedia !== "undefined" &&
   matchMedia("(prefers-reduced-motion: reduce)").matches;
 
