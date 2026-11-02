@@ -5,6 +5,7 @@ export default {
   name: "Parcel text",
   channel: "sms",
   price: 60,
+  requires: "fake-website",
   minutes: 15,
   payout: 45,
   heat: { success: 2, fail: 7 },
