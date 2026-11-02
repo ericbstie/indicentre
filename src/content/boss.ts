@@ -145,6 +145,6 @@ export const writtenWarning = (d: DaySummary) => ({
     `Re: Day ${d.day}. Quota ${d.quota} bucks, delivered ${d.earned}.`,
     "This letter goes in your file. Your file was empty until today, which HR also found suspicious.",
     "Miss two days in a row from here and someone else gets your chair. The chair has been told.",
-    "No need to sign. We know where you sit.",
+    "Sign below. An unsigned warning counts twice.",
   ],
 });
