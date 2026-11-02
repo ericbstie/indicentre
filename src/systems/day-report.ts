@@ -1,4 +1,5 @@
 import { verdictLine, writtenWarning } from "../content/boss.ts";
+import { bossMood } from "../core/boss.ts";
 import { type DaySummary, OVERNIGHT_COOLDOWN } from "../core/economy.ts";
 import { esc } from "../desktop/html.ts";
 import { showModal } from "../hud/modal.ts";
@@ -29,7 +30,7 @@ export default {
         // The run-end card replaces the report on the last day.
         if (game.state().status === "playing")
           showModal(
-            reportHtml(summary, game.state().bossMood),
+            reportHtml(summary, bossMood.get(game.state())),
             `Start day ${summary.day + 1}`,
           );
       }),

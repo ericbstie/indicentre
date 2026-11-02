@@ -7,6 +7,9 @@ import {
   SAVE_VERSION,
   saveRun,
 } from "./save.ts";
+import { findClue } from "../content/catfisher.ts";
+import { heardHint, scamFailed } from "../content/coworkers.ts";
+import { receiveMail } from "../content/mail.ts";
 import { initialState, reduce } from "./state.ts";
 
 const memory = () => {
@@ -23,13 +26,10 @@ const midRun = () =>
     { type: "earn", amount: 120 },
     { type: "heat", amount: 12 },
     { type: "tick", minutes: 30 },
-    { type: "scamFailed", scam: "phishing" },
-    { type: "heardHint", coworker: "priya" },
-    {
-      type: "mail",
-      mail: { id: "m1", from: "Boss", subject: "Hi", body: "." },
-    },
-    { type: "findClue", id: "c1" },
+    scamFailed("phishing"),
+    heardHint("priya"),
+    receiveMail({ id: "m1", from: "Boss", subject: "Hi", body: "." }),
+    findClue("c1"),
     { type: "buy", item: { kind: "tool", id: "persondata", price: 80 } },
     { type: "endDay" },
   ].reduce(
@@ -57,7 +57,7 @@ test("another save version starts a fresh run", () => {
 test("missing, corrupt, misshapen or finished saves are ignored", () => {
   expect(decodeRun(null)).toBeUndefined();
   expect(decodeRun("{nope")).toBeUndefined();
-  const { inbox: _, ...partial } = midRun();
+  const { slices: _, ...partial } = midRun();
   expect(
     decodeRun(JSON.stringify({ version: SAVE_VERSION, state: partial })),
   ).toBeUndefined();
@@ -84,21 +84,17 @@ test("storage that throws never breaks the game", () => {
 
 // Everything in GameState is saved. If this fails you changed its shape:
 // bump SAVE_VERSION (old saves then start fresh) and update the list.
-const SAVED_SHAPE_V1 = [
-  "bossMood",
-  "clues",
+const SAVED_SHAPE_V2 = [
   "day",
   "days",
   "earnedToday",
   "heatAtDayStart",
-  "inbox",
   "minute",
   "ownedTools",
   "scamBucks",
-  "scamFails",
   "shutdownMeter",
+  "slices",
   "status",
-  "talkedTo",
   "unlockedScams",
   "workplace.deskTier",
   "workplace.owned",
@@ -115,6 +111,6 @@ const shapeOf = (o: object, prefix = ""): string[] =>
   );
 
 test("GameState shape matches the save version", () => {
-  expect(SAVE_VERSION).toBe(1);
-  expect(shapeOf(initialState()).sort()).toEqual(SAVED_SHAPE_V1);
+  expect(SAVE_VERSION).toBe(2);
+  expect(shapeOf(initialState()).sort()).toEqual(SAVED_SHAPE_V2);
 });

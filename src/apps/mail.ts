@@ -1,5 +1,5 @@
 import "./mail.css";
-import { unreadCount } from "../core/state.ts";
+import { inbox, readMail, unreadCount } from "../content/mail.ts";
 import { esc, escLines } from "../desktop/html.ts";
 import type { DesktopApp } from "./app.ts";
 
@@ -19,9 +19,9 @@ export default {
     let selected: string | undefined;
 
     const render = () => {
-      const { inbox } = game.state();
-      list.innerHTML = inbox.length
-        ? inbox
+      const mails = inbox.get(game.state());
+      list.innerHTML = mails.length
+        ? mails
             .map(
               (m) =>
                 `<li data-id="${esc(m.id)}" class="${m.read ? "" : "unread"} ${m.id === selected ? "selected" : ""}">
@@ -29,7 +29,7 @@ export default {
             )
             .join("")
         : `<li class="empty">No mail.</li>`;
-      const m = inbox.find((x) => x.id === selected);
+      const m = mails.find((x) => x.id === selected);
       reader.innerHTML = m
         ? `<h3>${esc(m.subject)}</h3><p class="from">From: ${esc(m.from)}</p><p>${escLines(m.body)}</p>`
         : `<p class="empty">Select a message.</p>`;
@@ -40,7 +40,7 @@ export default {
         ?.dataset["id"];
       if (!id) return;
       selected = id;
-      game.dispatch({ type: "readMail", id });
+      game.dispatch(readMail(id));
     };
 
     render();

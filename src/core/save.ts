@@ -3,8 +3,10 @@
 import { type GameState, initialState } from "./state.ts";
 
 /** Bump whenever GameState's shape changes (save.test.ts checks the keys).
- * A save with any other version is dropped and a fresh run starts. */
-export const SAVE_VERSION = 1;
+ * A save with any other version is dropped and a fresh run starts.
+ * Slices are not covered: a slice whose value changes shape takes a new
+ * key (`"inbox"` -> `"inbox2"`), so its old saved value is ignored. */
+export const SAVE_VERSION = 2;
 
 const KEY = "indicentre/run";
 

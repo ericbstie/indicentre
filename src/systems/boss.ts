@@ -4,6 +4,8 @@ import { createWalker } from "../boss/walker.ts";
 import { type BossReaction, bossLines } from "../content/boss.ts";
 import {
   BIG_WIN,
+  bossMood,
+  changeMood,
   FAIL_STREAK,
   moodPool,
   WATCH_BELOW,
@@ -62,7 +64,7 @@ export default {
     const said = new Map<BossReaction, number>();
     /** Says the next line for `reaction` from the pool his mood picks. */
     const react = (reaction: BossReaction) => {
-      const pool = bossLines[reaction][moodPool(game.state().bossMood)];
+      const pool = bossLines[reaction][moodPool(bossMood.get(game.state()))];
       const n = said.get(reaction) ?? 0;
       said.set(reaction, n + 1);
       return say(pool[n % pool.length] ?? "");
@@ -101,24 +103,21 @@ export default {
     let failStreak = 0;
     const offScam = game.on("ScamResolved", (e) => {
       failStreak = e.success ? 0 : failStreak + 1;
-      game.dispatch({
-        type: "bossMood",
-        amount: scamMood(e.success, e.bucks, failStreak),
-      });
+      game.dispatch(changeMood(scamMood(e.success, e.bucks, failStreak)));
       if (busy) return;
       if (failStreak === FAIL_STREAK) void react("failStreak");
       else if (e.bucks >= BIG_WIN) void react("bigWin");
     });
     const offDay = game.on("DayEnded", ({ summary }) => {
       const result = quotaResult(summary);
-      game.dispatch({ type: "bossMood", amount: quotaMood[result] });
+      game.dispatch(changeMood(quotaMood[result]));
       // Fired or won: the run-end card has the last word.
       if (game.state().status !== "playing") return;
       // His verdict is on the day report; the slap lands with it.
       if (result === "missed") void slap();
       techniqueUnlocked ||= result === "missed";
       const unhappy =
-        result === "missed" || game.state().bossMood < WATCH_BELOW;
+        result === "missed" || bossMood.get(game.state()) < WATCH_BELOW;
       if (techniqueUnlocked && unhappy) void watchNextScam();
     });
     const offDesk = game.on("DeskUpgraded", () => {

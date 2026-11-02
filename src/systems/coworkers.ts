@@ -1,10 +1,12 @@
 import {
   type Coworker,
   coworkers,
+  heardHint,
+  hintsHeard,
   idleLine,
+  scamFailed,
   unlockedHints,
 } from "../content/coworkers.ts";
-import { hintsHeard } from "../core/state.ts";
 import { type DialogNode, openDialog } from "../dialog/dialog.ts";
 import { createNpc } from "../scene/npc.ts";
 import type { GameSystem } from "./system.ts";
@@ -22,7 +24,7 @@ export default {
     };
 
     const give = (c: Coworker, i: number) => {
-      game.dispatch({ type: "heardHint", coworker: c.id });
+      game.dispatch(heardHint(c.id));
       game.emit({
         type: "HintGiven",
         coworker: c.id,
@@ -57,7 +59,7 @@ export default {
 
     const stops = [
       game.on("ScamResolved", (e) => {
-        if (!e.success) game.dispatch({ type: "scamFailed", scam: e.scam });
+        if (!e.success) game.dispatch(scamFailed(e.scam));
       }),
     ];
     for (const c of coworkers) {

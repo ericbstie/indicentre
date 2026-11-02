@@ -9,24 +9,14 @@ import {
   type ToolId,
 } from "./economy.ts";
 import { initialWorkplace, type WorkplaceState } from "../workplace/slice.ts";
+import { reduceSlices, type SliceAction } from "./slice.ts";
 
 export const SHUTDOWN_MAX = 100;
 
-export const BOSS_MOOD_MAX = 100;
-const BOSS_MOOD_START = 50;
-
 export type ScamId = string;
 
-export interface Mail {
-  readonly id: string;
-  readonly from: string;
-  readonly subject: string;
-  readonly body: string;
-  readonly read: boolean;
-}
-
 /** The whole run. Saved as JSON (core/save.ts): keep it plain data, and bump
- * SAVE_VERSION when its shape changes. Slices nest here (e.g. workplace). */
+ * SAVE_VERSION when its shape changes. Feature state lives in `slices`. */
 export interface GameState {
   readonly scamBucks: number;
   /** 0..SHUTDOWN_MAX. At max the call center is raided and the run ends. */
@@ -35,40 +25,31 @@ export interface GameState {
   /** Minutes since the workday started. */
   readonly minute: number;
   readonly unlockedScams: ReadonlyArray<ScamId>;
-  /** Newest first. */
-  readonly inbox: ReadonlyArray<Mail>;
   /** Anything but "playing" ends the run (see economy.ts for fired/won). */
   readonly status: "playing" | "shutdown" | "fired" | "won";
-  /** Failed attempts per scam type; coworkers open up as this grows. */
-  readonly scamFails: Readonly<Record<ScamId, number>>;
-  /** Hints heard so far, per coworker id. */
-  readonly talkedTo: Readonly<Record<string, number>>;
-  /** 0..BOSS_MOOD_MAX. How the boss feels about you; see core/boss.ts. */
-  readonly bossMood: number;
   /** Bucks earned since this shift started. */
   readonly earnedToday: number;
   readonly heatAtDayStart: number;
   /** DayEnded log, oldest first. */
   readonly days: ReadonlyArray<DaySummary>;
   readonly ownedTools: ReadonlyArray<ToolId>;
-  /** Catfisher file clues found, oldest first (content/catfisher.ts ids). */
-  readonly clues: ReadonlyArray<string>;
   readonly workplace: WorkplaceState;
+  /** Feature state by slice key; read it with `slice.get(state)` (core/slice.ts). */
+  readonly slices: Readonly<Record<string, unknown>>;
 }
 
-export type Action =
+/** Economy actions. Features add slice actions, not variants here. */
+export type CoreAction =
   | { readonly type: "earn"; readonly amount: number }
   | { readonly type: "heat"; readonly amount: number }
   | { readonly type: "tick"; readonly minutes: number }
-  | { readonly type: "mail"; readonly mail: Omit<Mail, "read"> }
-  | { readonly type: "readMail"; readonly id: string }
-  | { readonly type: "scamFailed"; readonly scam: ScamId }
-  | { readonly type: "heardHint"; readonly coworker: string }
-  | { readonly type: "bossMood"; readonly amount: number }
   /** Clock out: ends the shift now. */
   | { readonly type: "endDay" }
-  | { readonly type: "buy"; readonly item: Purchase }
-  | { readonly type: "findClue"; readonly id: string };
+  | { readonly type: "buy"; readonly item: Purchase };
+
+export type Action = CoreAction | SliceAction;
+
+const isSliceAction = (a: Action): a is SliceAction => a.type.includes("/");
 
 export const initialState = (
   unlockedScams: ReadonlyArray<ScamId> = [],
@@ -78,31 +59,17 @@ export const initialState = (
   day: 1,
   minute: 0,
   unlockedScams,
-  inbox: [],
   status: "playing",
-  scamFails: {},
-  talkedTo: {},
-  bossMood: BOSS_MOOD_START,
   earnedToday: 0,
   heatAtDayStart: 0,
   days: [],
   ownedTools: [],
-  clues: [],
   workplace: initialWorkplace,
+  slices: {},
 });
 
-const clamp = (n: number, lo: number, hi: number) =>
+export const clamp = (n: number, lo: number, hi: number) =>
   Math.min(hi, Math.max(lo, n));
-
-export const unreadCount = (s: GameState) =>
-  s.inbox.filter((m) => !m.read).length;
-
-export const failsAt = (s: GameState, scam: ScamId) => s.scamFails[scam] ?? 0;
-
-export const hintsHeard = (s: GameState, coworker: string) =>
-  s.talkedTo[coworker] ?? 0;
-
-export const clueCount = (s: GameState) => s.clues.length;
 
 export const isUnlocked = (s: GameState, scam: ScamId) =>
   s.unlockedScams.includes(scam);
@@ -127,6 +94,10 @@ const withHeat = (s: GameState, shutdownMeter: number): GameState => {
 /** The only way state changes. Invalid actions return the state unchanged. */
 export const reduce = (s: GameState, a: Action): GameState => {
   if (s.status !== "playing") return s;
+  if (isSliceAction(a)) {
+    const slices = reduceSlices(s.slices, a);
+    return slices === s.slices ? s : { ...s, slices };
+  }
   switch (a.type) {
     case "earn":
       return a.amount > 0
@@ -140,38 +111,9 @@ export const reduce = (s: GameState, a: Action): GameState => {
       return withHeat(s, s.shutdownMeter + a.amount);
     case "tick":
       return advance(s, a.minutes);
-    case "mail":
-      return s.inbox.some((m) => m.id === a.mail.id)
-        ? s
-        : { ...s, inbox: [{ ...a.mail, read: false }, ...s.inbox] };
-    case "readMail":
-      return {
-        ...s,
-        inbox: s.inbox.map((m) => (m.id === a.id ? { ...m, read: true } : m)),
-      };
-    case "scamFailed":
-      return {
-        ...s,
-        scamFails: { ...s.scamFails, [a.scam]: failsAt(s, a.scam) + 1 },
-      };
-    case "heardHint":
-      return {
-        ...s,
-        talkedTo: {
-          ...s.talkedTo,
-          [a.coworker]: hintsHeard(s, a.coworker) + 1,
-        },
-      };
-    case "bossMood":
-      return {
-        ...s,
-        bossMood: clamp(s.bossMood + a.amount, 0, BOSS_MOOD_MAX),
-      };
     case "endDay":
       return endDay(s);
     case "buy":
       return buy(s, a.item);
-    case "findClue":
-      return s.clues.includes(a.id) ? s : { ...s, clues: [...s.clues, a.id] };
   }
 };

@@ -1,6 +1,9 @@
 import { expect, test } from "bun:test";
 import {
   BIG_WIN,
+  BOSS_MOOD_MAX,
+  bossMood,
+  changeMood,
   FAIL_STREAK,
   MOOD,
   moodPool,
@@ -9,7 +12,7 @@ import {
   SMASH_FACTOR,
   WATCH_BELOW,
 } from "./boss.ts";
-import { BOSS_MOOD_MAX, initialState, reduce } from "./state.ts";
+import { initialState, reduce } from "./state.ts";
 
 test("quota result bands", () => {
   const quota = 60;
@@ -26,12 +29,10 @@ test("scam mood: big wins count more, the streak penalty lands once", () => {
   expect(scamMood(false, 0, FAIL_STREAK + 1)).toBe(MOOD.fail);
 });
 
-test("bossMood action is clamped to 0..max", () => {
+test("boss mood is clamped to 0..max", () => {
   const s0 = initialState();
-  expect(reduce(s0, { type: "bossMood", amount: -500 }).bossMood).toBe(0);
-  expect(reduce(s0, { type: "bossMood", amount: 500 }).bossMood).toBe(
-    BOSS_MOOD_MAX,
-  );
+  expect(bossMood.get(reduce(s0, changeMood(-500)))).toBe(0);
+  expect(bossMood.get(reduce(s0, changeMood(500)))).toBe(BOSS_MOOD_MAX);
 });
 
 test("mood pool flips at the watch threshold", () => {

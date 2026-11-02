@@ -2,7 +2,8 @@
 // catfished the player before day 1. Each clue names one catfishing red
 // flag, from the victim's side. Ignoring them costs nothing but the story.
 
-import { clueCount, type GameState } from "../core/state.ts";
+import { defineSlice } from "../core/slice.ts";
+import type { GameState } from "../core/state.ts";
 
 /** How a clue reaches the player: a mail, or a coworker leaning over. */
 export type ClueVia =
@@ -138,4 +139,14 @@ export const clueMailId = (c: Clue) => `clue-${c.id}`;
 export const cluesDue = (day: number, found: ReadonlyArray<string>) =>
   clues.filter((c) => c.day <= day && !found.includes(c.id));
 
-export const fileComplete = (s: GameState) => clueCount(s) >= FILE_COMPLETE;
+/** Clue ids found, oldest first. */
+export const foundClues = defineSlice(
+  "clues",
+  [] as ReadonlyArray<string>,
+  (found, a: { readonly type: "clues/find"; readonly id: string }) =>
+    found.includes(a.id) ? found : [...found, a.id],
+);
+export const findClue = (id: string) => ({ type: "clues/find", id }) as const;
+
+export const fileComplete = (s: GameState) =>
+  foundClues.get(s).length >= FILE_COMPLETE;
