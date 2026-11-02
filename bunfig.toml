@@ -1,0 +1,5 @@
+[install]
+# Never write a range into package.json.
+exact = true
+# Supply-chain guard: refuse package versions published less than 7 days ago.
+minimumReleaseAge = 604800

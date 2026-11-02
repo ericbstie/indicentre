@@ -1,0 +1,23 @@
+{
+  "name": "indicentre",
+  "private": true,
+  "type": "module",
+  "packageManager": "bun@1.4.4",
+  "scripts": {
+    "dev": "bun --hot src/server.ts",
+    "start": "bun src/server.ts",
+    "build": "bun build ./src/client/index.html --outdir=dist --minify",
+    "check": "bun check --no-script && bun fmt --no-script --check",
+    "fmt": "bun fmt --no-script",
+    "test": "bun test --pass-with-no-tests"
+  },
+  "dependencies": {
+    "effect": "4.1.2",
+    "three": "0.187.0"
+  },
+  "trustedDependencies": [],
+  "devDependencies": {
+    "@types/bun": "1.4.4",
+    "@types/three": "0.187.0"
+  }
+}
