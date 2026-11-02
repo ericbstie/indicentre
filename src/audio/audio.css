@@ -1,0 +1,9 @@
+.sound-key {
+  position: fixed;
+  right: 12px;
+  bottom: 10px;
+  z-index: 2;
+  color: var(--muted);
+  font-size: 12px;
+  pointer-events: none;
+}

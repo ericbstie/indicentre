@@ -5,6 +5,7 @@ import clock from "./clock.ts";
 import coworkers from "./coworkers.ts";
 import dayReport from "./day-report.ts";
 import runEnd from "./run-end.ts";
+import sound from "./sound.ts";
 import welcome from "./welcome.ts";
 
 export const systems: ReadonlyArray<GameSystem> = [
@@ -13,5 +14,6 @@ export const systems: ReadonlyArray<GameSystem> = [
   coworkers,
   dayReport,
   runEnd,
+  sound,
   welcome,
 ];
