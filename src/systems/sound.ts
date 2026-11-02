@@ -1,11 +1,12 @@
 import "../audio/audio.css";
 import { audio } from "../audio/engine.ts";
+import { startMusic } from "../audio/music.ts";
 import type { GameSystem } from "./system.ts";
 
 const typing = (t: EventTarget | null) =>
   t instanceof HTMLElement && /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName);
 
-/** Sound: M toggles mute (remembered); the corner line says the key. */
+/** Sound: background music; M toggles mute (remembered), shown in a corner line. */
 export default {
   id: "sound",
   start() {
@@ -22,7 +23,10 @@ export default {
       label();
     };
     window.addEventListener("keydown", onKey);
+    let stopMusic = () => {};
+    audio.ready((ctx) => (stopMusic = startMusic(ctx)));
     return () => {
+      stopMusic();
       window.removeEventListener("keydown", onKey);
       key.remove();
     };
