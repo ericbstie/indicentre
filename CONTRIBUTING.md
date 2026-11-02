@@ -57,7 +57,8 @@ Conventional commit prefixes: `feat(scope)`, `fix`, `chore`, `ci`, `docs`,
 
 ```
 src/
-  server.ts            Bun.serve; HTML import bundles the client
+  server.ts            Bun.serve; dev: HTML import + HMR, prod: serves dist/
+  server/proxy.ts      host check, trusted X-Forwarded-* (docs/hosting.md)
   css.d.ts             lets .ts files `import "./x.css"`
   client/              composition root: wiring only, no features
     index.html         entry page (links tokens.css)
