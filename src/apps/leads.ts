@@ -1,17 +1,51 @@
 import "./leads.css";
-import { seeded } from "../core/rng.ts";
+import { seedFrom, seeded } from "../core/rng.ts";
 import { isUnlocked } from "../core/state.ts";
 import { scams } from "../scams/registry.ts";
-import { type Outcome, personalize, resolveScam } from "../scams/resolve.ts";
-import { generateTargets } from "../scams/targets.ts";
-import type { ScamDef, ScamTemplate, Target } from "../scams/types.ts";
+import {
+  type Outcome,
+  payout,
+  personalize,
+  resolveScam,
+} from "../scams/resolve.ts";
+import type { ScamDef, ScamTemplate } from "../scams/types.ts";
+import { generateVictims } from "../victims/generate.ts";
+import { writeHints } from "../victims/hints.ts";
+import type { Victim } from "../victims/types.ts";
+import { type RevealLevel, reveal, type VictimView } from "../victims/view.ts";
 import { esc, escLines } from "../desktop/html.ts";
 import type { DesktopApp } from "./app.ts";
 
 const LEADS_PER_BATCH = 3;
+/** Raised later by buying persondata. */
+const REVEAL: RevealLevel = 0;
+
+interface Lead {
+  readonly victim: Victim;
+  readonly view: VictimView;
+}
+
+const drawLeads = (seed: number): ReadonlyArray<Lead> => {
+  const rng = seeded(seed);
+  return generateVictims(rng, LEADS_PER_BATCH).map((victim) => ({
+    victim,
+    view: reveal(victim, writeHints(rng, victim), REVEAL),
+  }));
+};
+
+const pct = (x: number) => `${Math.round(x * 100)}%`;
+
+const viewCard = (v: VictimView) => `
+  <b>${esc(v.name)}</b>
+  <small>${esc(v.ageBand)} · ${esc(v.occupation)}</small>
+  <ul>${v.hints.map((h) => `<li>${esc(h)}</li>`).join("")}</ul>${
+    v.weaknesses
+      ? `<small>Falls for: ${esc(v.weaknesses.join(", "))} · tech ${esc(pct(v.techComfort ?? 0))}</small>`
+      : ""
+  }${v.defense ? `<small>Watch out: ${esc(v.defense)}</small>` : ""}`;
 
 interface Result {
-  readonly target: Target;
+  readonly target: Victim;
   readonly scam: ScamDef;
   readonly template: ScamTemplate;
   readonly outcome: Outcome;
@@ -24,30 +58,30 @@ export default {
   icon: "☎",
   order: 10,
   mount(el, { game }) {
+    // `?seed=abc` makes every lead batch reproducible for playtests.
+    const runSeed = seedFrom(
+      new URLSearchParams(location.search).get("seed") ?? "",
+    );
     const seedNow = () => {
       const s = game.state();
-      return s.day * 10_000 + s.minute;
+      return runSeed + s.day * 10_000 + s.minute;
     };
-    let targets = generateTargets(seeded(seedNow()), LEADS_PER_BATCH);
-    let target: Target | undefined;
+    let leads = drawLeads(seedNow());
+    let target: Victim | undefined;
     let result: Result | undefined;
 
     const available = () => scams.filter((s) => isUnlocked(game.state(), s.id));
 
     const viewTargets = () => `
       <h3>Today's leads</h3>
-      <div class="cards">${targets
+      <div class="cards">${leads
         .map(
-          (t) => `
-        <button class="card" data-target="${esc(t.id)}">
-          <b>${esc(t.name)}</b>
-          <small>${esc(t.age)} · ${esc(t.archetype)}</small>
-          <ul>${t.notes.map((n) => `<li>${esc(n)}</li>`).join("")}</ul>
-        </button>`,
+          ({ view }) => `
+        <button class="card" data-target="${esc(view.id)}">${viewCard(view)}</button>`,
         )
         .join("")}</div>`;
 
-    const viewTemplates = (t: Target) => `
+    const viewTemplates = (t: Victim) => `
       <button class="link" data-back>← Leads</button>
       <h3>Scam ${esc(t.name)}</h3>
       ${available()
@@ -61,7 +95,7 @@ export default {
             <div><b>${esc(tpl.label)}</b>
             <p class="subject">${esc(personalize(tpl.subject, t))}</p>
             <p class="body">${escLines(personalize(tpl.body, t))}</p></div>
-            <button class="btn" data-send="${esc(s.id)}/${esc(tpl.id)}">Send</button>
+            <button class="btn" data-send="${esc(s.id)}/${esc(tpl.id)}">Send<small>+${esc(payout(s, t))} bucks · heat +${esc(s.heat.success)}, +${esc(s.heat.fail)} if reported</small></button>
           </div>`,
           )
           .join("")}`,
@@ -76,10 +110,16 @@ export default {
         <h3>${
           o.success
             ? `${esc(first)} fell for it. +${esc(o.bucks)} scam bucks`
-            : `${esc(first)} reported you. Shutdown meter +${esc(o.heat)}`
+            : `${esc(first)} didn't bite. Shutdown meter +${esc(o.heat)}`
         }</h3>
-        <p>Odds were ${esc(Math.round(o.chance * 100))}%.</p>
-        <h4>Red flags ${esc(first)} ${o.success ? "missed" : "spotted"}</h4>
+        ${
+          o.success
+            ? ""
+            : `<blockquote>"${esc(o.defense.line)}"</blockquote>
+        <p><b>What ${esc(first)} did right:</b> ${esc(o.defense.behavior)}</p>`
+        }
+        <p>Odds were ${esc(pct(o.chance))}.</p>
+        <h4>Red flags ${esc(first)} ${o.success ? "missed" : "could have spotted"}</h4>
         <ul>${r.template.redFlags.map((f) => `<li>${esc(f)}</li>`).join("")}</ul>
         <p class="lesson">${esc(r.scam.lesson)}</p>
         <button class="btn" data-next>Next leads</button>
@@ -137,14 +177,15 @@ export default {
       const b = (e.target as HTMLElement).closest<HTMLElement>("button");
       if (!b) return;
       const d = b.dataset;
-      if (d["target"]) target = targets.find((t) => t.id === d["target"]);
+      if (d["target"])
+        target = leads.find((l) => l.view.id === d["target"])?.victim;
       else if (d["back"] !== undefined) target = undefined;
       else if (d["send"]) {
         const [scamId = "", templateId = ""] = d["send"].split("/");
         send(scamId, templateId);
       } else if (d["next"] !== undefined) {
         result = target = undefined;
-        targets = generateTargets(seeded(seedNow()), LEADS_PER_BATCH);
+        leads = drawLeads(seedNow());
       }
       render();
     };

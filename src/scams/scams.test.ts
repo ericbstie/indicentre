@@ -1,27 +1,21 @@
 import { describe, expect, test } from "bun:test";
-import { seeded } from "../core/rng.ts";
 import { initialState, reduce } from "../core/state.ts";
+import type { Victim } from "../victims/types.ts";
 import phishing from "./phishing.ts";
 import { scams, starterScams } from "./registry.ts";
-import {
-  MAX_CHANCE,
-  MIN_CHANCE,
-  personalize,
-  resolveScam,
-  successChance,
-} from "./resolve.ts";
-import { generateTargets } from "./targets.ts";
-import type { Target } from "./types.ts";
+import { fitTags, personalize, resolveScam } from "./resolve.ts";
 
-const target = (over: Partial<Target> = {}): Target => ({
+const victim = (over: Partial<Victim> = {}): Victim => ({
   id: "x",
   name: "Kari Nordby",
   age: 70,
-  archetype: "Retiree",
-  notes: [],
-  susceptibility: { authority: 1, urgency: 1, greed: 0, curiosity: 0 },
-  savvy: 0,
+  occupation: "Retired teacher",
+  techComfort: 0.1,
+  trust: 0.8,
   wealth: 1,
+  weaknesses: ["authority", "urgency"],
+  detail: { text: "Same bank for 41 years.", tag: "authority" },
+  defense: { id: "d", behavior: "b", line: "l", counters: ["job"] },
   ...over,
 });
 
@@ -47,37 +41,16 @@ describe("scam data", () => {
   });
 });
 
-describe("targets", () => {
-  test("generation is deterministic per seed", () => {
-    expect(generateTargets(seeded(42), 3)).toEqual(
-      generateTargets(seeded(42), 3),
-    );
-    expect(generateTargets(seeded(1), 3)).not.toEqual(
-      generateTargets(seeded(2), 3),
-    );
-  });
-});
-
 describe("resolution", () => {
-  test("matching lures beat mismatched ones; savvy lowers chance", () => {
-    const t = target();
-    const fit = successChance(t, template("account-locked"));
-    expect(fit).toBeGreaterThan(successChance(t, template("prize")));
-    expect(
-      successChance(target({ savvy: 1 }), template("account-locked")),
-    ).toBeLessThan(fit);
-  });
-
-  test("chance is clamped", () => {
-    for (const t of phishing.templates) {
-      const p = successChance(target({ savvy: 1 }), t);
-      expect(p).toBeGreaterThanOrEqual(MIN_CHANCE);
-      expect(p).toBeLessThanOrEqual(MAX_CHANCE);
-    }
+  test("fitTags are the template's lures", () => {
+    expect(fitTags(template("account-locked"))).toEqual([
+      "authority",
+      "urgency",
+    ]);
   });
 
   test("outcome actions apply payout and heat through the reducer", () => {
-    const t = target({ wealth: 2 });
+    const t = victim({ wealth: 2 });
     const win = resolveScam(() => 0, phishing, t, template("account-locked"));
     const lose = resolveScam(
       () => 0.99,
@@ -96,6 +69,6 @@ describe("resolution", () => {
   });
 
   test("personalize uses the first name", () => {
-    expect(personalize("Hi {name}!", target())).toBe("Hi Kari!");
+    expect(personalize("Hi {name}!", victim())).toBe("Hi Kari!");
   });
 });
