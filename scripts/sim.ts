@@ -3,7 +3,12 @@
 // in its data file shows up here.   bun run sim [runs]
 import { type Rng, seeded } from "../src/core/rng.ts";
 import { initialState, reduce, type GameState } from "../src/core/state.ts";
-import { quotaFor, SHIFT_MINUTES, WIN_DAY } from "../src/core/economy.ts";
+import {
+  canBuy,
+  quotaFor,
+  SHIFT_MINUTES,
+  WIN_DAY,
+} from "../src/core/economy.ts";
 import { scams, starterScams } from "../src/scams/registry.ts";
 import {
   failHeat,
@@ -150,7 +155,7 @@ const worstFail = (s: GameState) => {
 const shop = (s: GameState, pl: Player) => {
   let next = s;
   for (const item of catalog)
-    if (pl.buys(item) && next.scamBucks >= item.price)
+    if (pl.buys(item) && canBuy(next, item))
       next = reduce(next, { type: "buy", item });
   return next;
 };

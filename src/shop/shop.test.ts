@@ -35,6 +35,15 @@ describe("buy", () => {
     );
   });
 
+  test("a scam that needs a tool is not for sale without it", () => {
+    const item = catalog.find((c) => c.requires === "spoofed-id")!;
+    expect(item.blurb).toContain("Needs Spoofed caller ID");
+    const flush = reduce(rich, { type: "earn", amount: 500 });
+    expect(reduce(flush, { type: "buy", item })).toBe(flush);
+    const tooled = reduce(flush, { type: "buy", item: tool("spoofed-id") });
+    expect(owns(reduce(tooled, { type: "buy", item }), item)).toBe(true);
+  });
+
   test("buying a scam unlocks it; spending does not touch the quota", () => {
     const item = { kind: "scam", id: "lottery", price: 100 } as const;
     const s = reduce(rich, { type: "buy", item });

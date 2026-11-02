@@ -5,6 +5,7 @@ export default {
   name: "Bank fraud call",
   channel: "call",
   price: 180,
+  requires: "spoofed-id",
   minutes: 30,
   payout: 110,
   heat: { success: 5, fail: 13 },

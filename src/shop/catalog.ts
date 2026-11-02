@@ -3,6 +3,8 @@ import { scams } from "../scams/registry.ts";
 import { upgrades } from "../workplace/upgrades.ts";
 import { tools } from "./tools.ts";
 
+const toolName = (id: string) => tools.find((t) => t.id === id)?.name ?? id;
+
 export interface CatalogItem extends Purchase {
   readonly name: string;
   readonly blurb: string;
@@ -17,7 +19,10 @@ export const catalog: ReadonlyArray<CatalogItem> = [
       id: s.id,
       price: s.price,
       name: s.name,
-      blurb: `New scam. +${s.payout} bucks · heat +${s.heat.fail} if reported.`,
+      blurb: `New scam. +${s.payout} bucks · heat +${s.heat.fail} if reported.${
+        s.requires ? ` Needs ${toolName(s.requires)}.` : ""
+      }`,
+      ...(s.requires !== undefined && { requires: s.requires }),
     })),
   ...tools.map((t): CatalogItem => ({
     kind: "tool",

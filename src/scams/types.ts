@@ -1,3 +1,4 @@
+import type { ToolId } from "../core/economy.ts";
 import type { ScamId } from "../core/state.ts";
 import type { Tag } from "../victims/types.ts";
 
@@ -38,6 +39,8 @@ export interface ScamDef {
   readonly channel: Channel;
   /** Scam bucks to unlock; 0 = available from the start. */
   readonly price: number;
+  /** A tool (src/shop/tools.ts) the Shop wants you to own before selling this. */
+  readonly requires?: ToolId;
   /** In-game minutes one attempt takes. */
   readonly minutes: number;
   /** Base payout before target wealth. */
