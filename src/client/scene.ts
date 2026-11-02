@@ -23,19 +23,25 @@ export const createWorld = () => {
   window.addEventListener("resize", resize);
   resize();
 
-  /** Starts rendering; `onFrame` runs once per frame with a clamped dt. */
-  const start = (onFrame: (dt: number) => void) => {
+  const frameHandlers = new Set<(dt: number) => void>();
+  /** Runs `fn` once per frame with a clamped dt. Returns an unsubscribe. */
+  const onFrame = (fn: (dt: number) => void) => {
+    frameHandlers.add(fn);
+    return () => frameHandlers.delete(fn);
+  };
+
+  const start = () => {
     const timer = new THREE.Timer();
     renderer.setAnimationLoop((t) => {
       timer.update(t);
       const dt = Math.min(timer.getDelta(), 0.1);
       player.update(dt);
-      onFrame(dt);
+      frameHandlers.forEach((fn) => fn(dt));
       renderer.render(office.scene, camera);
     });
   };
 
-  return { renderer, camera, office, player, interactions, start };
+  return { renderer, camera, office, player, interactions, onFrame, start };
 };
 
 export type World = ReturnType<typeof createWorld>;

@@ -110,6 +110,14 @@ export const leadsApp: DesktopApp = {
       );
       result = { target, scam, template, outcome };
       outcome.actions.forEach(game.dispatch);
+      game.emit({
+        type: "ScamResolved",
+        scam: scam.id,
+        target: target.id,
+        success: outcome.success,
+        bucks: outcome.bucks,
+        heat: outcome.heat,
+      });
       if (outcome.success) {
         game.dispatch({
           type: "mail",
