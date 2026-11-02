@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { initialState, reduce } from "../core/state.ts";
+import { TAGS } from "../victims/types.ts";
 import {
   coworkers,
   heardHint,
@@ -17,6 +18,15 @@ describe("coworkers", () => {
       expect(c.hints.length).toBeGreaterThanOrEqual(4);
       expect(c.hints.length).toBeLessThanOrEqual(6);
     }
+  });
+
+  // Playtest 1: hints never named a trait, so talking first gave no edge.
+  test("each hint names exactly one victim tag, spelled as on the chips", () => {
+    const named = (hint: string) =>
+      TAGS.filter((t) => new RegExp(`\\b${t}\\b`, "i").test(hint));
+    for (const c of coworkers)
+      for (const h of c.hints)
+        expect({ h, n: named(h).length }).toEqual({ h, n: 1 });
   });
 
   test("one hint is free, each failed attempt at the specialty unlocks one", () => {

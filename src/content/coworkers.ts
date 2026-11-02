@@ -13,7 +13,8 @@ export interface Coworker {
   readonly look: NpcLook;
   /**
    * Said in order. The first is free; each failed attempt at their
-   * specialty unlocks one more. Each hint is a red flag seen from our side.
+   * specialty unlocks one more. Each hint is a red flag seen from our side
+   * and names one victim tag, as the Leads chips spell it.
    */
   readonly hints: ReadonlyArray<string>;
   /** When they have nothing new for you; said in turn. */
@@ -35,12 +36,12 @@ export const coworkers: ReadonlyArray<Coworker> = [
       outfit: "casual-female",
     },
     hints: [
-      "The subject line does all the work. If it doesn't sound like a deadline, nobody opens it.",
-      "Pensioners read every word. Students read nothing. Write for the one you've got.",
-      "People check the sender name. Almost nobody checks what comes after the @.",
+      "The subject line does all the work. If there's no urgency in it, nobody opens it.",
+      "Pensioners read every word. Students read nothing. Both open anything that smells of authority.",
+      "Write as their bank. People check the sender name. Almost nobody checks what comes after the @.",
       "Text them about a parcel and ask for 1.99, not 200. A small fee doesn't feel like money until it's their card number.",
-      "The ones who hover over the link before clicking? Let them go. They're already gone.",
-      "If one writes back angry, don't answer. Answering is how the bank finds us.",
+      "The ones who hover over the link before clicking? Let them go. Pick the ones with curiosity, they click first.",
+      "Greed is the quiet lure. Nobody writes back angry about an inheritance. They write back with questions.",
     ],
     idle: [
       "That's my fourteenth mail today and it's not even lunch. Don't stand there, it shows up on my numbers.",
@@ -60,11 +61,11 @@ export const coworkers: ReadonlyArray<Coworker> = [
       outfit: "casual2-male",
     },
     hints: [
-      "Nobody fears a virus they can't see. Tell them the computer is 'sending errors'. Sounds expensive.",
-      "Say a department, not a name. 'The security desk' beats 'Rohan' every time.",
-      "If they say they'll call back on the official number, it's over. Hang up before they do.",
-      "New tablet, grandkids set it up, nobody showed them anything. That's the call.",
-      "Keep them on the line. The second they ask someone else in the house, you've lost them.",
+      "Fear sells repairs. Tell them the computer is 'sending errors'. Nobody can see an error, so it sounds expensive.",
+      "Authority is a department, not a name. 'The security desk' beats 'Rohan' every time.",
+      "Urgency keeps them off the official number. Once they say they'll ring back, it's over. Hang up before they do.",
+      "New tablet, grandkids set it up, nobody showed them anything. That's a tech-help lead. Call.",
+      "The lonely ones stay on the line. The second they ask someone else in the house, you've lost them.",
       "Bank calls? Say 'fraud department' and they thank you for stealing from them. Just don't let them hang up to ring the card number.",
     ],
     idle: [
@@ -87,12 +88,12 @@ export const coworkers: ReadonlyArray<Coworker> = [
       outfit: "casual3-female",
     },
     hints: [
-      "Cheap listing, nice photos, and you're 'away for work'. That's why it has to be shipped.",
-      "Get them off the app. The app has a report button. A text message doesn't.",
-      "Ask for a small deposit to 'hold it'. Someone who's paid a bit will pay the rest.",
-      "A buyer who says 'I'll pick it up and pay cash' is not your buyer. Move on.",
-      "Never use the same photos twice in one city. Somebody always does an image search.",
-      "Invoices? Write as the supplier, a week before payday. Bookkeepers who ring the old number to check, you just lost.",
+      "Cheap listing, nice photos, and you're 'away for work'. That's why it's a parcel, never a pickup.",
+      "Get them off the app with curiosity: 'more photos on my phone'. The app has a report button. A text message doesn't.",
+      "Price it under market and let greed do the rest. Someone who's paid a deposit will pay the rest.",
+      "A buyer who says 'I'll pick it up and pay cash' is not your buyer. Shipping only, the parcel goes out once they've paid.",
+      "Never give them time. Urgency stops the image search: nobody checks the photos of a bike that's 'gone by tonight'.",
+      "Invoices? Write as the supplier, a week before payday, with all the authority of a letterhead. Bookkeepers who ring the old number to check, you just lost.",
     ],
     idle: [
       "Someone ate my yoghurt. It had my name on it. In marker. I'm sending a mail to all.",
