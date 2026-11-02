@@ -1,7 +1,7 @@
 import "./shop.css";
 import { canBuy, owns } from "../core/economy.ts";
 import type { GameState } from "../core/state.ts";
-import { esc } from "../desktop/html.ts";
+import { esc, tagList } from "../desktop/html.ts";
 import { type CatalogItem, catalog, lessonFor } from "../shop/catalog.ts";
 import type { DesktopApp } from "./app.ts";
 
@@ -10,7 +10,7 @@ const row = (s: GameState, item: CatalogItem) => {
   const lesson = have ? lessonFor(item.id) : undefined;
   return `
   <div class="item">
-    <div><b>${esc(item.name)}</b><p>${esc(item.blurb)}</p>${
+    <div><b>${esc(item.name)}</b>${item.tags ? ` ${tagList(item.tags)}` : ""}<p>${esc(item.blurb)}</p>${
       lesson ? `<p class="lesson">${esc(lesson)}</p>` : ""
     }</div>
     ${

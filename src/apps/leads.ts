@@ -19,7 +19,7 @@ import { fitLabel, successChance } from "../victims/resistance.ts";
 import { writeHints } from "../victims/hints.ts";
 import { firstName, type Victim } from "../victims/types.ts";
 import { type RevealLevel, reveal, type VictimView } from "../victims/view.ts";
-import { esc, escLines } from "../desktop/html.ts";
+import { esc, escLines, tagList } from "../desktop/html.ts";
 import { callOddsModifier } from "../workplace/slice.ts";
 import type { DesktopApp } from "./app.ts";
 
@@ -52,7 +52,7 @@ const viewCard = (v: VictimView) => `
   <small>${esc(v.ageBand)} · ${esc(v.occupation)}</small>
   <ul>${v.hints.map((h) => `<li>${esc(h)}</li>`).join("")}</ul>${
     v.weaknesses
-      ? `<small>Falls for: ${esc(v.weaknesses.join(", "))} · tech ${esc(pct(v.techComfort ?? 0))}</small>`
+      ? `<small>Falls for: ${tagList(v.weaknesses)} · tech ${esc(pct(v.techComfort ?? 0))}</small>`
       : ""
   }${v.defense ? `<small>Watch out: ${esc(v.defense)}</small>` : ""}`;
 
@@ -116,12 +116,13 @@ export default {
 
     const viewTemplate = (
       t: Victim,
+      s: ScamDef,
       tpl: ScamTemplate,
       action: string,
       stakes: string,
     ) => `
       <div class="template">
-        <div><b>${esc(tpl.label)}</b>
+        <div><b>${esc(tpl.label)}</b> ${tagList(pulls(s, tpl))}
         <p class="subject">${esc(personalize(tpl.subject, t))}</p>
         <p class="body">${escLines(personalize(tpl.body, t))}</p></div>
         <button class="btn" ${action}>Send<small>${esc(stakes)}</small></button>
@@ -135,7 +136,7 @@ export default {
       return `
         <p class="trust">Trust <meter value="${esc(current(t, s).trust)}"></meter>
           ${esc(done)}/${esc(warmups.length)} warm-ups. Ask now or keep talking.</p>
-        ${next ? viewTemplate(t, next, `data-warm="${esc(s.id)}"`, `${CHANNEL[s.channel]} · no bucks yet · heat +${s.heat.success} if blocked · ${s.minutes} min`) : ""}`;
+        ${next ? viewTemplate(t, s, next, `data-warm="${esc(s.id)}"`, `${CHANNEL[s.channel]} · no bucks yet · heat +${s.heat.success} if blocked · ${s.minutes} min`) : ""}`;
     };
 
     const viewTemplates = (t: Victim) => `
@@ -150,6 +151,7 @@ export default {
           .map((tpl) =>
             viewTemplate(
               t,
+              s,
               tpl,
               `data-send="${esc(s.id)}/${esc(tpl.id)}"`,
               stakes(s, tpl, current(t, s)),
