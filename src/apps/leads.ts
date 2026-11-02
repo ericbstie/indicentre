@@ -48,6 +48,7 @@ const drawLeads = (
 
 const CHANNEL: Record<Channel, string> = {
   mail: "Mail",
+  sms: "Text message",
   call: "Phone call",
   marketplace: "Marketplace",
   social: "Social",
