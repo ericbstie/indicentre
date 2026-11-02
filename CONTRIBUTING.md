@@ -54,6 +54,7 @@ src/
     game.ts            Game: sync facade over the Effect store (+ event bus)
   core/                pure logic, no DOM, no three
     state.ts           GameState, Action union, reduce(), selectors
+    economy.ts         shift clock, DayEnded log, quota, buy, win/lose
     events.ts          GameEvent union, diffEvents(), createBus()
     store.ts           GameStore Effect service (Ref + listeners + bus)
     rng.ts             seeded Rng; never Math.random in logic
@@ -64,11 +65,12 @@ src/
   scams/               REGISTRY: one scam per file, plus the scam system
     types.ts           Lure, ScamTemplate, ScamDef
     index.ts           generated
-    registry.ts        scams (shop order), starterScams, scamById
+    registry.ts        scams (shop order), starterScams, availableScams
     resolve.ts         fitTags(), resolveScam(victim) -> Outcome{actions}
     <id>.ts            a scam
   victims/             procedural victims: tables, generator, hints,
                        resistance (odds), reveal(level) view
+  shop/                tools.ts (tools as data + Modifiers), catalog.ts
   systems/             REGISTRY: one gameplay system per file
     system.ts          GameSystem, SystemContext {game, world}
     index.ts           generated
@@ -78,7 +80,7 @@ src/
   audio/               speak(line) babble hook (no-op until sound lands)
   desktop/             PC overlay shell (desktop.ts/.css), html.ts esc()
   scene/               three.js: office, player, npc, interact registry
-  hud/                 HUD overlay (hud.ts/.css)
+  hud/                 HUD overlay (hud.ts/.css), dialog.ts one-button modal
 scripts/
   gen.ts               writes the three generated index.ts files
   new.ts               scaffolds an app / scam / system
@@ -113,6 +115,7 @@ synchronous `Game` facade and stays Effect-free. New long-lived services
 | a reaction to money/heat/day/scams     | a system that calls `game.on(...)`                           |
 | a new kind of event                    | append a variant to `core/events.ts`                         |
 | new persistent state                   | append field + `Action` + `reduce` case + test in `state.ts` |
+| a shop tool                            | `src/shop/tools.ts` (+ `Modifiers` field if a new effect)    |
 | a new lure                             | `LURES` in `scams/types.ts` + `TAGS` in `victims/types.ts`   |
 | shared colors                          | `client/tokens.css` (rarely; prefer your own `.css`)         |
 

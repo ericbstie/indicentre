@@ -52,10 +52,8 @@ export interface GameState {
 
 export type Action =
   | { readonly type: "earn"; readonly amount: number }
-  | { readonly type: "spend"; readonly amount: number }
   | { readonly type: "heat"; readonly amount: number }
   | { readonly type: "tick"; readonly minutes: number }
-  | { readonly type: "unlock"; readonly scam: ScamId }
   | { readonly type: "mail"; readonly mail: Omit<Mail, "read"> }
   | { readonly type: "readMail"; readonly id: string }
   | { readonly type: "scamFailed"; readonly scam: ScamId }
@@ -86,9 +84,6 @@ export const initialState = (
 
 const clamp = (n: number, lo: number, hi: number) =>
   Math.min(hi, Math.max(lo, n));
-
-export const canAfford = (s: GameState, amount: number) =>
-  s.scamBucks >= amount;
 
 export const unreadCount = (s: GameState) =>
   s.inbox.filter((m) => !m.read).length;
@@ -130,18 +125,10 @@ export const reduce = (s: GameState, a: Action): GameState => {
             earnedToday: s.earnedToday + a.amount,
           }
         : s;
-    case "spend":
-      return a.amount > 0 && canAfford(s, a.amount)
-        ? { ...s, scamBucks: s.scamBucks - a.amount }
-        : s;
     case "heat":
       return withHeat(s, s.shutdownMeter + a.amount);
     case "tick":
       return advance(s, a.minutes);
-    case "unlock":
-      return isUnlocked(s, a.scam)
-        ? s
-        : { ...s, unlockedScams: [...s.unlockedScams, a.scam] };
     case "mail":
       return s.inbox.some((m) => m.id === a.mail.id)
         ? s
