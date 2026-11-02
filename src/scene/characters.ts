@@ -72,3 +72,69 @@ export const tint = (object: THREE.Object3D, name: string, color: number) => {
     }
   });
 };
+
+/** Above this ground speed (m/s) a character plays Walk instead of Idle. */
+const WALKING = 0.3;
+const FADE = 0.25;
+
+const live = new Set<(dt: number) => void>();
+
+/**
+ * Starts animating a character placed under `root` (the object that moves).
+ * By default it plays Idle and switches to Walk while `root` moves, so code
+ * that only moves `root` gets locomotion for free. `play` runs a one-shot
+ * clip (SitDown, StandUp) and holds its last frame; `auto` returns to
+ * Idle/Walk. Driven by tickCharacters() in the world's frame loop.
+ */
+export const animate = (c: Character, root: THREE.Object3D) => {
+  const mixer = new THREE.AnimationMixer(c.object);
+  let current: THREE.AnimationAction | undefined;
+  let playing: Clip | undefined;
+  let auto = true;
+  const to = (clip: Clip, once = false) => {
+    const source = c.clips.get(clip);
+    if (!source) return;
+    const next = mixer.clipAction(source);
+    if (next === current) return;
+    next.reset();
+    next.setLoop(once ? THREE.LoopOnce : THREE.LoopRepeat, Infinity);
+    next.clampWhenFinished = once;
+    next.play();
+    if (current) next.crossFadeFrom(current, FADE, false);
+    current = next;
+    playing = clip;
+  };
+  to("Idle");
+
+  const last = root.getWorldPosition(new THREE.Vector3());
+  const now = new THREE.Vector3();
+  const step = (dt: number) => {
+    root.getWorldPosition(now);
+    const speed = dt > 0 ? Math.hypot(now.x - last.x, now.z - last.z) / dt : 0;
+    last.copy(now);
+    if (auto) to(speed > WALKING ? "Walk" : "Idle");
+    mixer.update(dt);
+  };
+  live.add(step);
+
+  return {
+    get playing() {
+      return playing;
+    },
+    play(clip: Clip) {
+      auto = false;
+      to(clip, true);
+    },
+    auto() {
+      auto = true;
+    },
+    stop() {
+      live.delete(step);
+    },
+  };
+};
+
+/** Advances every animated character. Called once per frame by the world. */
+export const tickCharacters = (dt: number) => {
+  for (const step of live) step(dt);
+};

@@ -1,6 +1,6 @@
 import { afterAll, expect, test } from "bun:test";
 import * as THREE from "three";
-import { loadCharacter, tint } from "./characters.ts";
+import { animate, loadCharacter, tickCharacters, tint } from "./characters.ts";
 
 // Serve /assets/models/<id>.glb from disk, as the server does.
 const realFetch = globalThis.fetch;
@@ -42,4 +42,24 @@ test("instances get their own materials, so tint is per NPC", async () => {
   tint(a.object, "Shirt", 0xff0000);
   expect(colorOf(a.object, "Shirt")).toBe(0xff0000);
   expect(colorOf(b.object, "Shirt")).not.toBe(0xff0000);
+});
+
+test("plays Walk while its root moves and Idle when it stops", async () => {
+  const c = await loadCharacter("casual2-male");
+  const root = new THREE.Group().add(c.object);
+  const anim = animate(c, root);
+  expect(anim.playing).toBe("Idle");
+  root.position.x += 0.05; // 3 m/s at 60 fps
+  tickCharacters(1 / 60);
+  expect(anim.playing).toBe("Walk");
+  tickCharacters(1 / 60);
+  expect(anim.playing).toBe("Idle");
+  anim.play("SitDown");
+  root.position.x += 0.05;
+  tickCharacters(1 / 60);
+  expect(anim.playing).toBe("SitDown");
+  anim.auto();
+  tickCharacters(1 / 60);
+  expect(anim.playing).toBe("Idle");
+  anim.stop();
 });

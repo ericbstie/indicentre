@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { tickCharacters } from "../scene/characters.ts";
 import { createInteractions } from "../scene/interact.ts";
 import { buildOffice } from "../scene/office.ts";
 import { createPlayer } from "../scene/player.ts";
@@ -37,6 +38,7 @@ export const createWorld = () => {
       const dt = Math.min(timer.getDelta(), 0.1);
       player.update(dt);
       frameHandlers.forEach((fn) => fn(dt));
+      tickCharacters(dt);
       renderer.render(office.scene, camera);
     });
   };
