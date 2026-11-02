@@ -116,6 +116,8 @@ export default {
 
     let failStreak = 0;
     let warnedOn = 0;
+    /** He cheers the day's first big win only; after that they're the job. */
+    let cheeredOn = 0;
     const offScam = game.on("ScamResolved", (e) => {
       failStreak = e.success ? 0 : failStreak + 1;
       game.dispatch(changeMood(scamMood(e.success, e.bucks, failStreak)));
@@ -129,7 +131,10 @@ export default {
       }
       if (busy) return;
       if (failStreak === FAIL_STREAK) void react("failStreak");
-      else if (e.bucks >= BIG_WIN) void react("bigWin");
+      else if (e.bucks >= BIG_WIN && cheeredOn !== s.day) {
+        cheeredOn = s.day;
+        void react("bigWin");
+      }
     });
     const offDay = game.on("DayEnded", ({ summary }) => {
       const result = quotaResult(summary);
