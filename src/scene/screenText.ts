@@ -94,5 +94,3 @@ export const createTextScreen = (width: number, height: number, px = 1024) => {
 
   return { mesh, show };
 };
-
-export type TextScreen = ReturnType<typeof createTextScreen>;
