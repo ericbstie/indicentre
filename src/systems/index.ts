@@ -7,6 +7,7 @@ import coworkers from "./coworkers.ts";
 import dayReport from "./day-report.ts";
 import news from "./news.ts";
 import runEnd from "./run-end.ts";
+import save from "./save.ts";
 import sound from "./sound.ts";
 import welcome from "./welcome.ts";
 import workplace from "./workplace.ts";
@@ -19,6 +20,7 @@ export const systems: ReadonlyArray<GameSystem> = [
   dayReport,
   news,
   runEnd,
+  save,
   sound,
   welcome,
   workplace,
