@@ -10,5 +10,5 @@ export const writeHints = (rng: Rng, v: Victim): ReadonlyArray<string> => {
   const others = v.weaknesses.filter((t) => t !== v.detail.tag);
   if (!others.length) return [v.detail.text];
   const line = pick(rng, FRAGMENTS[pick(rng, others)]);
-  return [v.detail.text, line.replaceAll("{first}", firstName(v))];
+  return [v.detail.text, line.replaceAll("{name}", firstName(v))];
 };

@@ -29,6 +29,9 @@ rule only when you find a real duplicate, and cite where.
 - **A victim's first name comes from `firstName()`** (`src/victims/types.ts`).
   Seen: a second `firstName` in `src/news/news.ts`, and
   `personalize("{name}", target)` used as one in `src/apps/leads.ts`.
+- **The slot for it in text is `{name}`.** Seen: `{first}` in
+  `src/victims/fragments.ts` and the news slots next to `{name}` in scams.
+  The content contract checks it.
 - **Tags render with `tagList()`** (`desktop/html.ts`). Seen: "Falls for"
   as comma text in Leads next to new lure chips on pitches and Shop rows.
 - **Percentages use one helper.** Seen: `pct()` in `leads.ts`, a second
