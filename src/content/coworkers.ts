@@ -26,7 +26,12 @@ export const coworkers: ReadonlyArray<Coworker> = [
     name: "Priya",
     specialty: "phishing",
     desk: 0,
-    look: { shirt: 0x7a3b8f, skin: 0x8d5a3b, hair: 0x1a1210 },
+    look: {
+      shirt: 0x7a3b8f,
+      skin: 0x8d5a3b,
+      hair: 0x1a1210,
+      outfit: "casual-female",
+    },
     hints: [
       "The subject line does all the work. If it doesn't sound like a deadline, nobody opens it.",
       "Pensioners read every word. Students read nothing. Write for the one you've got.",
@@ -42,7 +47,12 @@ export const coworkers: ReadonlyArray<Coworker> = [
     name: "Rohan",
     specialty: "tech-support",
     desk: 2,
-    look: { shirt: 0x3b6e8f, skin: 0xa0704a, hair: 0x2b1d14 },
+    look: {
+      shirt: 0x3b6e8f,
+      skin: 0xa0704a,
+      hair: 0x2b1d14,
+      outfit: "casual2-male",
+    },
     hints: [
       "Nobody fears a virus they can't see. Tell them the computer is 'sending errors'. Sounds expensive.",
       "Say a department, not a name. 'The security desk' beats 'Rohan' every time.",
@@ -59,7 +69,12 @@ export const coworkers: ReadonlyArray<Coworker> = [
     name: "Mags",
     specialty: "marketplace",
     desk: 4,
-    look: { shirt: 0x8f6a2b, skin: 0xc49a78, hair: 0x6b3a1e },
+    look: {
+      shirt: 0x8f6a2b,
+      skin: 0xc49a78,
+      hair: 0x6b3a1e,
+      outfit: "casual3-female",
+    },
     hints: [
       "Cheap listing, nice photos, and you're 'away for work'. That's why it has to be shipped.",
       "Get them off the app. The app has a report button. A text message doesn't.",
