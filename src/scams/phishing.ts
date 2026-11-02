@@ -3,10 +3,19 @@ import type { ScamDef } from "./types.ts";
 export default {
   id: "phishing",
   name: "Phishing mail",
+  channel: "mail",
   price: 0,
   minutes: 20,
   payout: 40,
   heat: { success: 2, fail: 9 },
+  fitTags: ["parcel", "bank"],
+  whatToSpot: [
+    "Urgency is the tell. Real deadlines don't arrive by surprise email.",
+    "Check the sender's domain, not the name it shows.",
+    "Never log in through a link. Type the address yourself.",
+  ],
+  successLine:
+    "Done! I filled everything in. Thank you so much for warning me, you are very kind.",
   lesson:
     "Real companies don't ask you to 'verify' through a link in an unexpected email. Go to the site yourself.",
   templates: [

@@ -3,7 +3,7 @@ import { seedFrom, seeded } from "../core/rng.ts";
 import { availableScams } from "../scams/registry.ts";
 import {
   failHeat,
-  fitTags,
+  pulls,
   type Outcome,
   payout,
   personalize,
@@ -80,7 +80,7 @@ export default {
       const m = mods();
       const odds =
         m.reveal >= 2
-          ? ` · ${pct(successChance(t, fitTags(tpl), m.chanceBonus))} odds`
+          ? ` · ${pct(successChance(t, pulls(s, tpl), m.chanceBonus))} odds`
           : "";
       return `+${payout(s, t)} bucks · heat +${s.heat.success}, +${failHeat(s, m)} if reported · ${s.minutes} min${odds}`;
     };

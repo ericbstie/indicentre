@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { owns } from "../core/economy.ts";
 import { initialState, reduce } from "../core/state.ts";
 import phishing from "../scams/phishing.ts";
-import { failHeat, fitTags, resolveScam } from "../scams/resolve.ts";
+import { failHeat, pulls, resolveScam } from "../scams/resolve.ts";
 import { successChance } from "../victims/resistance.ts";
 import type { Victim } from "../victims/types.ts";
 import { catalog } from "./catalog.ts";
@@ -65,9 +65,9 @@ describe("tool effects", () => {
   test("persondata reveals, fake website raises odds, spoofed ID halves fail heat", () => {
     const mods = modifiersFor(["fake-website", "spoofed-id", "persondata"]);
     expect(mods.reveal).toBe(2);
-    expect(successChance(v, fitTags(tpl), mods.chanceBonus)).toBeCloseTo(
-      successChance(v, fitTags(tpl)) + 0.1,
-    );
+    expect(
+      successChance(v, pulls(phishing, tpl), mods.chanceBonus),
+    ).toBeCloseTo(successChance(v, pulls(phishing, tpl)) + 0.1);
     const fail = resolveScam(() => 0.99, phishing, v, tpl, mods);
     expect(fail.success).toBe(false);
     expect(fail.heat).toBe(failHeat(phishing, mods));
