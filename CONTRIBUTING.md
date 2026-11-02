@@ -100,7 +100,8 @@ src/
     system.ts          GameSystem, SystemContext {game, world}
     index.ts           generated, gitignored
     <id>.ts            clock.ts, welcome.ts, NPCs, news TV, boss...
-  content/             static text and data (mails, coworkers, news)
+  content/             static text and data (mails, coworkers, story beats)
+  story/               beat types, which beat plays when, scam schedule
   dialog/              openDialog({ speaker, line, choices }) overlay
   audio/               Web Audio, browser-only: engine (buses, mute),
                        babble (gibberish voices), speak, music, sfx
@@ -165,6 +166,7 @@ synchronous `Game` facade and stays Effect-free. New long-lived services
 | a scam type                            | `bun run new:scam <id>` → `src/scams/<id>.ts`                   |
 | an NPC, prop, TV, timer, boss reaction | `bun run new:system <id>` → `src/systems/<id>.ts`               |
 | text (mails, dialogue, news)           | `src/content/<topic>.ts`                                        |
+| a story scene or a day's new scam      | a beat in `src/content/story.ts`                                |
 | a reaction to money/heat/day/scams     | a system that calls `game.on(...)`                              |
 | a new kind of event                    | `defineEvent` in the file that emits it                         |
 | new persistent state                   | `defineSlice` + action creators + test, in the owning file      |
