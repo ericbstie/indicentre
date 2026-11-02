@@ -6,7 +6,7 @@ import type { GameState, ScamId } from "../core/state.ts";
 /** Wins on one scam in a day that still pay in full. */
 const FRESH_WINS = 2;
 /** Each win past that pays this much of the one before. */
-const WEAR = 0.7;
+const WEAR = 0.5;
 
 interface Wear {
   readonly day: number;
@@ -34,7 +34,7 @@ export const markLanded = (s: GameState, scam: ScamId): Landed => ({
   day: s.day,
 });
 
-/** Share of the full payout `scam` pays right now: 1, then 0.7, 0.49... */
+/** Share of the full payout `scam` pays right now: 1, 1, then 0.5, 0.25... */
 export const freshness = (s: GameState, scam: ScamId) => {
   const w = wear.get(s);
   const wins = w.day === s.day ? (w.wins[scam] ?? 0) : 0;

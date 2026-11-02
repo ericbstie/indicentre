@@ -6,13 +6,13 @@ import { freshness, markLanded } from "./wear.ts";
 const win = (s = initialState(), scam = "phishing") =>
   reduce(s, markLanded(s, scam));
 
-test("the first two wins pay in full, then each pays 70% of the last", () => {
+test("the first two wins pay in full, then each pays half the last", () => {
   const one = win();
   const two = win(one);
   const three = win(two);
   expect(freshness(one, "phishing")).toBe(1);
-  expect(freshness(two, "phishing")).toBeCloseTo(0.7);
-  expect(freshness(three, "phishing")).toBeCloseTo(0.49);
+  expect(freshness(two, "phishing")).toBeCloseTo(0.5);
+  expect(freshness(three, "phishing")).toBeCloseTo(0.25);
 });
 
 test("wear is per scam and resets the next day", () => {
