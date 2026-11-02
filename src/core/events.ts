@@ -33,7 +33,11 @@ export type GameEvent =
       readonly from: number;
       readonly to: number;
     }
-  | { readonly type: "DayEnded"; readonly summary: DaySummary };
+  | { readonly type: "DayEnded"; readonly summary: DaySummary }
+  | {
+      readonly type: "RunEnded";
+      readonly status: Exclude<GameState["status"], "playing">;
+    };
 
 export type EventType = GameEvent["type"];
 export type EventOf<T extends EventType> = Extract<GameEvent, { type: T }>;
@@ -63,6 +67,8 @@ export const diffEvents = (prev: GameState, next: GameState): GameEvent[] => {
   const ended =
     next.days.length > prev.days.length ? next.days.at(-1) : undefined;
   if (ended) out.push({ type: "DayEnded", summary: ended });
+  if (prev.status === "playing" && next.status !== "playing")
+    out.push({ type: "RunEnded", status: next.status });
   return out;
 };
 

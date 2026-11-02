@@ -15,8 +15,10 @@ const reportHtml = (d: DaySummary) => `
 export default {
   id: "day-report",
   start({ game }) {
-    return game.on("DayEnded", ({ summary }) =>
-      showDialog(reportHtml(summary), `Start day ${summary.day + 1}`),
-    );
+    return game.on("DayEnded", ({ summary }) => {
+      // The run-end card replaces the report on the last day.
+      if (game.state().status === "playing")
+        showDialog(reportHtml(summary), `Start day ${summary.day + 1}`);
+    });
   },
 } satisfies GameSystem;

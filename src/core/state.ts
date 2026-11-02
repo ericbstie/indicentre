@@ -34,7 +34,8 @@ export interface GameState {
   readonly unlockedScams: ReadonlyArray<ScamId>;
   /** Newest first. */
   readonly inbox: ReadonlyArray<Mail>;
-  readonly status: "playing" | "shutdown";
+  /** Anything but "playing" ends the run (see economy.ts for fired/won). */
+  readonly status: "playing" | "shutdown" | "fired" | "won";
   /** Failed attempts per scam type; coworkers open up as this grows. */
   readonly scamFails: Readonly<Record<ScamId, number>>;
   /** Hints heard so far, per coworker id. */
@@ -119,7 +120,7 @@ const withHeat = (s: GameState, shutdownMeter: number): GameState => {
 
 /** The only way state changes. Invalid actions return the state unchanged. */
 export const reduce = (s: GameState, a: Action): GameState => {
-  if (s.status === "shutdown") return s;
+  if (s.status !== "playing") return s;
   switch (a.type) {
     case "earn":
       return a.amount > 0

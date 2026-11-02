@@ -12,6 +12,11 @@ export const QUOTA_BASE = 60;
 export const QUOTA_STEP = 15;
 export const quotaFor = (day: number) => QUOTA_BASE + QUOTA_STEP * (day - 1);
 
+/** Missing the quota this many days in a row gets you fired. */
+export const FIRE_AFTER_MISSES = 2;
+/** Finish this day still employed and un-raided: top seller. */
+export const WIN_DAY = 10;
+
 /** The DayEnded event payload. Appended to `GameState.days` when a shift ends. */
 export interface DaySummary {
   readonly day: number;
@@ -33,7 +38,7 @@ export const endDay = (s: GameState): GameState => {
     met: s.earnedToday >= quotaFor(s.day),
   };
   const heat = Math.max(0, s.shutdownMeter - OVERNIGHT_COOLDOWN);
-  return {
+  const next: GameState = {
     ...s,
     day: s.day + 1,
     minute: 0,
@@ -42,6 +47,13 @@ export const endDay = (s: GameState): GameState => {
     heatAtDayStart: heat,
     days: [...s.days, summary],
   };
+  const status =
+    missStreak(next) >= FIRE_AFTER_MISSES
+      ? "fired"
+      : summary.day >= WIN_DAY
+        ? "won"
+        : s.status;
+  return { ...next, status };
 };
 
 /** Advance the clock. Work that runs past 17:00 ends the shift (one day max). */

@@ -140,8 +140,8 @@ export default {
     };
 
     const render = () => {
-      if (game.state().status === "shutdown") {
-        el.innerHTML = `<div class="leads"><p class="empty">The servers have been seized.</p></div>`;
+      if (game.state().status !== "playing") {
+        el.innerHTML = `<div class="leads"><p class="empty">No more leads.</p></div>`;
         return;
       }
       el.innerHTML = `<div class="leads">${
