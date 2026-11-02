@@ -33,3 +33,17 @@
   color: var(--danger);
   font-weight: 600;
 }
+
+.modal-card .verdict {
+  color: var(--ink-soft);
+}
+
+.modal-card .warning {
+  padding: 8px 12px;
+  border-left: 4px solid var(--danger);
+  background: var(--card);
+}
+
+.modal-card .warning p {
+  margin: 4px 0;
+}
