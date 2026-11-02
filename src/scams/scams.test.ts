@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { type Action, initialState, reduce } from "../core/state.ts";
-import { fit } from "../victims/resistance.ts";
+import { fit, successChance } from "../victims/resistance.ts";
 import catfish from "./catfish.ts";
 import techSupport from "./tech-support.ts";
 import { TAGS, type Victim } from "../victims/types.ts";
@@ -44,14 +44,11 @@ describe("scam data", () => {
       expect(s.heat.fail).toBeGreaterThan(s.heat.success);
       expect(s.fitTags.length).toBeGreaterThan(0);
       for (const tag of s.fitTags) expect(TAGS).toContain(tag);
-      expect(s.whatToSpot).toHaveLength(3);
-      for (const line of [...s.whatToSpot, s.successLine])
-        expect(line.trim().length).toBeGreaterThan(0);
+      expect(s.successLine.trim().length).toBeGreaterThan(0);
       expect(s.templates.length).toBeGreaterThan(0);
       const steps = [...(s.warmups ?? []), ...s.templates];
       expect(new Set(steps.map((t) => t.id)).size).toBe(steps.length);
       for (const t of steps) {
-        expect(t.redFlags.length).toBeGreaterThan(0);
         expect(Object.keys(t.lures).length).toBeGreaterThan(0);
       }
     });
@@ -121,13 +118,9 @@ describe("warm-ups", () => {
   });
 
   test("trust raises the odds of the ask", () => {
-    const cold = resolveScam(() => 0.99, catfish, lonely, ask).chance;
-    const warm = resolveScam(
-      () => 0.99,
-      catfish,
-      warmed(lonely, catfish, 2),
-      ask,
-    ).chance;
+    const odds = (v: Victim) => successChance(v, pulls(catfish, ask));
+    const cold = odds(lonely);
+    const warm = odds(warmed(lonely, catfish, 2));
     expect(warm).toBeGreaterThan(cold);
   });
 
@@ -151,8 +144,7 @@ describe("fit tags", () => {
     expect(fit(anxious, pulls(techSupport, call))).toBeGreaterThan(
       fit(romantic, pulls(techSupport, call)),
     );
-    const odds = (v: Victim) =>
-      resolveScam(() => 0.99, techSupport, v, call).chance;
+    const odds = (v: Victim) => successChance(v, pulls(techSupport, call));
     expect(odds(anxious)).toBeGreaterThan(odds(romantic));
   });
 

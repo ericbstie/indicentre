@@ -10,11 +10,6 @@ export default {
   payout: 110,
   heat: { success: 5, fail: 13 },
   fitTags: ["bank", "authority", "urgency", "fear"],
-  whatToSpot: [
-    "Your bank will never ask you to move money to keep it safe.",
-    "No one from the bank needs the code they just texted you.",
-    "Hang up and call the number on the back of your card.",
-  ],
   successLine:
     "She had my account number already, so I knew she was real. The money's safe now. She said not to ring the branch, they're part of the problem.",
   templates: [
@@ -26,11 +21,6 @@ export default {
 We think it's someone inside the branch, so we can't freeze it the normal way.
 Move your savings to this protected account while we clean up. It's still your money.`,
       lures: { authority: 0.9, urgency: 0.8 },
-      redFlags: [
-        "The bank called you, not the other way round",
-        "A 'safe account' is just someone else's account",
-        "Told not to trust your own branch",
-      ],
     },
     {
       id: "read-the-code",
@@ -40,11 +30,6 @@ Move your savings to this protected account while we clean up. It's still your m
 No? Good, I can cancel it. You'll get a code by text in a second.
 Read it back to me and the payment stops. Quickly, it goes through at the hour.`,
       lures: { authority: 0.8, urgency: 0.9 },
-      redFlags: [
-        "The code is for approving, whatever they call it",
-        "A countdown so you don't stop to think",
-        "Real bank staff never ask for your codes",
-      ],
     },
   ],
 } satisfies ScamDef;

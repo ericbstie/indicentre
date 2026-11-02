@@ -9,11 +9,6 @@ export default {
   payout: 40,
   heat: { success: 2, fail: 8 },
   fitTags: ["parcel", "bank"],
-  whatToSpot: [
-    "Urgency is the tell. Real deadlines don't arrive by surprise email.",
-    "Check the sender's domain, not the name it shows.",
-    "Never log in through a link. Type the address yourself.",
-  ],
   successLine:
     "Done! I filled everything in. Thank you so much for warning me, you are very kind.",
   templates: [
@@ -30,11 +25,6 @@ Verify your identity within 24 hours or your account will be closed permanently.
 
 BankCo Security Team`,
       lures: { authority: 0.8, urgency: 0.9 },
-      redFlags: [
-        "Pressure to act within hours",
-        "Link goes to a lookalike domain, not the bank's real site",
-        "Banks never ask you to log in through an email link",
-      ],
     },
     {
       id: "parcel-fee",
@@ -47,11 +37,6 @@ Pay now to schedule redelivery: [ Pay fee ]
 
 ParcelPost-Delivery Services`,
       lures: { curiosity: 0.8, urgency: 0.5 },
-      redFlags: [
-        "You weren't expecting a parcel",
-        "A tiny fee is bait to get your card details",
-        "Sender name doesn't match the real postal service",
-      ],
     },
     {
       id: "inheritance",
@@ -64,11 +49,6 @@ To release the funds, a small processing fee is required. Kindly reply with your
 
 Barrister Reginald P. Fortune, Esq.`,
       lures: { greed: 1, authority: 0.4 },
-      redFlags: [
-        "A relative you've never heard of",
-        "You must pay a fee to receive money",
-        "Asks for bank details by email",
-      ],
     },
   ],
 } satisfies ScamDef;
