@@ -71,12 +71,16 @@ The content contract checks the grep-able rules. These are judgment calls:
 - **Hints and lessons describe the scam the templates run.** Seen: Mags
   coached a fake seller while the marketplace templates are a fake buyer.
 - **Each real-world role has one made-up name:** Fjellstad Bank, QuickCrate
-  (courier), Lykke Sport (giveaway shop). Seen: BankCo and ParcelPost next
-  to them.
+  (courier), Lykke Sport (giveaway shop), Datavakt (tech support). Seen:
+  BankCo and ParcelPost next to them, Kwikship and Nettvakt in the scams.
 - **Say a point once, where the player reads it.** Seen: the catfish red
   flags in the day 0 lesson, the day 6 lesson and the won ending's note.
 - **One image per lead.** Seen: the weather comparison in two fragment
   banks, the password sticky note in both `DETAILS` and fragments.
 - **One plain, sad reply in each `successLines` pool.** Seen: all 21 ended
   on the victim's cheerful misreading.
+- **Win replies are typed to the scammer.** They arrive as `Re:` mail, so
+  they answer the pitch in the victim's own register and the harm shows
+  in what they say. Seen: replies written like news quotes ("The bank
+  says...") before the real-patterns pass (docs/scam-patterns.md).
 - **Places are Norwegian.** Seen: "a dentist in Ohio".

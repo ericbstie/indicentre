@@ -211,9 +211,12 @@ describe("content contract", () => {
     ).toEqual([]);
   });
 
-  // Seen: BankCo, ParcelPost, TrendStore, "Reginald P. Fortune, Esq.".
-  test("no placeholder or joke names", () => {
-    const placeholder = /\b[A-Z][a-z]+Co\b|\bEsq\.|ParcelPost|TrendStore/;
+  // Seen: BankCo, ParcelPost, TrendStore, "Reginald P. Fortune, Esq.", and
+  // second names for one role: Kwikship next to QuickCrate, Nettvakt next
+  // to Datavakt. Real scams copy the one company you already know.
+  test("no placeholder, joke or second names", () => {
+    const placeholder =
+      /\b[A-Z][a-z]+Co\b|\bEsq\.|ParcelPost|TrendStore|Kwikship|Nettvakt/;
     const all = Object.values(CONTENT).flatMap(strings);
     expect(all.filter((s) => placeholder.test(s))).toEqual([]);
   });
