@@ -14,6 +14,7 @@ import {
 } from "../core/boss.ts";
 import type { EventOf } from "../core/events.ts";
 import { openDialog } from "../dialog/dialog.ts";
+import { modalOpen } from "../hud/modal.ts";
 import { createNpc } from "../scene/npc.ts";
 import type { GameSystem } from "./system.ts";
 
@@ -50,7 +51,7 @@ const QUOTA_REACTION: Readonly<Record<QuotaResult, BossReaction>> = {
   smashed: "quotaSmashed",
 };
 
-/** The floor manager: tracks the shift's takings, moves his mood, walks over at day end. */
+/** The floor manager: moves his mood on scams and DayEnded, walks over with the verdict. */
 export default {
   id: "boss",
   start({ game, world }) {
@@ -82,6 +83,17 @@ export default {
       return say(pool[n % pool.length] ?? "");
     };
 
+    /** Resolves on the first frame where `ok()` holds. */
+    const until = (ok: () => boolean) =>
+      new Promise<void>((resolve) => {
+        if (ok()) return resolve();
+        const off = world.onFrame(() => {
+          if (!ok()) return;
+          off();
+          resolve();
+        });
+      });
+
     /** Walk to stand behind the player's chair, run `scene`, walk back. */
     let busy = false;
     const visitDesk = async (scene: () => Promise<void>) => {
@@ -90,6 +102,7 @@ export default {
       await walker.walkTo(AISLE);
       await walker.walkTo(BEHIND_DESK);
       walker.face(office.seat.lookAt);
+      await until(() => !modalOpen()); // let the day report go first
       await scene();
       await walker.walkTo(AISLE);
       await walker.walkTo(HOME);
@@ -115,10 +128,8 @@ export default {
     // missed quota, and on days that end with his mood low.
     let techniqueUnlocked = false;
 
-    let earnedToday = 0;
     let failStreak = 0;
     const offScam = game.on("ScamResolved", (e) => {
-      earnedToday += e.bucks;
       failStreak = e.success ? 0 : failStreak + 1;
       game.dispatch({
         type: "bossMood",
@@ -128,10 +139,11 @@ export default {
       if (failStreak === FAIL_STREAK) void react("failStreak");
       else if (e.bucks >= BIG_WIN) void react("bigWin");
     });
-    const offDay = game.on("DayAdvanced", () => {
-      const result = quotaResult(earnedToday);
-      earnedToday = 0;
+    const offDay = game.on("DayEnded", ({ summary }) => {
+      const result = quotaResult(summary);
       game.dispatch({ type: "bossMood", amount: quotaMood[result] });
+      // Fired or won: the run-end card has the last word.
+      if (game.state().status !== "playing") return;
       void visitDesk(async () => {
         const line = react(QUOTA_REACTION[result]);
         if (result === "missed") await slap();

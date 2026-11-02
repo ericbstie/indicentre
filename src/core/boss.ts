@@ -1,7 +1,6 @@
 // Pure boss rules: how scams and quota results move the boss's mood, and
 // when he reacts. The boss system (systems/boss.ts) applies these.
 
-export const DAILY_QUOTA = 150;
 /** Earning this multiple of the quota counts as smashing it. */
 export const SMASH_FACTOR = 2;
 /** A single scam paying at least this is a big win. */
@@ -23,10 +22,14 @@ export const MOOD = {
 
 export type QuotaResult = "missed" | "met" | "smashed";
 
-export const quotaResult = (
-  earned: number,
-  quota = DAILY_QUOTA,
-): QuotaResult =>
+/** Grades a finished day (the DayEnded summary). The quota comes from core/economy.ts. */
+export const quotaResult = ({
+  earned,
+  quota,
+}: {
+  readonly earned: number;
+  readonly quota: number;
+}): QuotaResult =>
   earned < quota
     ? "missed"
     : earned >= quota * SMASH_FACTOR

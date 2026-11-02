@@ -1,7 +1,6 @@
 import { expect, test } from "bun:test";
 import {
   BIG_WIN,
-  DAILY_QUOTA,
   FAIL_STREAK,
   MOOD,
   moodPool,
@@ -13,9 +12,10 @@ import {
 import { BOSS_MOOD_MAX, initialState, reduce } from "./state.ts";
 
 test("quota result bands", () => {
-  expect(quotaResult(DAILY_QUOTA - 1)).toBe("missed");
-  expect(quotaResult(DAILY_QUOTA)).toBe("met");
-  expect(quotaResult(DAILY_QUOTA * SMASH_FACTOR)).toBe("smashed");
+  const quota = 60;
+  expect(quotaResult({ earned: quota - 1, quota })).toBe("missed");
+  expect(quotaResult({ earned: quota, quota })).toBe("met");
+  expect(quotaResult({ earned: quota * SMASH_FACTOR, quota })).toBe("smashed");
 });
 
 test("scam mood: big wins count more, the streak penalty lands once", () => {
