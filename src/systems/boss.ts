@@ -35,6 +35,9 @@ const AISLE = new THREE.Vector3(4.6, 0, 1.8);
 /** Just behind and right of the player's chair. */
 const BEHIND_DESK = new THREE.Vector3(-3.3, 0, 1.8);
 
+/** Heat at which he warns you, once a day, that the floor could be raided. */
+const HEAT_WARNING = 60;
+
 /** Longest a line holds up a scene if the player never dismisses it. */
 const LINE_MS = 6000;
 
@@ -112,9 +115,18 @@ export default {
     let techniqueUnlocked = false;
 
     let failStreak = 0;
+    let warnedOn = 0;
     const offScam = game.on("ScamResolved", (e) => {
       failStreak = e.success ? 0 : failStreak + 1;
       game.dispatch(changeMood(scamMood(e.success, e.bucks, failStreak)));
+      const s = game.state();
+      const crossed =
+        s.shutdownMeter >= HEAT_WARNING &&
+        s.shutdownMeter - e.heat < HEAT_WARNING;
+      if (crossed && warnedOn !== s.day && s.status === "playing") {
+        warnedOn = s.day;
+        void react("heatWarning");
+      }
       if (busy) return;
       if (failStreak === FAIL_STREAK) void react("failStreak");
       else if (e.bucks >= BIG_WIN) void react("bigWin");
