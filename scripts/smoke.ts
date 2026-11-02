@@ -1,7 +1,7 @@
 // End-to-end smoke test: boots the real server, loads the page in headless
 // Chrome (Bun.WebView), sits at the PC, runs one phishing scam and checks
-// that it worked, then reloads and checks the run resumes (Continue) and
-// resets (New run). `bun run smoke`. Set BUN_CHROME_PATH if Chrome is elsewhere.
+// that it worked, ends the day and checks day 2 unlocks its scheduled scam,
+// then reloads and checks the run resumes (Continue) and resets (New run). `bun run smoke`. Set BUN_CHROME_PATH if Chrome is elsewhere.
 export {};
 const fail = (msg: string): never => {
   throw new Error(msg);
@@ -58,14 +58,14 @@ try {
     fail("page did not boot (window.indicentre missing)");
   const before = await hud();
 
-  // Story beats (day 0 intro, day 1 briefing, Priya at the PC) cover the
-  // screen; Esc through them like an impatient player.
+  // Story beats (day 0 intro, day 1 briefing, Priya at the PC) and cards
+  // (day report) cover the screen; Esc through them like an impatient player.
   const skipStory = async () => {
     let quiet = 0;
     for (let i = 0; i < 40 && quiet < 3; i++) {
       await Bun.sleep(250);
       const open = await view.evaluate<boolean>(
-        `!!document.querySelector(".dialog-layer:not([hidden])")`,
+        `!!document.querySelector(".dialog-layer:not([hidden]), .modal")`,
       );
       if (open)
         await view.evaluate(
@@ -78,11 +78,6 @@ try {
   await view.evaluate(`indicentre.sitDown()`);
   await skipStory();
   await view.evaluate(`indicentre.desktop.launch("leads")`);
-  console.log(
-    await view.evaluate<string>(
-      `JSON.stringify({open: indicentre.desktop.isOpen, s: indicentre.game.state().storySeen, u: indicentre.game.state().unlockedScams, dlg: document.querySelector(".dialog-layer:not([hidden])")?.innerText, modal: !!document.querySelector(".modal")})`,
-    ),
-  );
   await view.click(".leads [data-target]", { timeout: 5000 });
   await view.click(`.leads [data-send^="phishing/"]`, { timeout: 5000 });
 
@@ -90,8 +85,18 @@ try {
     `!!document.querySelector(".leads .result h3")`,
   );
   if (!shown) fail("no result card after sending a scam");
+  if ((await hud()) === before) fail(`HUD unchanged after a scam`);
+
+  // Day rollover: the report card, the boss, then day 2's scheduled scam.
+  await view.evaluate(`indicentre.standUp()`);
+  await view.evaluate(`indicentre.game.dispatch({ type: "endDay" })`);
+  await skipStory();
+  const day2 = await view.evaluate<string>(
+    `JSON.stringify([indicentre.game.state().day, indicentre.game.state().unlockedScams])`,
+  );
+  if (day2 !== JSON.stringify([2, ["phishing", "tech-support"]]))
+    fail(`day 2 did not start with tech-support: ${day2}`);
   const after = await hud();
-  if (after === before) fail(`HUD unchanged after a scam: ${after}`);
 
   await load();
   const card = await view.evaluate<string>(
