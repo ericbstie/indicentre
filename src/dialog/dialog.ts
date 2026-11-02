@@ -1,5 +1,5 @@
 import "./dialog.css";
-import { speak } from "../audio/speak.ts";
+import { hush, speak } from "../audio/speak.ts";
 
 export interface DialogChoice {
   readonly label: string;
@@ -86,6 +86,7 @@ const closeDialog = () => {
   if (!root || !current) return;
   root.hidden = true;
   current = undefined;
+  hush();
   const done = onClose;
   onClose = undefined;
   done?.();
