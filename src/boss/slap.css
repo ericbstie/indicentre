@@ -1,0 +1,40 @@
+.boss-vignette {
+  position: fixed;
+  z-index: 3;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, #0000 45%, #c00c 100%);
+  animation: boss-flash 700ms ease-out forwards;
+}
+
+.boss-shake {
+  animation: boss-shake 400ms linear;
+}
+
+@keyframes boss-flash {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes boss-shake {
+  0%,
+  100% {
+    transform: none;
+  }
+  20% {
+    transform: translate(-14px, 4px) rotate(-1deg);
+  }
+  40% {
+    transform: translate(10px, -6px) rotate(0.8deg);
+  }
+  60% {
+    transform: translate(-6px, 3px);
+  }
+  80% {
+    transform: translate(3px, -1px);
+  }
+}

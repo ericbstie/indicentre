@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { buildBoss, createWalker } from "../boss/model.ts";
+import { slap } from "../boss/slap.ts";
 import { createSpeech } from "../boss/speech.ts";
 import { type BossReaction, bossLines } from "../content/boss.ts";
 import {
@@ -77,7 +78,11 @@ export default {
       const result = quotaResult(earnedToday);
       earnedToday = 0;
       game.dispatch({ type: "bossMood", amount: quotaMood[result] });
-      void visitDesk(() => react(QUOTA_REACTION[result]));
+      void visitDesk(async () => {
+        const line = react(QUOTA_REACTION[result]);
+        if (result === "missed") await slap();
+        await line;
+      });
     });
     const offFrame = world.onFrame((dt) => walker.update(dt));
     return () => {
